@@ -145,13 +145,19 @@ class Stats(
     @core.Cog.listener()
     async def on_guild_join(self, guild: discord.Guild):
         guild_conf = await self.sonata.db.guilds.find_one_and_update(
-            {"id": guild.id}, {"$set": {"name": guild.name}}
+            {"id": guild.id}, {"$set": {"name": guild.name, "left": None}}
         )
         if not guild_conf:
             guild_conf = Guild(id=guild.id, name=guild.name).dict()
             await self.sonata.db.guilds.insert_one(guild_conf)
         for member in guild.members:
             await self.on_member_join(member)
+
+    @core.Cog.listener()
+    async def on_guild_remove(self, guild: discord.Guild):
+        await self.sonata.db.guilds.update_one(
+            {"id": guild.id}, {"$currentDate": {"left": True}}
+        )
 
     @core.Cog.listener()
     async def on_guild_update(self, before: discord.Guild, after: discord.Guild):
@@ -171,6 +177,14 @@ class Stats(
         if result.matched_count == 0:
             member_conf = User(id=member.id, name=str(member)).dict()
             await self.sonata.db.users.insert_one(member_conf)
+
+    @core.Cog.listener()
+    async def on_member_remove(self, member: discord.Member):
+        if member.bot:
+            return
+        await self.sonata.db.users.update_one(
+            {"id": member.id}, {"$pull": {"guilds": member.guild.id}}
+        )
 
     @core.Cog.listener()
     async def on_user_update(self, before: discord.User, after: discord.User):
@@ -233,10 +247,7 @@ class Stats(
             value=f"{user['exp']}/{self.calculate_exp(user['lvl'] + 1)}",
         )
         medals = {1: "🥇", 2: "🥈", 3: "🥉"}
-        if rank in medals:
-            rank = medals[rank]
-        else:
-            rank = f"#{rank}"
+        rank = medals.get(rank) or f"#{rank}"
         embed.add_field(name=_("Rank"), value=str(rank))
         embed.set_thumbnail(url=member.avatar_url)
         await ctx.send(embed=embed)

@@ -7,11 +7,11 @@ import discord
 from babel.dates import format_datetime, format_timedelta
 from dateutil import parser
 from discord.ext import commands
-from discord.ext.commands import UserConverter
+from discord.ext.commands import UserConverter, clean_content
 
 from sonata.bot import core, Sonata
 from sonata.bot.utils import i18n
-from sonata.bot.utils.misc import to_lower
+from sonata.bot.utils.misc import to_lower, make_locale_list
 from sonata.bot.utils.paginator import EmbedPaginator
 from sonata.config import ApiConfig
 
@@ -28,8 +28,9 @@ class General(
     def __init__(self, sonata: Sonata):
         self.sonata = sonata
 
-    @core.command()
-    async def about(self, ctx: core.Context, *, about: str = None):
+    @core.group(invoke_without_command=True)
+    async def about(self, ctx: core.Context, *, about: Union[clean_content, str] = None):
+        _("""Fills in "About" field in the profile info""")
         if about is None:
             user_conf = await ctx.db.users.find_one(
                 {"id": ctx.author.id}, {"about": True}
@@ -54,6 +55,12 @@ class General(
                 {"id": ctx.author.id}, {"$set": {"about": about}}
             )
             await ctx.inform(_("The `About` field is set."))
+
+    @about.command(name="clear")
+    async def about_clear(self, ctx: core.Context):
+        _("""Clears "About" field in profile info.""")
+        await ctx.db.users.update_one({"id": ctx.author.id}, {"$set": {"about": None}})
+        await ctx.inform(_("The `About` field is cleared."))
 
     @core.command()
     async def avatar(
@@ -225,7 +232,7 @@ class General(
                 guilds=len(self.sonata.guilds),
                 members=len(self.sonata.users),
             ),
-            _("Language support"): ", ".join(i18n.make_locale_list(display_name=True)),
+            _("Language support"): ", ".join(make_locale_list(display_name=True)),
             _("Useful links"): _("[Invite the bot to your server]({0})").format(
                 SONATA_INVITE
             ),
@@ -234,8 +241,8 @@ class General(
             embed.add_field(name=name, value=value, inline=False)
         await ctx.send(embed=embed)
 
-    @core.command()
-    async def user(
+    @core.command(aliases=["user"])
+    async def profile(
         self, ctx: core.Context, user: Union[UserConverter, discord.User] = None
     ):
         if user is None:

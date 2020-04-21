@@ -4,6 +4,7 @@ from discord.ext import commands
 
 from sonata.bot import core
 from sonata.bot.utils import i18n
+from sonata.bot.utils.misc import make_locale_list, locale_to_flag
 
 
 class Locale(
@@ -40,7 +41,7 @@ class Locale(
             user = await ctx.db.users.find_one({"id": ctx.author.id}, {"locale": True})
             return await ctx.inform(
                 _("Current user locale is {flag} `{locale}`.").format(
-                    flag=i18n.locale_to_flag(user["locale"]),
+                    flag=locale_to_flag(user["locale"]),
                     locale=BabelLocale.parse(user["locale"], sep="_").display_name,
                 )
             )
@@ -48,7 +49,7 @@ class Locale(
         if locale not in i18n.gettext_translations.keys():
             return await ctx.inform(
                 _("Locale not found. Available locales: {0}.").format(
-                    ", ".join(i18n.make_locale_list())
+                    ", ".join(make_locale_list())
                 )
             )
 
@@ -58,6 +59,6 @@ class Locale(
         i18n.current_locale.set(locale)
         await ctx.inform(
             _("The user locale is set to {flag} `{locale}`.").format(
-                flag=i18n.locale_to_flag(locale), locale=locale
+                flag=locale_to_flag(locale), locale=locale
             )
         )

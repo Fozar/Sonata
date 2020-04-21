@@ -6,7 +6,7 @@ from discord.ext import commands
 
 from sonata.bot import core
 from sonata.bot.utils import i18n
-from sonata.bot.utils.misc import to_lower
+from sonata.bot.utils.misc import to_lower, make_locale_list, locale_to_flag
 from sonata.config import BotConfig
 from sonata.db.models import Channel, Guild
 
@@ -56,7 +56,7 @@ class Admin(
 
             return await ctx.inform(
                 _("Current channel locale is {flag} `{locale}`.").format(
-                    flag=i18n.locale_to_flag(locale),
+                    flag=locale_to_flag(locale),
                     locale=Locale.parse(locale, sep="_").display_name,
                 )
             )
@@ -64,7 +64,7 @@ class Admin(
         if locale not in i18n.gettext_translations.keys():
             return await ctx.inform(
                 _("I don't speak this language. Available locales: {0}.").format(
-                    ", ".join(i18n.make_locale_list())
+                    ", ".join(make_locale_list())
                 )
             )
 
@@ -83,7 +83,7 @@ class Admin(
             i18n.current_locale.set(locale)
         await ctx.inform(
             _("The channel locale is set to {flag} `{locale}`.").format(
-                flag=i18n.locale_to_flag(locale), locale=locale,
+                flag=locale_to_flag(locale), locale=locale,
             )
         )
 
@@ -216,7 +216,7 @@ class Admin(
             guild = await ctx.db.guilds.find_one({"id": ctx.guild.id}, {"locale": True})
             return await ctx.inform(
                 _("Current guild locale is {flag} `{locale}`.").format(
-                    flag=i18n.locale_to_flag(guild["locale"]),
+                    flag=locale_to_flag(guild["locale"]),
                     locale=Locale.parse(guild["locale"], sep="_").display_name,
                 )
             )
@@ -224,7 +224,7 @@ class Admin(
         if locale not in i18n.gettext_translations.keys():
             return await ctx.inform(
                 _("Locale not found. Available locales: {0}.").format(
-                    ", ".join(i18n.make_locale_list())
+                    ", ".join(make_locale_list())
                 )
             )
 
@@ -234,7 +234,7 @@ class Admin(
         i18n.current_locale.set(locale)
         await ctx.inform(
             _("The guild locale is set to {flag} `{locale}`.").format(
-                flag=i18n.locale_to_flag(locale), locale=locale,
+                flag=locale_to_flag(locale), locale=locale,
             )
         )
 

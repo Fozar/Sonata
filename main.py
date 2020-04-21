@@ -7,9 +7,7 @@ from sonata.config import settings
 
 def main(argv: list):
     def show_help():
-        print(
-            "-D or --DEBUG to debug"
-        )
+        print("-D or --DEBUG to debug")
 
     try:
         opts, args = getopt.getopt(argv, "hD", ["help", "DEBUG"])

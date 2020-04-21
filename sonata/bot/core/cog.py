@@ -14,10 +14,12 @@ class CogMeta(commands.CogMeta):
 class Cog(commands.Cog, metaclass=CogMeta):
     @property
     def colour(self):
-        if hasattr(self, "__cog_colour__") and isinstance(self.__cog_colour__, discord.Colour):
+        if hasattr(self, "__cog_colour__") and isinstance(
+            self.__cog_colour__, discord.Colour
+        ):
             return self.__cog_colour__
 
-        return discord.Colour(0x9b9b9b)
+        return discord.Colour(0x9B9B9B)
 
     @property
     def description(self):

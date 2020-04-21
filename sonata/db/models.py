@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Optional, List
 
-from pydantic import BaseModel, validator, Field
+from pydantic import BaseModel, validator
 
 
 class CounterMixin(BaseModel):
@@ -48,6 +48,7 @@ class Guild(DiscordConfigModel, CounterMixin):
     disabled_cogs: List[str] = []
     disabled_commands: List[str] = []
     channels: List[Channel] = []
+    left: Optional[datetime] = None
 
 
 class Command(BaseModel):

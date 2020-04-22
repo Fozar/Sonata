@@ -92,7 +92,7 @@ class Sonata(commands.Bot):
         ):
             await ctx.send(
                 _("Arguments specified incorrectly:```diff\n- {0}```").format(
-                    "\n- ".join(exception.args)
+                    "\n- ".join(list(exception.args))
                 )
             )
         elif isinstance(exception, commands.errors.MissingRequiredArgument):

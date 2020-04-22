@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-04-22 23:00+0700\n"
-"PO-Revision-Date: 2020-04-22 23:04+0700\n"
+"POT-Creation-Date: 2020-04-23 00:18+0700\n"
+"PO-Revision-Date: 2020-04-23 00:18+0700\n"
 "Last-Translator: \n"
 "Language: ru_RU\n"
 "Language-Team: ru_RU <LL@li.org>\n"
@@ -865,7 +865,7 @@ msgstr "Язык пользователя установлен на {flag} `{loc
 msgid "Commands of bot owner"
 msgstr "Команды владельца бота"
 
-#: sonata/bot/cogs/reminder/reminder.py:55
+#: sonata/bot/cogs/reminder/reminder.py:53
 msgid ""
 "**Remind you**: {remind}\n"
 "**Date**: {date}"
@@ -873,11 +873,11 @@ msgstr ""
 "**Напоминаю**: {remind}\n"
 "**Дата**: {date}"
 
-#: sonata/bot/cogs/reminder/reminder.py:62
+#: sonata/bot/cogs/reminder/reminder.py:60
 msgid "Reminder"
 msgstr "Напоминание"
 
-#: sonata/bot/cogs/reminder/reminder.py:159
+#: sonata/bot/cogs/reminder/reminder.py:157
 msgid ""
 "**Remind**: {remind}\n"
 "**Date**: {date}"
@@ -885,11 +885,11 @@ msgstr ""
 "**Напомнить**: {remind}\n"
 "**Дата**: {date}"
 
-#: sonata/bot/cogs/reminder/reminder.py:166
+#: sonata/bot/cogs/reminder/reminder.py:164
 msgid "Create a reminder?"
 msgstr "Создать напоминание?"
 
-#: sonata/bot/cogs/reminder/reminder.py:169
+#: sonata/bot/cogs/reminder/reminder.py:168
 msgid "Reminder creation canceled"
 msgstr "Создание напоминания отменено"
 
@@ -965,7 +965,9 @@ msgstr "Мне запрещено это делать."
 msgid ""
 "Arguments specified incorrectly:```diff\n"
 "- {0}```"
-msgstr "Аргументы указаны неверно."
+msgstr ""
+"Аргументы указаны неверно:```diff\n"
+"- {0}```"
 
 #: sonata/bot/core/bot.py:99
 msgid "Required arguments not specified."
@@ -1039,27 +1041,35 @@ msgstr "__Использование:__"
 msgid "__Subcommands:__"
 msgstr "__Подкоманды:__"
 
-#: sonata/bot/utils/converters.py:20 sonata/bot/utils/converters.py:26
+#: sonata/bot/utils/converters.py:23 sonata/bot/utils/converters.py:29
 msgid "Could not find a channel by ID {0}."
 msgstr "Не удалось найти канал по ID"
 
-#: sonata/bot/utils/converters.py:46
+#: sonata/bot/utils/converters.py:56
 msgid "me"
 msgstr "мне"
 
-#: sonata/bot/utils/converters.py:53
+#: sonata/bot/utils/converters.py:64
 msgid "Could not recognize the date."
 msgstr "Не могу распознать дату."
 
-#: sonata/bot/utils/converters.py:59
+#: sonata/bot/utils/converters.py:71
+msgid "An error occurred converting the date."
+msgstr "Возникла ошибка конвертации даты."
+
+#: sonata/bot/utils/converters.py:73
 msgid "This time is in the past."
 msgstr "Это время в прошлом."
 
-#: sonata/bot/utils/converters.py:61
+#: sonata/bot/utils/converters.py:75
 msgid "This time is in the future."
 msgstr "Это время в будущем."
 
-#: sonata/bot/utils/converters.py:66
+#: sonata/bot/utils/converters.py:78
+msgid "Maximum timedelta: {0}"
+msgstr "Максимальная разница во времени: {0}"
+
+#: sonata/bot/utils/converters.py:86
 msgid "Missing argument before or after the time."
 msgstr "Отсутствует аргумент до или после времени."
 

@@ -1,5 +1,6 @@
 import asyncio
 from datetime import datetime, timedelta
+from typing import Union
 
 import discord
 import pytz
@@ -32,16 +33,13 @@ class Reminder(core.Cog, colour=discord.Colour(0x50E3C2)):
             return
 
         try:
-            if guild is not None:
-                channel = guild.get_channel(reminder.channel_id)
-            else:
-                channel: discord.TextChannel = self.sonata.get_channel(
-                    reminder.channel_id
-                ) or self.sonata.fetch_channel(reminder.channel_id)
-            if channel is None:
-                channel: discord.User = self.sonata.get_user(
-                    reminder.user_id
-                ) or self.sonata.fetch_user(reminder.user_id)
+            channel: Union[
+                discord.TextChannel, discord.DMChannel
+            ] = self.sonata.get_channel(
+                reminder.channel_id
+            ) or self.sonata.fetch_channel(
+                reminder.channel_id
+            )
         except discord.HTTPException:
             return
 
@@ -146,7 +144,7 @@ class Reminder(core.Cog, colour=discord.Colour(0x50E3C2)):
         if delta <= (86400 * 40):
             self._have_data.set()
 
-        if self._current_timer and when < self._current_timer.expires:
+        if self._current_timer and when < self._current_timer.expires_at:
             self._task.cancel()
             self._task = self.sonata.loop.create_task(self.dispatch_reminders())
 
@@ -166,12 +164,17 @@ class Reminder(core.Cog, colour=discord.Colour(0x50E3C2)):
             desc, title=_("Create a reminder?"), timestamp=remind.dt
         )
         if not response:
-            embed = discord.Embed(title=_("Reminder creation canceled"))
+            embed = discord.Embed(
+                title=_("Reminder creation canceled"), colour=self.colour
+            )
             await msg.edit(embed=embed)
             return
 
         await self.create_reminder(ctx, remind)
         embed = discord.Embed(
-            title=_("Reminder created"), description=desc, timestamp=remind.dt, colour=self.colour
+            title=_("Reminder created"),
+            description=desc,
+            timestamp=remind.dt,
+            colour=self.colour,
         )
         await msg.edit(embed=embed)

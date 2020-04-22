@@ -2,10 +2,11 @@ import getopt
 import sys
 
 from sonata import create_app
-from sonata.config import settings
 
 
 def main(argv: list):
+    debug = False
+
     def show_help():
         print("-D or --DEBUG to debug")
 
@@ -19,9 +20,9 @@ def main(argv: list):
             show_help()
             sys.exit()
         elif opt in ("-D", "--DEBUG"):
-            settings.DEBUG = True
+            debug = True
 
-    create_app()
+    create_app(debug)
 
 
 if __name__ == "__main__":

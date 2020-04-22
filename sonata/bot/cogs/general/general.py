@@ -13,9 +13,6 @@ from sonata.bot import core, Sonata
 from sonata.bot.utils import i18n
 from sonata.bot.utils.misc import to_lower, make_locale_list
 from sonata.bot.utils.paginator import EmbedPaginator
-from sonata.config import ApiConfig
-
-api_config = ApiConfig()
 
 WEATHER_URL = "http://api.openweathermap.org/data/2.5/weather"
 OW_ICON_URL = "https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/icons/logo_60x60.png"
@@ -29,7 +26,9 @@ class General(
         self.sonata = sonata
 
     @core.group(invoke_without_command=True)
-    async def about(self, ctx: core.Context, *, about: Union[clean_content, str] = None):
+    async def about(
+        self, ctx: core.Context, *, about: Union[clean_content, str] = None
+    ):
         _("""Fills in "About" field in the profile info""")
         if about is None:
             user_conf = await ctx.db.users.find_one(
@@ -343,7 +342,7 @@ class General(
             "type": "like",
             "units": "metric",
             "lang": i18n.current_locale.get()[:2],
-            "APPID": api_config.open_weather,
+            "APPID": self.sonata.config["api"].open_weather,
         }
         async with ctx.session.get(WEATHER_URL, params=params) as resp:
             if resp.status != 200:

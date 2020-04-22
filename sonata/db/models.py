@@ -4,6 +4,14 @@ from typing import Optional, List
 from pydantic import BaseModel, validator
 
 
+class CreatedAtMixin(BaseModel):
+    created_at: datetime = None
+
+    @validator("created_at", pre=True, always=True)
+    def set_created_at_now(cls, v):
+        return v or datetime.utcnow()
+
+
 class CounterMixin(BaseModel):
     total_messages: int = 0
     commands_invoked: int = 0
@@ -14,14 +22,9 @@ class DiscordModel(BaseModel):
     name: str
 
 
-class DiscordConfigModel(DiscordModel):
+class DiscordConfigModel(CreatedAtMixin, DiscordModel):
     locale: str = "en_US"
     custom_prefix: Optional[str] = None
-    created_at: datetime = None
-
-    @validator("created_at", pre=True, always=True)
-    def set_created_at_now(cls, v):
-        return v or datetime.utcnow()
 
 
 class User(DiscordConfigModel, CounterMixin):
@@ -57,3 +60,12 @@ class Command(BaseModel):
     enabled: bool
     invocation_counter: int = 0
     error_count: int = 0
+
+
+class Reminder(CreatedAtMixin):
+    reminder: str
+    expires_at: datetime
+    user_id: int
+    guild_id: Optional[int]
+    channel_id: int
+    active: bool = True

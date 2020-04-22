@@ -1,3 +1,5 @@
+import asyncio
+
 import discord
 from discord.ext import commands
 
@@ -20,3 +22,27 @@ class Context(commands.Context):
         )
         embed = discord.Embed(colour=colour, description=description, **kwargs)
         return await self.send(embed=embed)
+
+    async def confirm(self, description: str, timeout: float = 30.0, **kwargs):
+        msg = await self.inform(description, **kwargs)
+        reactions = ("✅", "❌")
+        for reaction in reactions:
+            await msg.add_reaction(reaction)
+
+        def check(reaction, user):
+            return user == self.author and str(reaction.emoji) in reactions
+
+        response = None
+        try:
+            reaction, user = await self.bot.wait_for(
+                "reaction_add", timeout=timeout, check=check
+            )
+            response = True if str(reaction.emoji) == reactions[0] else False
+        except asyncio.TimeoutError:
+            response = False
+        else:
+            response = True if str(reaction.emoji) == reactions[0] else False
+        finally:
+            for reaction in reactions:
+                await msg.remove_reaction(reaction, self.guild.me)
+            return msg, response

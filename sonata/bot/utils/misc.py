@@ -10,6 +10,10 @@ def to_lower(arg: str) -> str:  # Converter
     return arg.lower()
 
 
+def locale_to_language(locale: str) -> str:
+    return locale[:2]
+
+
 def locale_to_flag(locale: str) -> str:
     return f.flag(locale[-2:])
 

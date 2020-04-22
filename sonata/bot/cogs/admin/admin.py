@@ -1,8 +1,5 @@
-from typing import Union
-
 import discord
 from babel import Locale
-from discord.ext import commands
 
 from sonata.bot import core
 from sonata.bot.utils import i18n
@@ -37,10 +34,7 @@ class Admin(
 
     @channel.command(name="locale")
     async def channel_locale(
-        self,
-        ctx: core.Context,
-        channel: Union[commands.TextChannelConverter, discord.TextChannel],
-        locale: str = None,
+        self, ctx: core.Context, channel: discord.TextChannel, locale: str = None,
     ):
         _("""Set channel locale""")
         if locale is None:

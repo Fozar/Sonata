@@ -1,10 +1,8 @@
 import random
 import re
-from typing import Union
 
 import discord
 from discord.ext import commands
-from discord.ext.commands import MemberConverter
 
 from sonata.bot import core
 from sonata.bot.cogs.fun.games import Games
@@ -192,14 +190,10 @@ class Fun(Games, description=_("""Entertainment"""), colour=discord.Colour(0xF5A
 
     @core.command(help=_("""Choke a guild member"""))
     @commands.guild_only()
-    async def choke(self, ctx: core.Context, member: Union[MemberConverter, str]):
-        if isinstance(member, discord.Member):
-            target = member.mention
-        else:
-            target = member
+    async def choke(self, ctx: core.Context, member: discord.Member):
         await ctx.send(
             _("*{author} chokes {target}* ").format(
-                author=ctx.author.display_name, target=target
+                author=ctx.author.display_name, target=member.mention
             )
             + str(self.sonata.emoji("choke"))
         )
@@ -207,14 +201,10 @@ class Fun(Games, description=_("""Entertainment"""), colour=discord.Colour(0xF5A
 
     @core.command(help=_("""Hug a guild member"""))
     @commands.guild_only()
-    async def hug(self, ctx: core.Context, member: Union[MemberConverter, str]):
-        if isinstance(member, discord.Member):
-            target = member.mention
-        else:
-            target = member
+    async def hug(self, ctx: core.Context, member: discord.Member):
         await ctx.send(
             _("*{author} hugs {target}* ").format(
-                author=ctx.author.display_name, target=target
+                author=ctx.author.display_name, target=member.mention
             )
             + str(self.sonata.emoji("GivePLZ"))
         )
@@ -222,14 +212,10 @@ class Fun(Games, description=_("""Entertainment"""), colour=discord.Colour(0xF5A
 
     @core.command(help=_("""Hit a guild member"""))
     @commands.guild_only()
-    async def hit(self, ctx: core.Context, member: Union[MemberConverter, str]):
-        if isinstance(member, discord.Member):
-            target = member.mention
-        else:
-            target = member
+    async def hit(self, ctx: core.Context, member: discord.Member):
         await ctx.send(
             _("*{author} hits {target}* ").format(
-                author=ctx.author.display_name, target=target
+                author=ctx.author.display_name, target=member.mention
             )
             + str(self.sonata.emoji("peepoSmash"))
         )
@@ -237,14 +223,10 @@ class Fun(Games, description=_("""Entertainment"""), colour=discord.Colour(0xF5A
 
     @core.command(help=_("""Kiss a guild member"""))
     @commands.guild_only()
-    async def kiss(self, ctx: core.Context, member: Union[MemberConverter, str]):
-        if isinstance(member, discord.Member):
-            target = member.mention
-        else:
-            target = member
+    async def kiss(self, ctx: core.Context, member: discord.Member):
         await ctx.send(
             _("*{author} kisses {target}* ").format(
-                author=ctx.author.display_name, target=target
+                author=ctx.author.display_name, target=member.mention
             )
             + "😘"
         )
@@ -258,14 +240,10 @@ class Fun(Games, description=_("""Entertainment"""), colour=discord.Colour(0xF5A
 
     @core.command(help=_("""Wink at guild member"""))
     @commands.guild_only()
-    async def wink(self, ctx: core.Context, member: Union[MemberConverter, str]):
-        if isinstance(member, discord.Member):
-            target = member.mention
-        else:
-            target = member
+    async def wink(self, ctx: core.Context, member: discord.Member):
         await ctx.send(
             _("*{author} winks at {target}* ").format(
-                author=ctx.author.display_name, target=target
+                author=ctx.author.display_name, target=member.mention
             )
             + str(self.sonata.emoji("peepoWink"))
         )

@@ -1,7 +1,5 @@
-from typing import Optional
-
-import dateparser
-from datetime import datetime
+import pytz
+from dateparser import search
 from discord.ext import commands
 
 from sonata.bot import core
@@ -19,25 +17,57 @@ class GlobalChannel(commands.Converter):
                 channel_id = int(argument, base=10)
             except ValueError:
                 raise commands.BadArgument(
-                    f"Could not find a channel by ID {argument!r}."
+                    _("Could not find a channel by ID {0}.").format(repr(argument))
                 )
             else:
                 channel = ctx.bot.get_channel(channel_id)
                 if channel is None:
                     raise commands.BadArgument(
-                        f"Could not find a channel by ID {argument!r}."
+                        _("Could not find a channel by ID {0}.").format(repr(argument))
                     )
                 return channel
 
 
 class UserFriendlyTime(commands.Converter):
-    async def convert(self, ctx: core.Context, argument) -> Optional[datetime]:
+    def __init__(self, converter=None, future: bool = True, past: bool = False):
+        if isinstance(converter, type) and issubclass(converter, commands.Converter):
+            converter = converter()
+
+        if converter is not None and not isinstance(converter, commands.Converter):
+            raise TypeError("commands.Converter subclass necessary.")
+
+        self.converter = converter
+        self.future = future
+        self.past = past
+        self.arg = None
+        self.dt = None
+
+    async def convert(self, ctx: core.Context, argument):
+        if argument.startswith(_("me")):  # Like as "Remind me..."
+            argument = argument[2:].strip()
         languages = [
             locale_to_language(locale) for locale in i18n.gettext_translations.keys()
         ]
-        _datetime = dateparser.parse(argument, languages=languages)
-        if _datetime is None:
-            raise commands.BadArgument(
-                f"Failed to convert user date input: {argument!r}"
-            )
-        return _datetime
+        date = search.search_dates(argument, languages=languages)
+        if date is None:
+            raise commands.BadArgument(_("Could not recognize the date."))
+
+        now = ctx.message.created_at.replace(tzinfo=pytz.utc)
+        date = date[0]
+        when = date[1].astimezone(pytz.utc)
+        if not self.past and when <= now:
+            raise commands.BadArgument(_("This time is in the past."))
+        if not self.future and when > now:
+            raise commands.BadArgument(_("This time is in the future."))
+        self.dt = when
+
+        remaining = (argument.replace(date[0], "")).strip()
+        if not remaining:
+            raise commands.BadArgument(_("Missing argument before or after the time."))
+
+        if self.converter is not None:
+            self.arg = await self.converter.convert(ctx, remaining)
+        else:
+            self.arg = remaining
+
+        return self

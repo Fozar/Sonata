@@ -63,6 +63,7 @@ class Command(BaseModel):
 
 
 class Reminder(CreatedAtMixin):
+    id: int
     reminder: str
     expires_at: datetime
     user_id: int

@@ -1,10 +1,9 @@
 import ast
 import copy
-from typing import Union, Optional
+from typing import Optional
 
 import discord
 from discord.ext import commands
-from discord.ext.commands import UserConverter
 
 from sonata.bot import core
 from sonata.bot.cogs import load_extension, unload_extension, reload_extension
@@ -27,7 +26,7 @@ class Owner(
         self,
         ctx: core.Context,
         channel: Optional[GlobalChannel],
-        who: Union[UserConverter, discord.User],
+        who: discord.User,
         *,
         command: str,
     ):

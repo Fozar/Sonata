@@ -209,7 +209,7 @@ class Stats(
     async def rank(
         self,
         ctx: core.Context,
-        member: Union[commands.MemberConverter, discord.Member, int, None] = None,
+        member: Union[discord.Member, int] = None,
     ):
         _("""Shows your guild rank""")
         if member is None:

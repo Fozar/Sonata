@@ -79,44 +79,29 @@ class Sonata(commands.Bot):
 
         if isinstance(exception, commands.MissingPermissions):
             await ctx.send(
-                _("{0}, you do not have enough permissions to do it.").format(
+                _("You do not have enough permissions to do it.").format(
                     ctx.author.mention
                 )
             )
         elif isinstance(exception, commands.BotMissingPermissions):
-            await ctx.send(
-                _("{0}, I do not have enough permissions to do it.").format(
-                    ctx.author.mention
-                )
-            )
+            await ctx.send(_("I do not have enough permissions to do it."))
         elif isinstance(exception, discord.errors.Forbidden):
-            await ctx.send(
-                _("{0}, I am forbidden to do it.").format(ctx.author.mention)
-            )
+            await ctx.send(_("I am forbidden to do it."))
         elif isinstance(
             exception, (commands.errors.BadArgument, commands.errors.BadUnionArgument)
         ):
             await ctx.send(
-                _("{0}, arguments specified incorrectly.").format(ctx.author.mention)
+                _("Arguments specified incorrectly:```diff\n- {0}```").format(
+                    "\n- ".join(exception.args)
+                )
             )
-            await ctx.send_help()
         elif isinstance(exception, commands.errors.MissingRequiredArgument):
-            await ctx.send(
-                _("{0}, required arguments not specified.").format(ctx.author.mention)
-            )
+            await ctx.send(_("Required arguments not specified."))
             await ctx.send_help()
         elif isinstance(exception, discord.errors.HTTPException):
-            await ctx.send(
-                _("{0}, an error occurred while making an HTTP request.").format(
-                    ctx.author.mention
-                )
-            )
+            await ctx.send(_("An error occurred while making an HTTP request."))
         elif isinstance(exception, NoPremium):
-            await ctx.send(
-                _("{0}, this command is only for premium guilds.").format(
-                    ctx.author.mention
-                )
-            )
+            await ctx.send(_("This command is only for premium guilds."))
         else:
             print(
                 "Ignoring exception in command {}:".format(ctx.command), file=sys.stderr

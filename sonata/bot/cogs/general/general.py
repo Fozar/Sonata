@@ -1,13 +1,12 @@
 import csv
 from datetime import datetime, timedelta
 from io import StringIO
-from typing import Union
+from typing import Union, Optional
 
 import discord
 from babel.dates import format_datetime, format_timedelta
 from dateutil import parser
-from discord.ext import commands
-from discord.ext.commands import UserConverter, clean_content
+from discord.ext.commands import clean_content
 
 from sonata.bot import core, Sonata
 from sonata.bot.utils import i18n
@@ -63,9 +62,7 @@ class General(
 
     @core.command()
     async def avatar(
-        self,
-        ctx: core.Context,
-        member: Union[commands.MemberConverter, discord.Member, None] = None,
+        self, ctx: core.Context, member: Optional[discord.Member] = None,
     ):
         _("""Displays a member’s avatar in full size""")
         if member is None:
@@ -242,7 +239,7 @@ class General(
 
     @core.command(aliases=["user"])
     async def profile(
-        self, ctx: core.Context, user: Union[UserConverter, discord.User] = None
+        self, ctx: core.Context, user: Union[discord.Member, discord.User] = None
     ):
         if user is None:
             user = ctx.author

@@ -22,10 +22,12 @@ class Sonata(commands.Bot):
         self,
         default_prefix,
         db: motorio.AsyncIOMotorDatabase,
+        config: dict,
         logger: Logger = None,
         *args,
         **kwargs,
     ):
+        self.config = config
         super().__init__(
             command_prefix=determine_prefix,
             status=discord.Status.idle,

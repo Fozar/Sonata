@@ -4,9 +4,6 @@ import os
 
 from sonata.bot.cogs import load_extension
 from sonata.bot.core import Sonata
-from sonata.config import BotConfig
-
-discord_config = BotConfig()
 
 
 def setup_logger():
@@ -29,15 +26,17 @@ def setup_logger():
 async def init_bot(app):
     logger = setup_logger()
     loop = asyncio.get_event_loop()
+    bot_config = app["config"]["bot"]
     app["bot"] = Sonata(
-        default_prefix=discord_config.default_prefix,
-        owner_id=discord_config.owner_id,
-        description=discord_config.description,
+        default_prefix=bot_config.default_prefix,
+        owner_id=bot_config.owner_id,
+        description=bot_config.description,
         db=app.get("db"),
         logger=logger,
         loop=loop,
+        config=app["config"],
     )
-    for cog in discord_config.cogs:
+    for cog in bot_config.cogs:
         load_extension(app["bot"], cog.lower())
-    loop.create_task(app["bot"].start(discord_config.discord_token))
+    loop.create_task(app["bot"].start(bot_config.discord_token))
     logger.info("Bot started")

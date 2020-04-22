@@ -9,9 +9,6 @@ from discord.ext.commands import MemberConverter
 from sonata.bot import core
 from sonata.bot.cogs.fun.games import Games
 from sonata.bot.utils.misc import to_lower
-from sonata.config import ApiConfig
-
-api_config = ApiConfig()
 
 
 class DogAPI:
@@ -163,7 +160,7 @@ class Fun(Games, description=_("""Entertainment"""), colour=discord.Colour(0xF5A
         _("""Finds a random cat image""")
         async with ctx.session.get(
             "https://api.thecatapi.com/v1/images/search",
-            headers={"x-api-key": api_config.cat_api},
+            headers={"x-api-key": self.sonata.config["api"].cat_api},
         ) as resp:
             if resp.status != 200:
                 return await ctx.send(

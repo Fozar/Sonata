@@ -7,7 +7,6 @@ from discord.ext import commands
 from sonata.bot import core
 from sonata.bot.utils import i18n
 from sonata.bot.utils.misc import to_lower, make_locale_list, locale_to_flag
-from sonata.config import BotConfig
 from sonata.db.models import Channel, Guild
 
 
@@ -154,14 +153,14 @@ class Admin(
     @guild_cog.command(name="disable")
     async def guild_cog_disable(self, ctx: core.Context, cog: str):
         _("""Disables cog in the guild""")
-        if cog not in BotConfig().cogs:
+        if cog not in self.sonata.config["bot"].cogs:
             return await ctx.inform(
                 _(
                     "Cog `{cog}` does not exist.\n"
                     "You can disable the following cogs: {cogs}."
-                ).format(cog=cog, cogs=", ".join(BotConfig.other_cogs))
+                ).format(cog=cog, cogs=", ".join(self.sonata.config["bot"].other_cogs))
             )
-        if cog in BotConfig.core_cogs:
+        if cog in self.sonata.config["bot"].core_cogs:
             return await ctx.inform(_("Cog `{0}` cannot be disabled.").format(cog))
         result = await ctx.db.guilds.update_one(
             {"id": ctx.guild.id}, {"$addToSet": {"disabled_cogs": cog}}
@@ -197,7 +196,7 @@ class Admin(
             return await ctx.inform(_("Command `{0}` not found.").format(cmd))
 
         cmd_name = cmd.qualified_name
-        if cmd.cog.qualified_name in BotConfig.core_cogs:
+        if cmd.cog.qualified_name in self.sonata.config["bot"].core_cogs:
             return await ctx.inform(
                 _("Command `{0}` cannot be disabled.").format(cmd_name)
             )

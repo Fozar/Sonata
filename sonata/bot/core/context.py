@@ -44,5 +44,7 @@ class Context(commands.Context):
             response = True if str(reaction.emoji) == reactions[0] else False
         finally:
             for reaction in reactions:
-                await msg.remove_reaction(reaction, self.guild.me)
+                await msg.remove_reaction(
+                    reaction, self.guild.me if self.guild else self.bot.user
+                )
             return msg, response

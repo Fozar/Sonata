@@ -43,8 +43,9 @@ class UserFriendlyTime(commands.Converter):
         self.dt = None
 
     async def convert(self, ctx: core.Context, argument):
-        if argument.startswith(_("me")):  # Like as "Remind me..."
-            argument = argument[2:].strip()
+        me = _("me")  # Like as "Remind me..."
+        if argument.startswith(me):
+            argument = argument[len(me):].strip()
         languages = [
             locale_to_language(locale) for locale in i18n.gettext_translations.keys()
         ]

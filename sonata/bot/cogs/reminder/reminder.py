@@ -172,6 +172,6 @@ class Reminder(core.Cog, colour=discord.Colour(0x50E3C2)):
 
         await self.create_reminder(ctx, remind)
         embed = discord.Embed(
-            title=_("Reminder created"), description=desc, colour=self.colour
+            title=_("Reminder created"), description=desc, timestamp=remind.dt, colour=self.colour
         )
         await msg.edit(embed=embed)

@@ -29,6 +29,8 @@ class General(
         self, ctx: core.Context, *, about: Union[clean_content, str] = None
     ):
         _("""Fills in "About" field in the profile info""")
+        if ctx.invoked_subcommand is not None:
+            return
         if about is None:
             user_conf = await ctx.db.users.find_one(
                 {"id": ctx.author.id}, {"about": True}

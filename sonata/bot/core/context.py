@@ -32,19 +32,16 @@ class Context(commands.Context):
         def check(reaction, user):
             return user == self.author and str(reaction.emoji) in reactions
 
-        response = None
         try:
             reaction, user = await self.bot.wait_for(
                 "reaction_add", timeout=timeout, check=check
             )
-            response = True if str(reaction.emoji) == reactions[0] else False
         except asyncio.TimeoutError:
             response = False
         else:
             response = True if str(reaction.emoji) == reactions[0] else False
-        finally:
-            for reaction in reactions:
-                await msg.remove_reaction(
-                    reaction, self.guild.me if self.guild else self.bot.user
-                )
-            return msg, response
+        for reaction in reactions:
+            await msg.remove_reaction(
+                reaction, self.guild.me if self.guild else self.bot.user
+            )
+        return msg, response

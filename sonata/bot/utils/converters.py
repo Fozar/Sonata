@@ -35,6 +35,7 @@ class UserFriendlyTime(commands.Converter):
     def __init__(
         self,
         converter=None,
+        default=None,
         future: bool = True,
         past: bool = False,
         max_delta: int = 86400 * 365 * 5,
@@ -46,6 +47,7 @@ class UserFriendlyTime(commands.Converter):
             raise TypeError("commands.Converter subclass necessary.")
 
         self.converter = converter
+        self.default = default
         self.future = future
         self.past = past
         self.max_delta = timedelta(seconds=max_delta)
@@ -83,7 +85,12 @@ class UserFriendlyTime(commands.Converter):
 
         remaining = (argument.replace(date[0], "")).strip()
         if not remaining:
-            raise commands.BadArgument(_("Missing argument before or after the time."))
+            if not self.default:
+                raise commands.BadArgument(
+                    _("Missing argument before or after the time.")
+                )
+            else:
+                self.arg = self.default
 
         if self.converter is not None:
             self.arg = await self.converter.convert(ctx, remaining)

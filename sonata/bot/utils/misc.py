@@ -32,3 +32,9 @@ def make_locale_list(flag=True, display_name=False):
             string = f"{locale_to_flag(locale)} {string}"
         locales.append(string)
     return locales
+
+
+def chunks(lst, n):
+    """Yield successive n-sized chunks from lst."""
+    for i in range(0, len(lst), n):
+        yield lst[i : i + n]

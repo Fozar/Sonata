@@ -14,12 +14,10 @@ class Paginator:
         pages: Optional[list] = None,
         controls: Optional[dict] = None,
         timeout: float = 30.0,
-        dm: bool = False,
     ):
         self.pages = pages
         self.controls = controls
         self.timeout = timeout
-        self.dm = dm
 
     @property
     def controls(self):
@@ -43,14 +41,14 @@ class Paginator:
             self._controls = _controls
 
     def add_page(self, page: str):
+        if not isinstance(page, str):
+            raise RuntimeError("Page must be of `str` type")
         if self.__len__() > 0:
             self.pages.append(page)
         else:
             self.pages = [page]
 
     def add_pages(self, pages: list):
-        if not all(isinstance(page, str) for page in pages):
-            raise RuntimeError("All pages must be of `str` type")
         for page in pages:
             self.add_page(page)
 
@@ -68,12 +66,8 @@ class Paginator:
         self, ctx: core.Context, message: discord.Message = None, page: int = 0,
     ):
         current_page = self.pages[page]
-
         if not message:
-            if self.dm:
-                message = await ctx.author.send(content=current_page)
-            else:
-                message = await ctx.channel.send(content=current_page)
+            message = await ctx.channel.send(content=current_page)
             await self.add_reactions(message, self.controls.keys())
         else:
             try:
@@ -152,30 +146,20 @@ class Paginator:
 
 class EmbedPaginator(Paginator):
     def add_page(self, page: discord.Embed):
+        if not isinstance(page, discord.Embed):
+            raise RuntimeError("Page must be of `discord.Embed` type")
         if self.__len__() > 0:
             self.pages.append(page)
         else:
             self.pages = [page]
 
-    def add_pages(self, pages: list):
-        if not all(isinstance(page, discord.Embed) for page in pages):
-            raise RuntimeError("All pages must be of `discord.Embed` type")
-        for page in pages:
-            self.add_page(page)
-
     # noinspection DuplicatedCode
     async def send_pages(
         self, ctx, message: discord.Message = None, page: int = 0,
     ):
-        if self.pages is not None:
-            current_page = self.pages[page]
-        else:
-            current_page = None
+        current_page = self.pages[page]
         if not message:
-            if self.dm:
-                message = await ctx.author.send(embed=current_page)
-            else:
-                message = await ctx.channel.send(embed=current_page)
+            message = await ctx.channel.send(embed=current_page)
             await self.add_reactions(message, self.controls.keys())
         else:
             try:

@@ -219,17 +219,7 @@ class Reminder(core.Cog, colour=discord.Colour(0x50E3C2)):
         for reminders in chunks(reminders, 10):
             embed = discord.Embed(title=_("Reminder list"), colour=self.colour)
             for reminder in reminders:
-                _id = reminder["id"]
-                try:
-                    channel = self.sonata.get_channel(
-                        reminder["channel_id"]
-                    ) or await self.sonata.fetch_channel(reminder["channel_id"])
-                    message = await channel.fetch_message(reminder["id"])
-                except discord.HTTPException:
-                    pass
-                else:
-                    _id = f"[{_id}]({message.jump_url})"
-                value = f"**ID**: {_id}\n**Remind**: {reminder['reminder']}"
+                value = f"**ID**: {reminder['id']}\n**Remind**: {reminder['reminder']}"
                 embed.add_field(
                     name=format_datetime(
                         reminder["expires_at"], format="long", locale=current_locale

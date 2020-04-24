@@ -1,3 +1,5 @@
+import ast
+import operator as op
 from datetime import timedelta
 
 import pytz
@@ -98,3 +100,45 @@ class UserFriendlyTime(commands.Converter):
             self.arg = remaining
 
         return self
+
+
+class Expression(commands.Converter):
+    def __init__(self):
+        self.operators = {
+            ast.Add: op.add,
+            ast.Sub: op.sub,
+            ast.Mult: op.mul,
+            ast.Div: op.truediv,
+            ast.Pow: self.power,
+            ast.USub: op.neg,
+            ast.UAdd: op.pos
+        }
+
+    @staticmethod
+    def power(a, b):
+        if any(abs(n) > 100 for n in [a, b]):
+            raise commands.BadArgument(_("Range exceeded: {0} ** {1}").format(a, b))
+        return op.pow(a, b)
+
+    def eval_(self, node):
+        if isinstance(node, ast.Num):  # <number>
+            return node.n
+        elif isinstance(node, ast.BinOp):  # <left> <operator> <right>
+            return self.operators[type(node.op)](
+                self.eval_(node.left), self.eval_(node.right)
+            )
+        elif isinstance(node, ast.UnaryOp):  # <operator> <operand> e.g., -1
+            return self.operators[type(node.op)](self.eval_(node.operand))
+        else:
+            raise commands.BadArgument(_("Invalid expression"))
+
+    def eval_expr(self, expr):
+        try:
+            return self.eval_(ast.parse(expr, mode="eval").body)
+        except SyntaxError:
+            raise commands.BadArgument(_("Invalid expression"))
+
+    async def convert(self, ctx, argument):
+        argument = argument.replace(" ", "")
+        argument = argument.replace("^", "**")
+        return self.eval_expr(argument)

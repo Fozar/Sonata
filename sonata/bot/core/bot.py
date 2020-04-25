@@ -56,6 +56,14 @@ class Sonata(commands.Bot):
     def description(self, value):
         self._description = value
 
+    @property
+    def locale(self):
+        return i18n.current_locale.get()
+
+    @locale.setter
+    def locale(self, value):
+        i18n.current_locale.set(value)
+
     # Events
 
     async def on_ready(self):
@@ -139,13 +147,26 @@ class Sonata(commands.Bot):
 
         await self.invoke(ctx)
 
-    async def set_locale(self, msg: discord.Message):
-        locale_cog = self.cogs.get("Locale")
-        if locale_cog:
-            locale = await locale_cog.define_locale(msg)
+    async def define_locale(self, obj: Union[discord.Message, Context]):
+        if obj.guild:
+            guild = await self.db.guilds.find_one(
+                {"id": obj.guild.id},
+                {
+                    "locale": True,
+                    "premium": True,
+                    "channels": {"$elemMatch": {"id": obj.channel.id}},
+                },
+            )
+            if guild["premium"] and "channels" in guild:
+                return guild["channels"][0]["locale"]
+
+            return guild["locale"]
         else:
-            locale = i18n.default_locale
-        i18n.current_locale.set(locale)
+            user = await self.db.users.find_one({"id": obj.author.id}, {"locale": True})
+            return user["locale"]
+
+    async def set_locale(self, msg: discord.Message):
+        self.locale = await self.define_locale(msg)
 
     def should_reply(self, message):
         """Returns whether the bot should reply to a given message"""

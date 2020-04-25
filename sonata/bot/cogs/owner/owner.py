@@ -7,13 +7,12 @@ from discord.ext import commands
 
 from sonata.bot import core
 from sonata.bot.cogs import load_extension, unload_extension, reload_extension
-from sonata.bot.utils.converters import GlobalChannel
-from sonata.bot.utils.misc import to_lower
+from sonata.bot.utils.converters import GlobalChannel, to_lower
 
 
 class Owner(
     core.Cog, description=_("""Commands of bot owner"""), colour=discord.Colour(0x1)
-):
+):  # TODO: Add blacklist
     def __init__(self, sonata: core.Sonata):
         self.sonata = sonata
         self._last_result = None

@@ -5,8 +5,8 @@ import discord
 from discord.ext import commands
 
 from sonata.bot import core
-from sonata.bot.cogs.fun.games import Games
-from sonata.bot.utils.misc import to_lower
+from .games import Games
+from sonata.bot.utils.converters import to_lower
 
 
 class DogAPI:

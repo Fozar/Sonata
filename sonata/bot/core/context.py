@@ -3,6 +3,8 @@ import asyncio
 import discord
 from discord.ext import commands
 
+from sonata.bot.utils import i18n
+
 
 class Context(commands.Context):
     @property
@@ -12,6 +14,14 @@ class Context(commands.Context):
     @property
     def db(self):
         return self.bot.db
+
+    @property
+    def locale(self):
+        return i18n.current_locale.get()
+
+    @locale.setter
+    def locale(self, value):
+        i18n.current_locale.set(value)
 
     async def send_help(self, *args):
         await super().send_help(self.command, *args)

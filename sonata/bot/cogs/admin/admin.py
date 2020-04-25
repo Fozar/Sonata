@@ -3,7 +3,7 @@ from babel import Locale
 
 from sonata.bot import core
 from sonata.bot.utils import i18n
-from sonata.bot.utils.misc import to_lower, make_locale_list, locale_to_flag
+from sonata.bot.utils.converters import to_lower, locale_to_flag, validate_locale
 from sonata.db.models import Channel, Guild
 
 
@@ -11,7 +11,7 @@ class Admin(
     core.Cog,
     description=_("""Commands of guild admins"""),
     colour=discord.Colour(0x8B572A),
-):
+):  # TODO: Add ignore list. Maybe Mod
     def __init__(self, sonata: core.Sonata):
         self.sonata = sonata
 
@@ -34,7 +34,10 @@ class Admin(
 
     @channel.command(name="locale")
     async def channel_locale(
-        self, ctx: core.Context, channel: discord.TextChannel, locale: str = None,
+        self,
+        ctx: core.Context,
+        channel: discord.TextChannel,
+        locale: validate_locale = None,
     ):
         _("""Set channel locale""")
         if locale is None:
@@ -54,13 +57,6 @@ class Admin(
                 )
             )
 
-        if locale not in i18n.gettext_translations.keys():
-            return await ctx.inform(
-                _("I don't speak this language. Available locales: {0}.").format(
-                    ", ".join(make_locale_list())
-                )
-            )
-
         result = await ctx.db.guilds.update_one(
             {"id": ctx.guild.id, "channels": {"$elemMatch": {"id": channel.id}}},
             {"$set": {"channels.$.locale": locale}},
@@ -73,7 +69,7 @@ class Admin(
                 {"id": ctx.guild.id}, {"$push": {"channels": channel_conf}}
             )
         if channel == ctx.channel:
-            i18n.current_locale.set(locale)
+            ctx.locale = locale
         await ctx.inform(
             _("The channel locale is set to {flag} `{locale}`.").format(
                 flag=locale_to_flag(locale), locale=locale,
@@ -203,7 +199,7 @@ class Admin(
             await ctx.inform(_("Command `{0}` disabled.").format(command))
 
     @guild.command(name="locale")
-    async def guild_locale(self, ctx: core.Context, locale: str = None):
+    async def guild_locale(self, ctx: core.Context, locale: validate_locale = None):
         _("""Set guild locale""")
         if locale is None:
             guild = await ctx.db.guilds.find_one({"id": ctx.guild.id}, {"locale": True})
@@ -214,17 +210,10 @@ class Admin(
                 )
             )
 
-        if locale not in i18n.gettext_translations.keys():
-            return await ctx.inform(
-                _("Locale not found. Available locales: {0}.").format(
-                    ", ".join(make_locale_list())
-                )
-            )
-
         await ctx.db.guilds.update_one(
             {"id": ctx.guild.id}, {"$set": {"locale": locale}}
         )
-        i18n.current_locale.set(locale)
+        ctx.locale = locale
         await ctx.inform(
             _("The guild locale is set to {flag} `{locale}`.").format(
                 flag=locale_to_flag(locale), locale=locale,

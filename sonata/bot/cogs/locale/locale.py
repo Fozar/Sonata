@@ -4,38 +4,19 @@ from discord.ext import commands
 
 from sonata.bot import core
 from sonata.bot.utils import i18n
-from sonata.bot.utils.misc import make_locale_list, locale_to_flag
+from sonata.bot.utils.converters import validate_locale, locale_to_flag
+from sonata.bot.utils.misc import make_locale_list
 
 
 class Locale(
-    core.Cog, description=_("""Multilingual support"""), colour=discord.Colour(0xFFFFFF)
+    core.Cog, description=_("""Multilingual support"""), colour=discord.Colour(0xFFFFFE)
 ):
     def __init__(self, sonata: core.Sonata):
         self.sonata = sonata
 
-    async def define_locale(self, msg: discord.Message):
-        if msg.guild:
-            guild = await self.sonata.db.guilds.find_one(
-                {"id": msg.guild.id},
-                {
-                    "locale": True,
-                    "premium": True,
-                    "channels": {"$elemMatch": {"id": msg.channel.id}},
-                },
-            )
-            if guild["premium"] and "channels" in guild:
-                return guild["channels"][0]["locale"]
-
-            return guild["locale"]
-        else:
-            user = await self.sonata.db.users.find_one(
-                {"id": msg.author.id}, {"locale": True}
-            )
-            return user["locale"]
-
     @core.command()
     @commands.dm_only()
-    async def locale(self, ctx: core.Context, locale: str = None):
+    async def locale(self, ctx: core.Context, locale: validate_locale = None):
         _("""Set user locale""")
         if locale is None:
             user = await ctx.db.users.find_one({"id": ctx.author.id}, {"locale": True})
@@ -46,19 +27,19 @@ class Locale(
                 )
             )
 
-        if locale not in i18n.gettext_translations.keys():
-            return await ctx.inform(
-                _("Locale not found. Available locales: {0}.").format(
-                    ", ".join(make_locale_list())
-                )
-            )
-
         await ctx.db.users.update_one(
             {"id": ctx.author.id}, {"$set": {"locale": locale}}
         )
-        i18n.current_locale.set(locale)
+        ctx.locale = locale
         await ctx.inform(
             _("The user locale is set to {flag} `{locale}`.").format(
                 flag=locale_to_flag(locale), locale=locale
             )
+        )
+
+    @core.command()
+    async def locales(self, ctx: core.Context):
+        _("""Returns a list of supported locales""")
+        await ctx.inform(
+            _("Available locales: {0}.").format(", ".join(make_locale_list()))
         )

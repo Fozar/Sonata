@@ -9,8 +9,8 @@ from dateutil import parser
 
 from sonata.bot import core
 from sonata.bot.utils import i18n
-from sonata.bot.utils.converters import Expression
-from sonata.bot.utils.misc import to_lower
+from sonata.bot.utils.converters import Expression, to_lower, locale_to_lang
+from sonata.bot.utils.misc import format_e
 from sonata.bot.utils.paginator import EmbedPaginator
 
 WEATHER_URL = "http://api.openweathermap.org/data/2.5/weather"
@@ -28,7 +28,7 @@ class Utils(core.Cog, colour=discord.Colour(0x7ED321)):
         now = datetime.utcnow()
         local_time = format_datetime(
             now + timedelta(seconds=weather_response["timezone"]),
-            locale=i18n.current_locale.get(),
+            locale=self.sonata.locale,
         )
         embed = discord.Embed(title=weather_desc, colour=self.colour, timestamp=now,)
 
@@ -88,25 +88,31 @@ class Utils(core.Cog, colour=discord.Colour(0x7ED321)):
             """Calculates an expression
         
         Supported operations
-        - Add (a+b)
-        - Subtract (a-b)
-        - Multiply (a*b)
-        - Divide (a/b)
-        - Power (a**b or a^b)
-        - Unary plus (+a)
-        - Unary minus (-a)
+        ```
+        Add (a+b)
+        Subtract (a-b)
+        Multiply (a*b)
+        Divide (a/b)
+        Power (a**b or a^b)
+        Unary plus (+a)
+        Unary minus (-a)
+        ```
         
         There is a restriction on the power operation. \
         None of the operands should be greater than 100.
         
         Examples
-        - 2^6 = 64
-        - 2**6 = 64
-        - 8*8 = 64
-        - -(4 * (2^2 + 4) + 32) = -64
+        ```
+        2^6 = 64
+        2**6 = 64
+        8*8 = 64
+        -(4 * (2^2 + 4) + 32) = -64
+        ```
         
         """
         )
+        if len(str(expression)) > 20:
+            expression = format_e(expression)
         await ctx.inform(_("Result: {0}").format(expression))
 
     @core.command(aliases=["virus"])
@@ -176,7 +182,7 @@ class Utils(core.Cog, colour=discord.Colour(0x7ED321)):
             "q": locality,
             "type": "like",
             "units": "metric",
-            "lang": i18n.current_locale.get()[:2],
+            "lang": locale_to_lang(ctx.locale),
             "APPID": self.sonata.config["api"].open_weather,
         }
         async with ctx.session.get(WEATHER_URL, params=params) as resp:

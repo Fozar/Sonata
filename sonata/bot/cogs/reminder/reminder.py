@@ -38,7 +38,7 @@ class Reminder(core.Cog, colour=discord.Colour(0x50E3C2)):
         desc = _("**Remind you**: {remind}\n**Date**: {date}").format(
             remind=reminder.reminder,
             date=format_datetime(
-                reminder.expires_at, format="long", locale=i18n.current_locale.get()
+                reminder.expires_at, format="long", locale=self.sonata.locale
             ),
         )
         embed = discord.Embed(
@@ -181,7 +181,7 @@ class Reminder(core.Cog, colour=discord.Colour(0x50E3C2)):
         desc = _("**Remind**: {remind}\n**Date**: {date}").format(
             remind=remind.arg,
             date=format_datetime(
-                remind.dt, format="long", locale=i18n.current_locale.get()
+                remind.dt, format="long", locale=self.sonata.loop
             ),
         )
         msg, response = await ctx.confirm(
@@ -214,7 +214,6 @@ class Reminder(core.Cog, colour=discord.Colour(0x50E3C2)):
         reminders = await cursor.to_list(length=None)
         if not reminders:
             await ctx.inform(_("No active reminders."))
-        current_locale = i18n.current_locale.get()
         pages = []
         for reminders in chunks(reminders, 10):
             embed = discord.Embed(title=_("Reminder list"), colour=self.colour)
@@ -222,7 +221,7 @@ class Reminder(core.Cog, colour=discord.Colour(0x50E3C2)):
                 value = f"**ID**: {reminder['id']}\n**Remind**: {reminder['reminder']}"
                 embed.add_field(
                     name=format_datetime(
-                        reminder["expires_at"], format="long", locale=current_locale
+                        reminder["expires_at"], format="long", locale=ctx.locale
                     ),
                     value=value,
                     inline=False,

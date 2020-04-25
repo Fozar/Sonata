@@ -1,7 +1,12 @@
 import ast
+import asyncio
+import concurrent.futures
 import operator as op
+import re
 from datetime import timedelta
+from functools import partial
 
+import flag as f
 import pytz
 from babel.dates import format_timedelta
 from dateparser import search
@@ -9,7 +14,30 @@ from discord.ext import commands
 
 from sonata.bot import core
 from sonata.bot.utils import i18n
-from sonata.bot.utils.misc import locale_to_language
+
+
+def flag_to_locale(flag: str) -> str:
+    locale = f.dflagize(flag)
+    r = re.compile(r".{2}_" + locale.strip(":"))
+    return list(filter(r.match, i18n.gettext_translations.keys()))[0]
+
+
+def to_lower(arg: str) -> str:
+    return arg.lower()
+
+
+def validate_locale(arg: str) -> str:
+    if arg not in i18n.gettext_translations:
+        raise commands.BadArgument(_("Locale not found"))
+    return arg
+
+
+def locale_to_flag(locale: str) -> str:
+    return f.flag(locale[-2:])
+
+
+def locale_to_lang(locale: str) -> str:
+    return locale[:2]
 
 
 class GlobalChannel(commands.Converter):
@@ -61,7 +89,7 @@ class UserFriendlyTime(commands.Converter):
         if argument.startswith(me):
             argument = argument[len(me) :].strip()
         languages = [
-            locale_to_language(locale) for locale in i18n.gettext_translations.keys()
+            locale_to_lang(locale) for locale in i18n.gettext_translations.keys()
         ]
         date = search.search_dates(argument, languages=languages)
         if date is None:
@@ -80,7 +108,7 @@ class UserFriendlyTime(commands.Converter):
         if when - now > self.max_delta:
             raise commands.BadArgument(
                 _("Maximum timedelta: {0}").format(
-                    format_timedelta(self.max_delta, locale=i18n.current_locale.get())
+                    format_timedelta(self.max_delta, locale=ctx.locale)
                 )
             )
         self.dt = when
@@ -103,7 +131,7 @@ class UserFriendlyTime(commands.Converter):
 
 
 class Expression(commands.Converter):
-    def __init__(self):
+    def __init__(self, timeout: float = 0.5):
         self.operators = {
             ast.Add: op.add,
             ast.Sub: op.sub,
@@ -111,8 +139,9 @@ class Expression(commands.Converter):
             ast.Div: op.truediv,
             ast.Pow: self.power,
             ast.USub: op.neg,
-            ast.UAdd: op.pos
+            ast.UAdd: op.pos,
         }
+        self.timeout = timeout
 
     @staticmethod
     def power(a, b):
@@ -138,7 +167,19 @@ class Expression(commands.Converter):
         except SyntaxError:
             raise commands.BadArgument(_("Invalid expression"))
 
-    async def convert(self, ctx, argument):
+    async def convert(self, ctx: core.Context, argument):
         argument = argument.replace(" ", "")
         argument = argument.replace("^", "**")
-        return self.eval_expr(argument)
+        eval_expr = partial(self.eval_expr, argument)
+        with concurrent.futures.ThreadPoolExecutor() as pool:
+            try:
+                result = await asyncio.wait_for(
+                    ctx.bot.loop.run_in_executor(pool, eval_expr),
+                    timeout=self.timeout,
+                    loop=ctx.bot.loop,
+                )
+            except asyncio.TimeoutError:
+                raise commands.BadArgument(
+                    _("Timeout exceeded: {0}s").format(self.timeout)
+                )
+        return result

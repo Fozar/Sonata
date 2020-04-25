@@ -94,5 +94,4 @@ def i18n_docstring(func):
 current_locale = contextvars.ContextVar("i18n")
 builtins._ = use_current_gettext
 
-# noinspection PyArgumentList
 current_locale.set(default_locale)

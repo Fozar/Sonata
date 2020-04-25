@@ -5,7 +5,6 @@ from babel.dates import format_datetime, format_timedelta
 from discord.ext.commands import clean_content
 
 from sonata.bot import core, Sonata
-from sonata.bot.utils import i18n
 from sonata.bot.utils.misc import make_locale_list
 
 SONATA_INVITE = "https://discordapp.com/api/oauth2/authorize?client_id=355591424319946753&permissions=8&scope=bot"
@@ -93,10 +92,10 @@ class General(
                 launch_time=format_datetime(
                     self.sonata.launch_time,
                     format="long",
-                    locale=i18n.current_locale.get(),
+                    locale=ctx.locale,
                 ),
                 online=format_timedelta(
-                    self.sonata.uptime, locale=i18n.current_locale.get()
+                    self.sonata.uptime, locale=ctx.locale
                 ),
                 guilds=len(self.sonata.guilds),
                 members=len(self.sonata.users),
@@ -146,10 +145,10 @@ class General(
                                 _("Activity")
                             ] = f"{member.activity.emoji} {main_info[_('Activity')]}"
                 main_info[_("Joined the guild")] = format_datetime(
-                    member.joined_at, locale=i18n.current_locale.get()
+                    member.joined_at, locale=ctx.locale
                 )
         main_info[_("Registration date")] = format_datetime(
-            user.created_at, locale=i18n.current_locale.get()
+            user.created_at, locale=ctx.locale
         )
         main_info = [f"**{key}**: {value}" for key, value in main_info.items()]
         embed.add_field(name=_("Summary"), value="\n".join(main_info), inline=False)
@@ -175,7 +174,7 @@ class General(
         stats_cog = self.sonata.cogs.get("Stats")
         statistics = {
             _("Statistics has been running since"): format_datetime(
-                user_conf["created_at"], locale=i18n.current_locale.get()
+                user_conf["created_at"], locale=ctx.locale
             ),
             _("Total messages"): user_conf["total_messages"],
             _("Commands invoked"): user_conf["commands_invoked"],

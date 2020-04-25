@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-04-24 20:52+0700\n"
-"PO-Revision-Date: 2020-04-24 20:52+0700\n"
+"POT-Creation-Date: 2020-04-25 17:54+0700\n"
+"PO-Revision-Date: 2020-04-25 17:55+0700\n"
 "Last-Translator: \n"
 "Language: ru_RU\n"
 "Language-Team: ru_RU <LL@li.org>\n"
@@ -973,92 +973,100 @@ msgid ""
 "Calculates an expression\n"
 "        \n"
 "        Supported operations\n"
-"        - Add (a+b)\n"
-"        - Subtract (a-b)\n"
-"        - Multiply (a*b)\n"
-"        - Divide (a/b)\n"
-"        - Power (a**b or a^b)\n"
-"        - Unary plus (+a)\n"
-"        - Unary minus (-a)\n"
+"        ```\n"
+"        Add (a+b)\n"
+"        Subtract (a-b)\n"
+"        Multiply (a*b)\n"
+"        Divide (a/b)\n"
+"        Power (a**b or a^b)\n"
+"        Unary plus (+a)\n"
+"        Unary minus (-a)\n"
+"        ```\n"
 "        \n"
 "        There is a restriction on the power operation.         None of the "
 "operands should be greater than 100.\n"
 "        \n"
 "        Examples\n"
-"        - 2^6 = 64\n"
-"        - 2**6 = 64\n"
-"        - 8*8 = 64\n"
-"        - -(4 * (2^2 + 4) + 32) = -64\n"
+"        ```\n"
+"        2^6 = 64\n"
+"        2**6 = 64\n"
+"        8*8 = 64\n"
+"        -(4 * (2^2 + 4) + 32) = -64\n"
+"        ```\n"
 "        \n"
 "        "
 msgstr ""
 "Вычисляет выражение\n"
 "        \n"
 "        Поддерживаемые операции\n"
-"        - Сложение (a+b)\n"
-"        - Вычитание (a-b)\n"
-"        - Умножение (a*b)\n"
-"        - Деление (a/b)\n"
-"        - Возведение в степень (a**b or a^b)\n"
-"        - Унарный плюс (+a)\n"
-"        - Унарный минус (-a)\n"
+"        ```\n"
+"        Сложение (a+b)\n"
+"        Вычитание (a-b)\n"
+"        Умножение (a*b)\n"
+"        Деление (a/b)\n"
+"        Возведение в степень (a**b или a^b)\n"
+"        Унарный плюс (+a)\n"
+"        Унарный минус (-a)\n"
+"        ```\n"
 "        \n"
 "        На операцию возведения в степень наложено ограничение. Ни один из "
 "операндов не должен быть больше 100.\n"
 "        \n"
 "        Примеры\n"
-"        - 2^6 = 64\n"
-"        - 2**6 = 64\n"
-"        - 8*8 = 64\n"
-"        - -(4 * (2^2 + 4) + 32) = -64\n"
+"        ```\n"
+"        2^6 = 64\n"
+"        2**6 = 64\n"
+"        8*8 = 64\n"
+"        -(4 * (2^2 + 4) + 32) = -64\n"
+"        ```\n"
 "        \n"
 "        "
 
-#: sonata/bot/cogs/utils/utils.py:110
+#: sonata/bot/cogs/utils/utils.py:116
 msgid "Result: {0}"
 msgstr "Результат: {0}"
 
-#: sonata/bot/cogs/utils/utils.py:114
+#: sonata/bot/cogs/utils/utils.py:120
 msgid "Shows COVID-19 pandemic statistics"
 msgstr "Показывает статистику пандемии COVID-19"
 
-#: sonata/bot/cogs/utils/utils.py:125
+#: sonata/bot/cogs/utils/utils.py:131
 msgid "world"
 msgstr "мир"
 
-#: sonata/bot/cogs/utils/utils.py:130
+#: sonata/bot/cogs/utils/utils.py:136
 msgid "Country not found."
 msgstr "Страна не найдена."
 
-#: sonata/bot/cogs/utils/utils.py:153
+#: sonata/bot/cogs/utils/utils.py:159
 msgid " - World"
 msgstr " - Мир"
 
-#: sonata/bot/cogs/utils/utils.py:158
+#: sonata/bot/cogs/utils/utils.py:164
 msgid "Confirmed cases"
 msgstr "Подтвержденные случаи"
 
-#: sonata/bot/cogs/utils/utils.py:159
+#: sonata/bot/cogs/utils/utils.py:165
 msgid "Active cases"
 msgstr "Активные случаи"
 
-#: sonata/bot/cogs/utils/utils.py:160
+#: sonata/bot/cogs/utils/utils.py:166
 msgid "Closed cases"
 msgstr "Закрытые случаи"
 
-#: sonata/bot/cogs/utils/utils.py:161
+#: sonata/bot/cogs/utils/utils.py:167
 msgid "Recovered"
 msgstr "Выздоровления"
 
-#: sonata/bot/cogs/utils/utils.py:162
+#: sonata/bot/cogs/utils/utils.py:168
 msgid "Deaths"
 msgstr "Смерти"
 
-#: sonata/bot/cogs/utils/utils.py:163
+#: sonata/bot/cogs/utils/utils.py:169
 msgid "Deaths/Closed cases"
 msgstr "Смерти/Закрытые случаи"
 
-#: sonata/bot/cogs/utils/utils.py:170
+#: sonata/bot/cogs/utils/utils.py:176
 msgid ""
 "Finds out the weather\n"
 "\n"
@@ -1068,7 +1076,7 @@ msgstr ""
 "\n"
 "        Название населенного пункта может быть указано на любом языке."
 
-#: sonata/bot/cogs/utils/utils.py:185
+#: sonata/bot/cogs/utils/utils.py:191
 msgid "{0}, I did not find such a locality."
 msgstr "{0}, я не нашла такой населенный пункт."
 
@@ -1163,45 +1171,49 @@ msgstr "__Использование:__"
 msgid "__Subcommands:__"
 msgstr "__Подкоманды:__"
 
-#: sonata/bot/utils/converters.py:25 sonata/bot/utils/converters.py:31
+#: sonata/bot/utils/converters.py:28 sonata/bot/utils/converters.py:34
 msgid "Could not find a channel by ID {0}."
 msgstr "Не удалось найти канал по ID"
 
-#: sonata/bot/utils/converters.py:60
+#: sonata/bot/utils/converters.py:63
 msgid "me"
 msgstr "мне"
 
-#: sonata/bot/utils/converters.py:68
+#: sonata/bot/utils/converters.py:71
 msgid "Could not recognize the date."
 msgstr "Не могу распознать дату."
 
-#: sonata/bot/utils/converters.py:75
+#: sonata/bot/utils/converters.py:78
 msgid "An error occurred converting the date."
 msgstr "Возникла ошибка конвертации даты."
 
-#: sonata/bot/utils/converters.py:77
+#: sonata/bot/utils/converters.py:80
 msgid "This time is in the past."
 msgstr "Это время в прошлом."
 
-#: sonata/bot/utils/converters.py:79
+#: sonata/bot/utils/converters.py:82
 msgid "This time is in the future."
 msgstr "Это время в будущем."
 
-#: sonata/bot/utils/converters.py:82
+#: sonata/bot/utils/converters.py:85
 msgid "Maximum timedelta: {0}"
 msgstr "Максимальная разница во времени: {0}"
 
-#: sonata/bot/utils/converters.py:92
+#: sonata/bot/utils/converters.py:95
 msgid "Missing argument before or after the time."
 msgstr "Отсутствует аргумент до или после времени."
 
-#: sonata/bot/utils/converters.py:120
+#: sonata/bot/utils/converters.py:124
 msgid "Range exceeded: {0} ** {1}"
 msgstr "Превышен диапазон: {0} ** {1}"
 
-#: sonata/bot/utils/converters.py:133 sonata/bot/utils/converters.py:139
+#: sonata/bot/utils/converters.py:137 sonata/bot/utils/converters.py:143
 msgid "Invalid expression"
 msgstr "Неверное выражение"
+
+#: sonata/bot/utils/converters.py:158
+msgid "Timeout exceeded: {0}s"
+msgstr "Превышено ограничение по времени: {0}с"
 
 #: sonata/config/settings.py:8
 msgid ""
@@ -1284,3 +1296,51 @@ msgstr ""
 
 #~ msgid "{0}, this command is only for premium guilds."
 #~ msgstr "{0}, эта команда только для премиум гильдий."
+
+#~ msgid ""
+#~ "Calculates an expression\n"
+#~ "        \n"
+#~ "        Supported operations\n"
+#~ "        - Add (a+b)\n"
+#~ "        - Subtract (a-b)\n"
+#~ "        - Multiply (a*b)\n"
+#~ "        - Divide (a/b)\n"
+#~ "        - Power (a**b or a^b)\n"
+#~ "        - Unary plus (+a)\n"
+#~ "        - Unary minus (-a)\n"
+#~ "        \n"
+#~ "        There is a restriction on the power operation.         None of "
+#~ "the operands should be greater than 100.\n"
+#~ "        \n"
+#~ "        Examples\n"
+#~ "        - 2^6 = 64\n"
+#~ "        - 2**6 = 64\n"
+#~ "        - 8*8 = 64\n"
+#~ "        - -(4 * (2^2 + 4) + 32) = -64\n"
+#~ "        \n"
+#~ "        "
+#~ msgstr ""
+#~ "Вычисляет выражение\n"
+#~ "        \n"
+#~ "        Поддерживаемые операции\n"
+#~ "        - Сложение (a+b)\n"
+#~ "        - Вычитание (a-b)\n"
+#~ "        - Умножение (a*b)\n"
+#~ "        - Деление (a/b)\n"
+#~ "        - Возведение в степень (a**b or a^b)\n"
+#~ "        - Унарный плюс (+a)\n"
+#~ "        - Унарный минус (-a)\n"
+#~ "        \n"
+#~ "        На операцию возведения в степень наложено ограничение. Ни один из "
+#~ "операндов не должен быть больше 100.\n"
+#~ "        \n"
+#~ "        Примеры\n"
+#~ "        - 2^6 = 64\n"
+#~ "        - 2**6 = 64\n"
+#~ "        - 8*8 = 64\n"
+#~ "        - -(4 * (2^2 + 4) + 32) = -64\n"
+#~ "        \n"
+#~ "        "
+
+#~ msgid "Timeout exceeded"
+#~ msgstr "Превышено ограничение по времени"

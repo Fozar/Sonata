@@ -121,6 +121,7 @@ class Sonata(commands.Bot):
     async def process_commands(self, message: discord.Message):
         await self.set_locale(message)
         ctx = await self.get_context(message, cls=Context)
+        # Check command is disabled
         if ctx.guild and ctx.command is not None:
             guild = await self.db.guilds.find_one(
                 {"id": message.guild.id},

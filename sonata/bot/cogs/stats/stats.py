@@ -1,25 +1,31 @@
 import math
 import random
-
-import discord
-from discord import abc
+from datetime import datetime
 from typing import Dict, Union
 
+import discord
+from dateutil.parser import parse
+from discord import abc
 from discord.ext import commands
 
 from sonata.bot import core
-from sonata.db.models import Guild, User, Command
+from sonata.db.models import Guild, User, Command, DailyStats
 
 
 class Stats(
     core.Cog, description=_("""Sonata statistics"""), colour=discord.Colour(0xF5A623)
 ):
     def __init__(self, sonata: core.Sonata):
+        self.exp_offset = 100
+        self.exp_multiplier = 100
         self.sonata = sonata
+        self.recalc_started_at = None
 
-    @staticmethod
-    def calculate_exp(lvl: int):
-        return math.ceil(100 * lvl ** 2 - 100 * lvl) + 100
+    def calculate_exp(self, lvl: int):
+        return (
+            math.ceil(self.exp_multiplier * lvl ** 2 - self.exp_multiplier * lvl)
+            + self.exp_offset
+        )
 
     def make_leaderboard_embed(self, user_list: Dict[int, Dict[str, int]]):
         embed = discord.Embed(colour=self.colour)
@@ -54,72 +60,35 @@ class Stats(
 
     @core.Cog.listener()
     async def on_ready(self):
-        for guild in self.sonata.guilds:
-            await self.on_guild_join(guild)
         for command in self.sonata.walk_commands():
             guild_conf = self.sonata.db.commands.find(
                 {"name": command.qualified_name}, {"name": True}
             ).limit(1)
-            if not await guild_conf.fetch_next:
-                command_conf = Command(
-                    name=command.qualified_name,
-                    cog=command.cog.qualified_name if command.cog else None,
-                    enabled=command.enabled,
-                ).dict()
-                await self.sonata.db.commands.insert_one(command_conf)
+            if await guild_conf.fetch_next:
+                continue
+
+            command_conf = Command(
+                name=command.qualified_name,
+                cog=command.cog.qualified_name if command.cog else None,
+                enabled=command.enabled,
+            ).dict()
+            await self.sonata.db.commands.insert_one(command_conf)
+        for guild in self.sonata.guilds:
+            await self.on_guild_join(guild)
 
     @core.Cog.listener()
     async def on_message(self, message: discord.Message):
         if not self.sonata.should_reply(message):
             return
 
-        if message.guild:
-            guild = await self.sonata.db.guilds.find_one_and_update(
-                {"id": message.guild.id},
-                {
-                    "$currentDate": {"last_message_at": True},
-                    "$inc": {"total_messages": 1},
-                },
-                {"_id": False, "leveling": True},
-            )
-            leveling = guild["leveling"]
-        else:
-            leveling = False
+        if (
+            self.recalc_started_at is not None
+            and self.recalc_started_at <= message.created_at
+        ):
+            return
 
-        if leveling:
-            user = await self.sonata.db.users.find_one_and_update(
-                {"id": message.author.id},
-                {"$inc": {"total_messages": 1}},
-                {"_id": False, "last_exp_at": True, "exp": True, "lvl": True},
-            )
-            if (
-                user["last_exp_at"] is None
-                or (message.created_at - user["last_exp_at"]).total_seconds() >= 60
-            ):
-                exp = random.randint(5, 15) * int(1 + user["lvl"] / 100)
-                user["exp"] += exp
-                next_lvl = user["lvl"] + 1
-                update = {
-                    "$inc": {"exp": exp},
-                    "$set": {"last_exp_at": message.created_at},
-                }
-                if user["exp"] >= self.calculate_exp(next_lvl):
-                    user["lvl"] = next_lvl
-                    update["$inc"]["lvl"] = 1
-                await self.sonata.db.users.update_one({"id": message.author.id}, update)
-                if user["lvl"] == next_lvl:
-                    await self.sonata.set_locale(message)
-                    rank = await self.sonata.db.users.count_documents(
-                        {"guilds": message.guild.id, "exp": {"$gte": user["exp"]}}
-                    )
-                    embed = self.make_lvlup_embed(
-                        message.author, user["lvl"], user["exp"], rank
-                    )
-                    await message.channel.send(embed=embed)
-        else:
-            await self.sonata.db.users.update_one(
-                {"id": message.author.id}, {"$inc": {"total_messages": 1}}
-            )
+        await self.update_guild_stats(message)
+        await self.update_user_stats(message)
 
     @core.Cog.listener()
     async def on_command(self, ctx: core.Context):
@@ -130,8 +99,12 @@ class Stats(
             {"id": ctx.author.id}, {"$inc": {"commands_invoked": 1}}
         )
         if ctx.guild:
-            await ctx.db.guilds.update_one(
-                {"id": ctx.guild.id}, {"$inc": {"commands_invoked": 1}}
+            date = ctx.message.created_at.replace(
+                hour=0, minute=0, second=0, microsecond=0
+            )
+            await ctx.db.daily_stats.update_one(
+                {"date": date, "guild_id": ctx.guild.id},
+                {"$inc": {"commands_invoked": 1}},
             )
 
     # noinspection PyUnusedLocal
@@ -204,6 +177,61 @@ class Stats(
                 user_conf = User(id=user.id, name=str(user)).dict()
                 await self.sonata.db.users.insert_one(user_conf)
 
+    async def lvl_up(self, message, exp, lvl):
+        if self.recalc_started_at is not None:
+            return
+        await self.sonata.set_locale(message)
+        rank = await self.sonata.db.users.count_documents(
+            {"guilds": message.guild.id, "exp": {"$gte": exp}}
+        )
+        embed = self.make_lvlup_embed(message.author, lvl, exp, rank)
+        await message.channel.send(embed=embed)
+
+    async def update_user_exp(self, message, exp, lvl):
+        exp = random.randint(5, 15) * int(1 + lvl / 100) + exp
+        update = {
+            "$set": {"last_exp_at": message.created_at, "exp": exp},
+        }
+        next_lvl = lvl + 1
+        if exp >= self.calculate_exp(next_lvl):
+            lvl = next_lvl
+            update["$set"]["lvl"] = lvl
+        await self.sonata.db.users.update_one({"id": message.author.id}, update)
+        if lvl == next_lvl:
+            await self.lvl_up(message, exp, lvl)
+
+    async def update_user_stats(self, message: discord.Message):
+        user = await self.sonata.db.users.find_one_and_update(
+            {"id": message.author.id},
+            {"$inc": {"total_messages": 1}},
+            {"_id": False, "last_exp_at": True, "exp": True, "lvl": True},
+        )
+        if not user:
+            return
+        if (
+            user["last_exp_at"] is None
+            or (message.created_at - user["last_exp_at"]).total_seconds() >= 60
+        ):
+            await self.update_user_exp(message, user["exp"], user["lvl"])
+
+    async def update_daily_stats(self, dt: datetime, guild: discord.Guild):
+        date = dt.replace(hour=0, minute=0, second=0, microsecond=0)
+        result = await self.sonata.db.daily_stats.update_one(
+            {"date": date, "guild_id": guild.id}, {"$inc": {"total_messages": 1}}
+        )
+        if result.matched_count == 0:
+            daily_stats = DailyStats(
+                date=date, guild_id=guild.id, total_messages=1,
+            ).dict()
+            await self.sonata.db.daily_stats.insert_one(daily_stats)
+
+    async def update_guild_stats(self, message: discord.Message):
+        result = await self.sonata.db.guilds.update_one(
+            {"id": message.guild.id}, {"$set": {"last_message_at": message.created_at}}
+        )
+        if result.matched_count != 0:
+            await self.update_daily_stats(message.created_at, message.guild)
+
     @core.command()
     @commands.guild_only()
     async def rank(
@@ -212,9 +240,6 @@ class Stats(
         _("""Shows your guild rank""")
         if member is None:
             member = ctx.author
-        guild = await ctx.db.guilds.find_one({"id": ctx.guild.id}, {"leveling": True})
-        if not guild["leveling"]:
-            return await ctx.inform(_("This guild has a level system disabled."))
         if isinstance(member, int):
             rank = member
             cursor = (
@@ -250,15 +275,72 @@ class Stats(
         embed.set_thumbnail(url=member.avatar_url)
         await ctx.send(embed=embed)
 
+    @core.command(name="recalc.stats")
+    @commands.is_owner()
+    async def recalculate_stats(self, ctx: core.Context, *, date: str):
+        self.recalc_started_at = ctx.message.created_at
+        date = parse(date)
+        now = datetime.utcnow()
+        status = await ctx.send("```Initialization...```")
+        await self.sonata.db.users.update_many(
+            {},
+            {
+                "$set": {
+                    "total_messages": 0,
+                    "commands_invoked": 0,
+                    "last_exp_at": None,
+                    "created_at": date,
+                    "lvl": 0,
+                    "exp": 0,
+                }
+            },
+        )
+        await status.edit(content="```Users reset```")
+        await self.sonata.db.commands.update_many(
+            {}, {"$set": {"invocation_counter": 0, "error_count": 0}}
+        )
+        await status.edit(content="```Commands reset```")
+        await self.sonata.db.daily_stats.delete_many({})
+        await status.edit(content="```Daily stats reset```")
+        messages = []
+        for guild in self.sonata.guilds:
+            await self.sonata.db.guilds.update_one(
+                {"id": guild.id},
+                {"$set": {"last_message_at": None, "created_at": date}},
+            )
+            await status.edit(content=f"```Guild {guild.name} reset```")
+            for channel in guild.channels:
+                if not isinstance(channel, discord.TextChannel):
+                    continue
+                await status.edit(
+                    content=f"```Fetch: {guild.name} - {channel.name}```"
+                )
+                messages += (
+                    await channel.history(limit=None, after=date, before=now)
+                    .filter(lambda msg: not msg.author.bot)
+                    .flatten()
+                )
+
+        messages = sorted(messages, key=lambda msg: msg.created_at)
+        date = None
+        for message in messages:
+            if message.created_at.date() != date:
+                date = message.created_at.date()
+                await status.edit(
+                    content=f"```Recalc: {date}```"
+                )
+            await self.on_message(message)
+            ctx = await self.sonata.get_context(message, cls=core.Context)
+            if ctx.command:
+                await self.on_command(ctx)
+        self.recalc_started_at = None
+        await status.edit(content="```Done```")
+
     @core.group()
     async def top(self, ctx: core.Context):
         _("""Shows guild leaderboard""")
         if ctx.invoked_subcommand is not None:
             return
-
-        guild = await ctx.db.guilds.find_one({"id": ctx.guild.id}, {"leveling": True})
-        if not guild["leveling"]:
-            return await ctx.inform(_("This guild has a level system disabled."))
 
         cursor = ctx.db.users.find(
             {"guilds": ctx.guild.id},
@@ -289,13 +371,8 @@ class Stats(
             {}, {"id": True, "exp": True, "lvl": True}, sort=[("exp", -1)],
         ).limit(10)
         user_list = dict(enumerate(await cursor.to_list(length=None), start=1))
-        guild = await ctx.db.guilds.find_one({"id": ctx.guild.id}, {"leveling": True})
-        if (
-            not next(
-                (user for user in user_list.values() if user["id"] == ctx.author.id),
-                False,
-            )
-            and guild["leveling"]
+        if not next(
+            (user for user in user_list.values() if user["id"] == ctx.author.id), False,
         ):
             author = await ctx.db.users.find_one(
                 {"id": ctx.author.id}, {"id": True, "lvl": True, "exp": True}

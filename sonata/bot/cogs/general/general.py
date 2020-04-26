@@ -181,13 +181,9 @@ class General(
             _("Global rank"): global_rank,
         }
         if ctx.guild and ctx.guild.get_member(user.id):
-            guild_conf = await ctx.db.guilds.find_one(
-                {"id": ctx.guild.id}, {"leveling": True}
+            statistics[_("Guild rank")] = await ctx.db.users.count_documents(
+                {"guilds": ctx.guild.id, "exp": {"$gte": user_conf["exp"]}}
             )
-            if guild_conf["leveling"]:
-                statistics[_("Guild rank")] = await ctx.db.users.count_documents(
-                    {"guilds": ctx.guild.id, "exp": {"$gte": user_conf["exp"]}}
-                )
         statistics = [f"**{key}**: {value}" for key, value in statistics.items()]
         statistics = "\n".join(statistics)
         statistics += _("\n`Statistics counts only messages visible to the bot`")

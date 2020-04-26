@@ -12,9 +12,15 @@ class CreatedAtMixin(BaseModel):
         return v or datetime.utcnow()
 
 
+class EmojiCounter(BaseModel):
+    id: int
+    counter: int = 0
+
+
 class CounterMixin(BaseModel):
     total_messages: int = 0
     commands_invoked: int = 0
+    emoji_counter: List[EmojiCounter] = []
 
 
 class DiscordModel(BaseModel):
@@ -39,11 +45,9 @@ class Channel(DiscordConfigModel):
     pass
 
 
-class Guild(DiscordConfigModel, CounterMixin):
-    last_message_at: datetime = None
+class Guild(DiscordConfigModel):
     premium: bool = False
     dm_help: bool = False
-    leveling: bool = True
     admin_role: Optional[int] = None
     mod_role: Optional[int] = None
     modlog: Optional[int] = None
@@ -70,3 +74,8 @@ class Reminder(CreatedAtMixin):
     guild_id: Optional[int]
     channel_id: int
     active: bool = True
+
+
+class DailyStats(CounterMixin):
+    date: datetime
+    guild_id: int

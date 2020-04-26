@@ -207,9 +207,7 @@ class Stats(
     @core.command()
     @commands.guild_only()
     async def rank(
-        self,
-        ctx: core.Context,
-        member: Union[discord.Member, int] = None,
+        self, ctx: core.Context, member: Union[discord.Member, int] = None,
     ):
         _("""Shows your guild rank""")
         if member is None:

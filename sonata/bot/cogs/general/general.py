@@ -90,13 +90,9 @@ class General(
                 "**Serving**: {guilds} guilds and {members} members."
             ).format(
                 launch_time=format_datetime(
-                    self.sonata.launch_time,
-                    format="long",
-                    locale=ctx.locale,
+                    self.sonata.launch_time, format="long", locale=ctx.locale,
                 ),
-                online=format_timedelta(
-                    self.sonata.uptime, locale=ctx.locale
-                ),
+                online=format_timedelta(self.sonata.uptime, locale=ctx.locale),
                 guilds=len(self.sonata.guilds),
                 members=len(self.sonata.users),
             ),

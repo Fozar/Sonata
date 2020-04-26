@@ -8,7 +8,6 @@ from babel.dates import format_datetime
 from discord.ext import commands
 
 from sonata.bot import core, Sonata
-from sonata.bot.utils import i18n
 from sonata.bot.utils.converters import UserFriendlyTime
 from sonata.bot.utils.misc import chunks
 from sonata.bot.utils.paginator import EmbedPaginator
@@ -35,15 +34,7 @@ class Reminder(core.Cog, colour=discord.Colour(0x50E3C2)):
         except discord.HTTPException:
             return
 
-        desc = _("**Remind you**: {remind}\n**Date**: {date}").format(
-            remind=reminder.reminder,
-            date=format_datetime(
-                reminder.expires_at, format="long", locale=self.sonata.locale
-            ),
-        )
-        embed = discord.Embed(
-            title=_("Reminder"), description=desc, colour=self.colour,
-        )
+        embed = discord.Embed(colour=self.colour)
 
         try:
             message = await channel.fetch_message(reminder.id)
@@ -63,6 +54,14 @@ class Reminder(core.Cog, colour=discord.Colour(0x50E3C2)):
             await self.sonata.set_locale(message)
             embed.url = message.jump_url
             user = message.author
+
+        embed.title = _("Reminder")
+        embed.description = _("**Remind you**: {remind}\n**Date**: {date}").format(
+            remind=reminder.reminder,
+            date=format_datetime(
+                reminder.expires_at, format="long", locale=self.sonata.locale
+            ),
+        )
 
         try:
             await channel.send(f"{user.mention}", embed=embed)
@@ -180,9 +179,7 @@ class Reminder(core.Cog, colour=discord.Colour(0x50E3C2)):
             return
         desc = _("**Remind**: {remind}\n**Date**: {date}").format(
             remind=remind.arg,
-            date=format_datetime(
-                remind.dt, format="long", locale=self.sonata.loop
-            ),
+            date=format_datetime(remind.dt, format="long", locale=self.sonata.loop),
         )
         msg, response = await ctx.confirm(
             desc, title=_("Create a reminder?"), timestamp=remind.dt

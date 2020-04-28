@@ -7,8 +7,6 @@ from discord.ext.commands import clean_content
 from sonata.bot import core, Sonata
 from sonata.bot.utils.misc import make_locale_list
 
-SONATA_INVITE = "https://discordapp.com/api/oauth2/authorize?client_id=355591424319946753&permissions=8&scope=bot"
-
 
 class General(
     core.Cog, description=_("General commands"), colour=discord.Colour(0x4A90E2)
@@ -59,7 +57,7 @@ class General(
         _("""Returns an invitation link""")
         embed = discord.Embed(
             title=_("You can invite me at this link"),
-            url=SONATA_INVITE,
+            url=ctx.bot.invite,
             colour=self.colour,
         )
         await ctx.send(embed=embed)
@@ -73,13 +71,13 @@ class General(
             description=self.sonata.description,
         )
         embed.set_thumbnail(url=self.sonata.user.avatar_url)
-        owner = self.sonata.get_user(self.sonata.owner_id)
+        app_info = await self.sonata.application_info()
         inline_fields = {
             _("Name"): f"{self.sonata.emoji('sonata')} {self.sonata.user}",
             _(
                 "API wrapper"
-            ): "[Discord.py v.1.3.3](https://discordpy.readthedocs.io/en/latest/)",
-            _("Developer"): f"{self.sonata.emoji('fozar')} {owner}",
+            ): f"[discord.py {discord.__version__}](https://discordpy.readthedocs.io/en/latest/)",
+            _("Developer"): f"{self.sonata.emoji(704606245495242752)} {app_info.owner}",
         }
         for name, value in inline_fields.items():
             embed.add_field(name=name, value=value)
@@ -98,7 +96,7 @@ class General(
             ),
             _("Language support"): ", ".join(make_locale_list(display_name=True)),
             _("Useful links"): _("[Invite the bot to your server]({0})").format(
-                SONATA_INVITE
+                ctx.bot.invite
             ),
         }
         for name, value in fields.items():

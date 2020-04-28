@@ -26,4 +26,4 @@ async def init_config(app):
         "twitch": TwitchConfig(),
         "api": ApiConfig(),
     }
-    print("Config initialized")
+    app["logger"].info("Config initialized")

@@ -1,6 +1,8 @@
 import asyncio
 import logging
 import os
+from datetime import datetime
+from logging import handlers
 
 from aiohttp import web
 
@@ -20,11 +22,21 @@ else:
 
 def setup_logger():
     stream_handler = logging.StreamHandler()
-    stream_handler.setLevel(logging.INFO)
-    file_handler = logging.FileHandler(
-        filename=f"{os.getcwd()}/logs/app/app.log", encoding="utf-8", mode="w"
+    stream_handler.setFormatter(
+        logging.Formatter("%(asctime)s [%(levelname)s] - %(filename)s - %(message)s")
     )
     stream_handler.setLevel(logging.INFO)
+    file_handler = handlers.TimedRotatingFileHandler(
+        filename=f"{os.getcwd()}/logs/app/{datetime.utcnow().date()}.log",
+        when="midnight",
+        backupCount=3,
+        encoding="utf-8",
+        utc=True,
+    )
+    file_handler.setFormatter(
+        logging.Formatter("%(asctime)s [%(levelname)s] - %(filename)s - %(message)s")
+    )
+    file_handler.setLevel(logging.DEBUG)
     logger = logging.getLogger("aiohttp.access")
     logger.addHandler(stream_handler)
     logger.addHandler(file_handler)
@@ -34,8 +46,8 @@ def setup_logger():
 
 def create_app(debug: bool = False):
     logger = setup_logger()
-    logger.info("Create application")
     app = web.Application()
+    app["logger"] = logger
     app["debug"] = debug
     logger.info("Append modules")
     app.on_startup.append(init_config)

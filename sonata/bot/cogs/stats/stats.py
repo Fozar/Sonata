@@ -1,7 +1,4 @@
-import math
-import random
 from datetime import datetime
-from typing import Dict, Union
 
 import discord
 from dateutil.parser import parse
@@ -9,54 +6,16 @@ from discord import abc
 from discord.ext import commands
 
 from sonata.bot import core
+from sonata.bot.cogs.stats.leveling import Leveling
 from sonata.db.models import Guild, User, Command, DailyStats
 
 
 class Stats(
-    core.Cog, description=_("""Sonata statistics"""), colour=discord.Colour(0xF5A623)
+    Leveling, description=_("""Sonata statistics"""), colour=discord.Colour(0xF5A623)
 ):
     def __init__(self, sonata: core.Sonata):
-        self.exp_offset = 100
-        self.exp_multiplier = 100
-        self.sonata = sonata
+        super().__init__(sonata)
         self.recalc_started_at = None
-
-    def calculate_exp(self, lvl: int):
-        return (
-            math.ceil(self.exp_multiplier * lvl ** 2 - self.exp_multiplier * lvl)
-            + self.exp_offset
-        )
-
-    def make_leaderboard_embed(self, user_list: Dict[int, Dict[str, int]]):
-        embed = discord.Embed(colour=self.colour)
-        for rank, user_conf in user_list.items():
-            user = self.sonata.get_user(user_conf["id"])
-            embed.add_field(
-                name=f"`#{rank}` **{user.display_name}**",
-                value=_("**Level**: {lvl} | **Experience**: {exp}/{max_exp}").format(
-                    lvl=user_conf["lvl"],
-                    exp=user_conf["exp"],
-                    max_exp=self.calculate_exp(user_conf["lvl"] + 1),
-                ),
-                inline=False,
-            )
-        return embed
-
-    def make_lvlup_embed(self, member: discord.Member, lvl: int, exp: int, rank: int):
-        embed = discord.Embed(
-            colour=self.colour,
-            title=_("Level up"),
-            description=_("**{user}** has reached level **{lvl}**!").format(
-                user=member.display_name, lvl=lvl
-            ),
-        )
-        embed.set_thumbnail(url=member.avatar_url)
-        embed.set_footer(
-            text=_("Rank: #{rank} | Experience: {exp}/{max_exp}").format(
-                rank=rank, exp=exp, max_exp=self.calculate_exp(lvl + 1),
-            )
-        )
-        return embed
 
     @core.Cog.listener()
     async def on_ready(self):
@@ -87,7 +46,8 @@ class Stats(
         ):
             return
 
-        await self.update_guild_stats(message)
+        if message.guild:
+            await self.update_guild_stats(message)
         await self.update_user_stats(message)
 
     @core.Cog.listener()
@@ -180,25 +140,7 @@ class Stats(
     async def lvl_up(self, message, exp, lvl):
         if self.recalc_started_at is not None:
             return
-        await self.sonata.set_locale(message)
-        rank = await self.sonata.db.users.count_documents(
-            {"guilds": message.guild.id, "exp": {"$gte": exp}}
-        )
-        embed = self.make_lvlup_embed(message.author, lvl, exp, rank)
-        await message.channel.send(embed=embed)
-
-    async def update_user_exp(self, message, exp, lvl):
-        exp = random.randint(5, 15) * int(1 + lvl / 100) + exp
-        update = {
-            "$set": {"last_exp_at": message.created_at, "exp": exp},
-        }
-        next_lvl = lvl + 1
-        if exp >= self.calculate_exp(next_lvl):
-            lvl = next_lvl
-            update["$set"]["lvl"] = lvl
-        await self.sonata.db.users.update_one({"id": message.author.id}, update)
-        if lvl == next_lvl:
-            await self.lvl_up(message, exp, lvl)
+        await super().lvl_up(message, exp, lvl)
 
     async def update_user_stats(self, message: discord.Message):
         user = await self.sonata.db.users.find_one_and_update(
@@ -232,57 +174,14 @@ class Stats(
         if result.matched_count != 0:
             await self.update_daily_stats(message.created_at, message.guild)
 
-    @core.command()
-    @commands.guild_only()
-    async def rank(
-        self, ctx: core.Context, member: Union[discord.Member, int] = None,
-    ):
-        _("""Shows your guild rank""")
-        if member is None:
-            member = ctx.author
-        if isinstance(member, int):
-            rank = member
-            cursor = (
-                ctx.db.users.find(
-                    {"guilds": ctx.guild.id},
-                    {"id": True, "exp": True, "lvl": True},
-                    sort=[("exp", -1)],
-                )
-                .skip(rank - 1)
-                .limit(1)
-            )
-            user = cursor.next_object() if await cursor.fetch_next else None
-            if user:
-                member = ctx.guild.get_member(user["id"])
-        else:
-            user = await ctx.db.users.find_one(
-                {"id": member.id}, {"exp": True, "lvl": True}
-            )
-            rank = await ctx.db.users.count_documents(
-                {"guilds": ctx.guild.id, "exp": {"$gte": user["exp"]}}
-            )
-        if not user:
-            return await ctx.inform(_("Member not found."))
-        embed = discord.Embed(colour=self.colour, title=member.display_name)
-        embed.add_field(name=_("Level"), value=str(user["lvl"]))
-        embed.add_field(
-            name=_("Experience"),
-            value=f"{user['exp']}/{self.calculate_exp(user['lvl'] + 1)}",
-        )
-        medals = {1: "🥇", 2: "🥈", 3: "🥉"}
-        rank = medals.get(rank) or f"#{rank}"
-        embed.add_field(name=_("Rank"), value=str(rank))
-        embed.set_thumbnail(url=member.avatar_url)
-        await ctx.send(embed=embed)
-
     @core.command(name="recalc.stats")
     @commands.is_owner()
     async def recalculate_stats(self, ctx: core.Context, *, date: str):
+        status = await ctx.send("```Initialization...```")
         self.recalc_started_at = ctx.message.created_at
         date = parse(date)
         now = datetime.utcnow()
-        status = await ctx.send("```Initialization...```")
-        await self.sonata.db.users.update_many(
+        await ctx.db.users.update_many(
             {},
             {
                 "$set": {
@@ -296,15 +195,15 @@ class Stats(
             },
         )
         await status.edit(content="```Users reset```")
-        await self.sonata.db.commands.update_many(
+        await ctx.db.commands.update_many(
             {}, {"$set": {"invocation_counter": 0, "error_count": 0}}
         )
         await status.edit(content="```Commands reset```")
-        await self.sonata.db.daily_stats.delete_many({})
+        await ctx.db.daily_stats.delete_many({})
         await status.edit(content="```Daily stats reset```")
         messages = []
         for guild in self.sonata.guilds:
-            await self.sonata.db.guilds.update_one(
+            await ctx.db.guilds.update_one(
                 {"id": guild.id},
                 {"$set": {"last_message_at": None, "created_at": date}},
             )
@@ -312,9 +211,7 @@ class Stats(
             for channel in guild.channels:
                 if not isinstance(channel, discord.TextChannel):
                     continue
-                await status.edit(
-                    content=f"```Fetch: {guild.name} - {channel.name}```"
-                )
+                await status.edit(content=f"```Fetch: {guild.name} - {channel.name}```")
                 messages += (
                     await channel.history(limit=None, after=date, before=now)
                     .filter(lambda msg: not msg.author.bot)
@@ -326,59 +223,10 @@ class Stats(
         for message in messages:
             if message.created_at.date() != date:
                 date = message.created_at.date()
-                await status.edit(
-                    content=f"```Recalc: {date}```"
-                )
+                await status.edit(content=f"```Recalc: {date}```")
             await self.on_message(message)
             ctx = await self.sonata.get_context(message, cls=core.Context)
             if ctx.command:
                 await self.on_command(ctx)
         self.recalc_started_at = None
         await status.edit(content="```Done```")
-
-    @core.group()
-    async def top(self, ctx: core.Context):
-        _("""Shows guild leaderboard""")
-        if ctx.invoked_subcommand is not None:
-            return
-
-        cursor = ctx.db.users.find(
-            {"guilds": ctx.guild.id},
-            {"id": True, "exp": True, "lvl": True},
-            sort=[("exp", -1)],
-        ).limit(10)
-        user_list = dict(enumerate(await cursor.to_list(length=None), start=1))
-
-        if not next(
-            (user for user in user_list.values() if user["id"] == ctx.author.id), False
-        ):
-            author = await ctx.db.users.find_one(
-                {"id": ctx.author.id}, {"id": True, "lvl": True, "exp": True}
-            )
-            rank = await ctx.db.users.count_documents(
-                {"guilds": ctx.guild.id, "exp": {"$gte": author["exp"]}}
-            )
-            user_list[rank] = author
-
-        embed = self.make_leaderboard_embed(user_list)
-        embed.title = _("Guild Leaderboard")
-        await ctx.send(embed=embed)
-
-    @top.command(name="global")
-    async def top_global(self, ctx: core.Context):
-        _("""Shows global leaderboard""")
-        cursor = ctx.db.users.find(
-            {}, {"id": True, "exp": True, "lvl": True}, sort=[("exp", -1)],
-        ).limit(10)
-        user_list = dict(enumerate(await cursor.to_list(length=None), start=1))
-        if not next(
-            (user for user in user_list.values() if user["id"] == ctx.author.id), False,
-        ):
-            author = await ctx.db.users.find_one(
-                {"id": ctx.author.id}, {"id": True, "lvl": True, "exp": True}
-            )
-            rank = await ctx.db.users.count_documents({"exp": {"$gte": author["exp"]}})
-            user_list[rank] = author
-        embed = self.make_leaderboard_embed(user_list)
-        embed.title = _("Global Leaderboard")
-        await ctx.send(embed=embed)

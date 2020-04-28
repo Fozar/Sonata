@@ -1,6 +1,8 @@
 import asyncio
 import logging
 import os
+from datetime import datetime
+from logging import handlers
 
 from sonata.bot.cogs import load_extension
 from sonata.bot.core import Sonata
@@ -8,12 +10,19 @@ from sonata.bot.core import Sonata
 
 def setup_logger():
     stream_handler = logging.StreamHandler()
+    stream_handler.setFormatter(
+        logging.Formatter("%(asctime)s [%(levelname)s] - %(filename)s - %(message)s")
+    )
     stream_handler.setLevel(logging.INFO)
-    file_handler = logging.FileHandler(
-        filename=f"{os.getcwd()}/logs/discord/discord.log", encoding="utf-8", mode="w"
+    file_handler = handlers.TimedRotatingFileHandler(
+        filename=f"{os.getcwd()}/logs/discord/{datetime.utcnow().date()}.log",
+        when="midnight",
+        backupCount=3,
+        encoding="utf-8",
+        utc=True,
     )
     file_handler.setFormatter(
-        logging.Formatter("%(asctime)s:%(levelname)s:%(filename)s: %(message)s")
+        logging.Formatter("%(asctime)s [%(levelname)s] - %(filename)s - %(message)s")
     )
     file_handler.setLevel(logging.DEBUG)
     logger = logging.getLogger("discord")
@@ -38,5 +47,4 @@ async def init_bot(app):
     )
     for cog in bot_config.cogs:
         load_extension(app["bot"], cog.lower())
-    loop.create_task(app["bot"].start(bot_config.discord_token))
-    logger.info("Bot started")
+    loop.create_task(app["bot"].start())

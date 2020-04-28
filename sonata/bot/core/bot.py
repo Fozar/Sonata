@@ -1,6 +1,4 @@
 import inspect
-import sys
-import traceback
 from datetime import datetime
 from logging import Logger
 from typing import Union, Optional
@@ -64,6 +62,10 @@ class Sonata(commands.Bot):
     def locale(self, value):
         i18n.current_locale.set(value)
 
+    @property
+    def invite(self):
+        return discord.utils.oauth_url(self.user.id, permissions=discord.Permissions(8))
+
     # Events
 
     async def on_ready(self):
@@ -71,6 +73,7 @@ class Sonata(commands.Bot):
         await self.change_presence(status=discord.Status.dnd)
         if not self.launch_time:
             self.launch_time = datetime.utcnow()
+        self.logger.info("Sonata is ready")
 
     async def on_message(self, message: discord.Message):
         if not self.should_reply(message):
@@ -111,42 +114,11 @@ class Sonata(commands.Bot):
         elif isinstance(exception, NoPremium):
             await ctx.send(_("This command is only for premium guilds."))
         else:
-            print(
-                "Ignoring exception in command {}:".format(ctx.command), file=sys.stderr
-            )
-            traceback.print_exception(
-                type(exception), exception, exception.__traceback__, file=sys.stderr
+            self.logger.warning(
+                f"Ignoring exception in command {ctx.command}: {exception}"
             )
 
-    async def process_commands(self, message: discord.Message):
-        await self.set_locale(message)
-        ctx = await self.get_context(message, cls=Context)
-        # Check command is disabled
-        if ctx.guild and ctx.command is not None:
-            guild = await self.db.guilds.find_one(
-                {"id": message.guild.id},
-                {"_id": False, "disabled_cogs": True, "disabled_commands": True},
-            )
-            if (
-                (
-                    ctx.command.cog
-                    and ctx.command.cog.qualified_name in guild["disabled_cogs"]
-                )
-                or ctx.command.qualified_name in guild["disabled_commands"]
-                or next(
-                    (
-                        parent
-                        for parent in ctx.command.parents
-                        if parent.qualified_name in guild["disabled_commands"]
-                    ),
-                    False,
-                )
-            ):
-                ctx.command.enabled = False
-            else:
-                ctx.command.enabled = True
-
-        await self.invoke(ctx)
+    # Methods
 
     async def define_locale(self, obj: Union[discord.Message, Context]):
         if obj.guild:
@@ -166,13 +138,6 @@ class Sonata(commands.Bot):
             user = await self.db.users.find_one({"id": obj.author.id}, {"locale": True})
             return user["locale"]
 
-    async def set_locale(self, msg: discord.Message):
-        self.locale = await self.define_locale(msg)
-
-    def should_reply(self, message):
-        """Returns whether the bot should reply to a given message"""
-        return not message.author.bot and self.is_ready() and self.launch_time
-
     def emoji(self, search_term: Union[int, str]) -> Optional[discord.Emoji]:
         """Get an emoji by ID or filename.
 
@@ -189,9 +154,43 @@ class Sonata(commands.Bot):
         if isinstance(search_term, int):
             return self.get_emoji(search_term)
         if isinstance(search_term, str):
-            return next(
-                (emoji for emoji in self.emojis if emoji.name == search_term), None
+            return discord.utils.get(self.emojis, name=search_term)
+
+    async def process_commands(self, message: discord.Message):
+        await self.set_locale(message)
+        ctx = await self.get_context(message, cls=Context)
+        # Check command is disabled
+        if ctx.guild and ctx.command is not None:
+            guild = await self.db.guilds.find_one(
+                {"id": message.guild.id},
+                {"_id": False, "disabled_cogs": True, "disabled_commands": True},
             )
+            if (
+                (
+                    ctx.command.cog
+                    and ctx.command.cog.qualified_name in guild["disabled_cogs"]
+                )
+                or ctx.command.qualified_name in guild["disabled_commands"]
+                or discord.utils.find(
+                    lambda parent: parent.qualified_name in guild["disabled_commands"],
+                    ctx.command.parents,
+                )
+            ):
+                ctx.command.enabled = False
+            else:
+                ctx.command.enabled = True
+
+        await self.invoke(ctx)
+
+    async def set_locale(self, msg: discord.Message):
+        self.locale = await self.define_locale(msg)
+
+    def should_reply(self, message):
+        """Returns whether the bot should reply to a given message"""
+        return not message.author.bot and self.is_ready() and self.launch_time
+
+    async def start(self, *args, **kwargs):
+        await super().start(self.config["bot"].discord_token, *args, **kwargs)
 
 
 async def determine_prefix(bot: Sonata, msg: discord.Message):

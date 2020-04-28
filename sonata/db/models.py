@@ -12,15 +12,9 @@ class CreatedAtMixin(BaseModel):
         return v or datetime.utcnow()
 
 
-class EmojiCounter(BaseModel):
-    id: int
-    counter: int = 0
-
-
 class CounterMixin(BaseModel):
     total_messages: int = 0
     commands_invoked: int = 0
-    emoji_counter: List[EmojiCounter] = []
 
 
 class DiscordModel(BaseModel):
@@ -79,3 +73,9 @@ class Reminder(CreatedAtMixin):
 class DailyStats(CounterMixin):
     date: datetime
     guild_id: int
+
+
+class EmojiStats(CreatedAtMixin):
+    id: int
+    guild_id: int
+    total: int

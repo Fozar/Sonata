@@ -168,8 +168,7 @@ class Expression(commands.Converter):
             raise commands.BadArgument(_("Invalid expression"))
 
     async def convert(self, ctx: core.Context, argument):
-        argument = argument.replace(" ", "")
-        argument = argument.replace("^", "**")
+        argument = argument.strip(" `\n").replace(" ", "").replace("^", "**")
         eval_expr = partial(self.eval_expr, argument)
         with concurrent.futures.ThreadPoolExecutor() as pool:
             try:

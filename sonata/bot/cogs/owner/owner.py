@@ -1,17 +1,28 @@
-import ast
+import asyncio
+import concurrent.futures
 import copy
+import inspect
+import os
+import platform
+import time
+from datetime import timedelta
+from functools import partial
 from typing import Optional
 
 import discord
+import psutil
+from babel.dates import format_timedelta
 from discord.ext import commands
 
 from sonata.bot import core
 from sonata.bot.cogs import load_extension, unload_extension, reload_extension
-from sonata.bot.utils.converters import GlobalChannel, to_lower
+from sonata.bot.utils.converters import GlobalChannel, to_lower, EvalExpression
 
 
 class Owner(
-    core.Cog, description=_("""Commands of bot owner"""), colour=discord.Colour(0x1)
+    core.Cog,
+    description=_("""Commands of bot owner"""),
+    colour=discord.Colour(0xB91BA4),
 ):  # TODO: Add blacklist
     def __init__(self, sonata: core.Sonata):
         self.sonata = sonata
@@ -29,7 +40,9 @@ class Owner(
         *,
         command: str,
     ):
-        """Выполняет команду от имени определенного участника"""
+        _(
+            """Executes a command on behalf of a specific member in a specific channel."""
+        )
         msg = copy.copy(ctx.message)
         channel = channel or ctx.channel
         msg.channel = channel
@@ -40,7 +53,7 @@ class Owner(
 
     @core.command()
     async def repeat(self, ctx, times: int, *, command: str):
-        """Повторяет команду указанное количество раз"""
+        _("""Repeats the command the specified number of times""")
         msg = copy.copy(ctx.message)
         msg.content = ctx.prefix + command
 
@@ -52,20 +65,25 @@ class Owner(
     async def cog_command_error(self, ctx: core.Context, error):
         original = error.original
         if isinstance(original, commands.ExtensionNotFound):
-            await ctx.send(f"Я не нашла модуль: **{original.name}**!")
+            await ctx.send(_("I did not find the cog: **{0}**!").format(original.name))
         elif isinstance(original, commands.ExtensionAlreadyLoaded):
-            await ctx.send(f"Модуль уже подключен: **{original.name}**!")
+            await ctx.send(
+                _("The cog is already loaded: **{0}**!").format(original.name)
+            )
         elif isinstance(original, commands.ExtensionNotLoaded):
-            await ctx.send(f"Я не подключала модуль: **{original.name}**!")
+            await ctx.send(_("I did not load the cog: **{0}**!").format(original.name))
         elif isinstance(original, commands.NoEntryPointError):
             await ctx.send(
-                f"В расширении модуля **{original.name}** отсутсвует функция запуска."
+                _("There is no setup function in the **{0}** extension.").format(
+                    original.name
+                )
             )
         elif isinstance(original, commands.ExtensionFailed):
             await ctx.send(
-                f"В модуле **{original.name}** или его функции запуска произошла ошибка:\n{original.original}"
+                _(
+                    "An error occurred in the **{0.name}** cog or its setup function:\n{0.original}"
+                ).format(original)
             )
-        await self.sonata.change_presence(status=discord.Status.dnd)
 
     @core.command()
     async def ping(self, ctx: core.Context):
@@ -74,104 +92,76 @@ class Owner(
 
     @core.group()
     async def cogs(self, ctx: core.Context):
-        """Выводит список подключенных модулей"""
+        _("""Lists loaded cogs""")
         if ctx.invoked_subcommand is not None:
             return
 
         loaded_cogs = list(self.sonata.cogs.keys())
         if not loaded_cogs:
-            await ctx.send("Нет подключенных модулей!")
+            await ctx.send(_("No loaded cogs!"))
             return
 
         content = "```"
         if loaded_cogs:
-            content += f"Подключенные модули:\n{', '.join(loaded_cogs)}\n"
+            content += _("Loaded cogs:\n{0}\n").format(", ".join(loaded_cogs))
         content += "```"
         await ctx.send(content)
 
     @cogs.command()
     async def load(self, ctx: core.Context, cog_name: to_lower):
-        """Подключает модуль"""
+        _("""Loads cog""")
         await self.sonata.change_presence(status=discord.Status.idle)
         load_extension(self.sonata, cog_name)
-        await ctx.send(f"Подключила модуль: **{cog_name}**.")
+        await ctx.send(_("I loaded the cog: **{}**.").format(cog_name.capitalize()))
         await self.sonata.change_presence(status=discord.Status.dnd)
 
     @cogs.command()
     async def unload(self, ctx: core.Context, cog_name: to_lower):
-        """Отключает модуль"""
+        _("""Disables cog""")
         if cog_name == to_lower(self.qualified_name):
-            await ctx.send("Этот модуль не может быть отключен")
+            await ctx.send(_("This cog cannot be disabled"))
             return
 
         unload_extension(self.sonata, cog_name)
-        await ctx.send(f"Отключила модуль: **{cog_name}**.")
+        await ctx.send(_("I disabled the cog: **{0}**.").format(cog_name.capitalize()))
 
     @cogs.command()
     async def reload(self, ctx: core.Context, cog_name: to_lower):
-        """Переподключает модуль"""
+        _("""Reloads cog""")
         await self.sonata.change_presence(status=discord.Status.idle)
         reload_extension(self.sonata, cog_name)
-        await ctx.send(f"Переподключила модуль: **{cog_name}**.")
+        await ctx.send(_("I reloaded the cog: **{0}**.").format(cog_name.capitalize()))
         await self.sonata.change_presence(status=discord.Status.dnd)
 
     @core.command()
     async def uptime(self, ctx: core.Context):
-        """Показывает время с момента запуска бота"""
+        _("""Displays uptime""")
         await ctx.send(self.sonata.uptime)
 
-    def insert_returns(self, body):
-        # insert return stmt if the last expression is a expression statement
-        if isinstance(body[-1], ast.Expr):
-            body[-1] = ast.Return(body[-1].value)
-            ast.fix_missing_locations(body[-1])
-
-        # for if statements, we insert returns into the body and the orelse
-        if isinstance(body[-1], ast.If):
-            self.insert_returns(body[-1].body)
-            self.insert_returns(body[-1].orelse)
-
-        # for with blocks, again we insert returns into the body
-        if isinstance(body[-1], ast.With):
-            self.insert_returns(body[-1].body)
-
     @core.command(name="eval")
-    async def eval_fn(self, ctx: core.Context, *, cmd):
-        """Evaluates input.
-        Input is interpreted as newline separated statements.
-        If the last statement is an expression, that is the return value.
+    async def eval_fn(self, ctx: core.Context, *, cmd: EvalExpression()):
+        _(
+            """Evaluates input
+        Input is interpreted as newline separated statements.\
+        If the last statement is an expression, that is the return value.\
         Usable globals:
           - `bot`: the bot instance
           - `discord`: the discord module
           - `commands`: the discord.ext.commands module
           - `ctx`: the invocation context
           - `__import__`: the builtin `__import__` function
-        Such that `>eval 1 + 1` gives `2` as the result.
-        The following invocation will cause the bot to send the text '9'
-        to the channel of invocation and return '3' as the result of evaluating
-        >eval ```py
+          - `_`: last result
+        Such that `>eval 1 + 1` gives `2` as the result.\
+        The following invocation will cause the bot to send the text '9' \
+        to the channel of invocation and return '3' as the result of evaluating.
+        >>> eval ```py
         a = 1 + 2
         b = a * 2
         await ctx.send(a + b)
         a
         ```
         """
-        fn_name = "_eval_expr"
-
-        cmd = cmd.strip("` ").splitlines()
-        if cmd[0] in ("py", "python"):
-            cmd.pop(0)
-        # add a layer of indentation
-        cmd = "\n".join(f"    {i}" for i in cmd)
-
-        # wrap in async def body
-        body = f"async def {fn_name}():\n{cmd}"
-
-        parsed = ast.parse(body)
-        body = parsed.body[0].body
-
-        self.insert_returns(body)
-
+        )
         env = {
             "bot": ctx.bot,
             "discord": discord,
@@ -180,11 +170,138 @@ class Owner(
             "__import__": __import__,
             "_": self._last_result,
         }
-        exec(compile(parsed, filename="<ast>", mode="exec"), env)
+        exec(compile(cmd.parsed, filename="<ast>", mode="exec"), env)
         try:
-            result = await eval(f"{fn_name}()", env)
+            result = await eval(f"{cmd.fn_name}()", env)
         except Exception as e:
             await ctx.send(f"```py\n{e.__class__.__name__}: {e}\n```")
         else:
             self._last_result = result
             await ctx.send(f"```py\n{result}\n```")
+
+    @core.command()
+    async def source(self, ctx: core.Context, *, command: str = None):
+        _(
+            """Displays full source code for a specific command
+        
+        To display the source code of a subcommand you can separate it by \
+        periods, e.g. `tag.create` for the create subcommand of the tag command \
+        or by spaces.
+        """
+        )
+        source_url = "https://github.com/Fozar/Sonata"
+        branch = "master"
+        if command is None:
+            return await ctx.send(source_url)
+
+        if command == "help":
+            src = type(self.sonata.help_command)
+            module = src.__module__
+            filename = inspect.getsourcefile(src)
+        else:
+            obj = self.sonata.get_command(command.replace(".", " "))
+            if obj is None:
+                return await ctx.inform(_("Could not find command."))
+
+            # since we found the command we're looking for, presumably anyway, let's
+            # try to access the code itself
+            src = obj.callback.__code__
+            module = obj.callback.__module__
+            filename = src.co_filename
+
+        lines, firstlineno = inspect.getsourcelines(src)
+        if not module.startswith("discord"):
+            # not a built-in command
+            location = os.path.relpath(filename).replace("\\", "/")
+        else:
+            location = module.replace(".", "/") + ".py"
+            source_url = "https://github.com/Rapptz/discord.py"
+            branch = "master"
+
+        final_url = f"<{source_url}/blob/{branch}/{location}#L{firstlineno}-L{firstlineno + len(lines) - 1}>"
+        await ctx.inform(final_url)
+
+    @core.command()
+    async def sys(self, ctx: core.Context):
+        _("""Displays system info""")
+        embed = discord.Embed(title=_("System Info"), colour=self.colour)
+        embed.add_field(
+            name=_("Platform"),
+            value=_(
+                "**System**: {system}\n**Release**: {release}\n**Uptime**: {uptime}"
+            ).format(
+                system=platform.system(),
+                release=platform.release(),
+                uptime=format_timedelta(
+                    timedelta(seconds=time.time() - psutil.boot_time()),
+                    locale=ctx.locale,
+                ),
+            ),
+        )
+        embed.add_field(
+            name=_("CPU"),
+            value=_("**Cores**: {count}\n**Usage**: {usage}%").format(
+                count=psutil.cpu_count(), usage=psutil.cpu_percent()
+            ),
+        )
+        ram = psutil.virtual_memory()
+        embed.add_field(
+            name=_("RAM"),
+            value=_(
+                "**Total**: {total}GB\n**Available**: {available}GB\n**Usage**: {usage}%"
+            ).format(
+                total=round(ram.total / 1024 ** 3, 2),
+                available=round(ram.available / 1024 ** 3, 2),
+                usage=ram.percent,
+            ),
+        )
+        bot_pid = os.getpid()
+        bot = psutil.Process(bot_pid)
+        mongo_info = await ctx.db.command("serverStatus")
+        mongo = psutil.Process(mongo_info["pid"])
+        bot_cpu_percent = partial(bot.cpu_percent, 1.0)
+        mongo_cpu_percent = partial(mongo.cpu_percent, 1.0)
+
+        with concurrent.futures.ThreadPoolExecutor() as pool:
+            bot_cpu, mongo_cpu = tuple(
+                await asyncio.gather(
+                    ctx.bot.loop.run_in_executor(pool, bot_cpu_percent),
+                    ctx.bot.loop.run_in_executor(pool, mongo_cpu_percent),
+                    loop=ctx.bot.loop,
+                )
+            )
+        embed.add_field(
+            name=_("Bot"),
+            value=_(
+                "**Uptime**: {uptime}\n**PID**: {pid}\n"
+                "**Memory usage**: {mem}MB ({mem_percent}%)"
+                "\n**CPU usage**: {cpu}%"
+            ).format(
+                uptime=format_timedelta(
+                    timedelta(seconds=time.time() - bot.create_time()),
+                    locale=ctx.locale,
+                ),
+                pid=bot_pid,
+                mem=round(bot.memory_info().rss / 1024 ** 2, 2),
+                mem_percent=round(bot.memory_percent(), 2),
+                cpu=bot_cpu,
+            ),
+        )
+
+        embed.add_field(
+            name=_("Database"),
+            value=_(
+                "**Uptime**: {uptime}\n**PID**: {pid}\n"
+                "**Memory usage**: {mem}MB ({mem_percent}%)"
+                "\n**CPU usage**: {cpu}%"
+            ).format(
+                uptime=format_timedelta(
+                    timedelta(seconds=mongo_info["uptime"]), locale=ctx.locale
+                ),
+                pid=mongo_info["pid"],
+                mem=round(mongo.memory_info().rss / 1024 ** 2, 2),
+                mem_percent=round(mongo.memory_percent(), 2),
+                cpu=mongo_cpu,
+            ),
+        )
+        await ctx.send(embed=embed)

@@ -7,92 +7,120 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-04-27 17:42+0700\n"
-"PO-Revision-Date: 2020-04-27 17:42+0700\n"
+"POT-Creation-Date: 2020-04-29 21:05+0700\n"
+"PO-Revision-Date: 2020-04-29 21:05+0700\n"
 "Last-Translator: \n"
 "Language: ru_RU\n"
 "Language-Team: ru_RU <LL@li.org>\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 "
+"&& (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.8.0\n"
 "X-Generator: Poedit 2.3\n"
 
-#: sonata/bot/cogs/admin/admin.py:12
+#: sonata/bot/cogs/admin/admin.py:11
 msgid "Commands of guild admins"
 msgstr "Команды администраторов гильдии"
 
-#: sonata/bot/cogs/admin/admin.py:30
+#: sonata/bot/cogs/admin/admin.py:29
 msgid "Channels settings"
 msgstr "Настройки каналов"
 
-#: sonata/bot/cogs/admin/admin.py:42
+#: sonata/bot/cogs/admin/admin.py:41
 msgid "Set channel locale"
 msgstr "Устанавливает язык канала"
 
-#: sonata/bot/cogs/admin/admin.py:54
+#: sonata/bot/cogs/admin/admin.py:53
 msgid "Current channel locale is {flag} `{locale}`."
 msgstr "Текущий язык канала: {flag} `{0}`."
 
-#: sonata/bot/cogs/admin/admin.py:74
+#: sonata/bot/cogs/admin/admin.py:73
 msgid "The channel locale is set to {flag} `{locale}`."
 msgstr "Язык канала установлен на {flag} `{locale}`."
 
-#: sonata/bot/cogs/admin/admin.py:83
+#: sonata/bot/cogs/admin/admin.py:82
 msgid "Guild settings"
 msgstr "Настройки гильдии"
 
-#: sonata/bot/cogs/admin/admin.py:90
+#: sonata/bot/cogs/admin/admin.py:89
+msgid "Disables/Enables auto-message when leveling up for all members"
+msgstr "Отключает/включает автосообщение при повышении уровня для всех участников"
+
+#: sonata/bot/cogs/admin/admin.py:97
+msgid "Enables auto-message when leveling up for all members"
+msgstr "Включает автосообщение при повышении уровня для всех участников"
+
+#: sonata/bot/cogs/admin/admin.py:103
+msgid "Auto-message when leveling up is already enabled for all members."
+msgstr "Автосообщение при повышении уровня уже включено для всех участников."
+
+#: sonata/bot/cogs/admin/admin.py:107
+msgid "Auto-message when leveling up is enabled for all members."
+msgstr "Автосообщение при повышении уровня включено для всех участников."
+
+#: sonata/bot/cogs/admin/admin.py:112
+msgid "Disables auto-message when leveling up for all members"
+msgstr "Отключает автосообщение при повышении уровня для всех участников"
+
+#: sonata/bot/cogs/admin/admin.py:118
+msgid "Auto-message when leveling up is already disabled for all members."
+msgstr "Автосообщение при повышении уровня уже отключено для всех участников."
+
+#: sonata/bot/cogs/admin/admin.py:122
+msgid "Auto-message when leveling up is disabled for all members."
+msgstr "Автосообщение при повышении уровня отключено для всех участников."
+
+#: sonata/bot/cogs/admin/admin.py:127
 msgid "Toggle whether to send help message to direct messages"
 msgstr "Переключает отправку справки в личные сообщения"
 
-#: sonata/bot/cogs/admin/admin.py:97
+#: sonata/bot/cogs/admin/admin.py:134
 msgid "Enables sending help to direct messages"
 msgstr "Включает отправку справки в личные сообщения"
 
-#: sonata/bot/cogs/admin/admin.py:103
+#: sonata/bot/cogs/admin/admin.py:140
 msgid "Sending bot help messages to direct messages is already enabled."
 msgstr "Отправка справки в личные сообщения уже включена."
 
-#: sonata/bot/cogs/admin/admin.py:107
+#: sonata/bot/cogs/admin/admin.py:144
 msgid "Sending bot help messages to direct messages is enabled."
 msgstr "Отправка справки в личные сообщения включена."
 
-#: sonata/bot/cogs/admin/admin.py:112
+#: sonata/bot/cogs/admin/admin.py:149
 msgid "Disables sending help to direct messages"
 msgstr "Отключает отправку справки в личные сообщения"
 
-#: sonata/bot/cogs/admin/admin.py:118
+#: sonata/bot/cogs/admin/admin.py:155
 msgid "Sending bot help messages to direct messages is already disabled."
 msgstr "Отправка справки в личные сообщения уже отключена."
 
-#: sonata/bot/cogs/admin/admin.py:122
+#: sonata/bot/cogs/admin/admin.py:159
 msgid "Sending bot help messages to direct messages is disabled."
 msgstr "Отправка справки в личные сообщения отключена."
 
-#: sonata/bot/cogs/admin/admin.py:127
+#: sonata/bot/cogs/admin/admin.py:164
 msgid "Disables/Enables cog in the guild"
 msgstr "Отключает/включает модуль в гильдии"
 
-#: sonata/bot/cogs/admin/admin.py:134
+#: sonata/bot/cogs/admin/admin.py:171
 msgid "Enables cog in the guild"
 msgstr "Включает модуль в гильдии"
 
-#: sonata/bot/cogs/admin/admin.py:139
+#: sonata/bot/cogs/admin/admin.py:176
 msgid "This cog has not been disabled."
 msgstr "Этот модуль не был отключен."
 
-#: sonata/bot/cogs/admin/admin.py:141
+#: sonata/bot/cogs/admin/admin.py:178
 msgid "Cog `{0}` enabled."
 msgstr "Модуль `{0}` включен."
 
-#: sonata/bot/cogs/admin/admin.py:145
+#: sonata/bot/cogs/admin/admin.py:182
 msgid "Disables cog in the guild"
 msgstr "Отключает модуль в гильдии"
 
-#: sonata/bot/cogs/admin/admin.py:148
+#: sonata/bot/cogs/admin/admin.py:185
 msgid ""
 "Cog `{cog}` does not exist.\n"
 "You can disable the following cogs: {cogs}."
@@ -100,67 +128,67 @@ msgstr ""
 "Модуль `{cog}` не существует.\n"
 "Ты можешь отключить следующие модули: {cogs}."
 
-#: sonata/bot/cogs/admin/admin.py:154
+#: sonata/bot/cogs/admin/admin.py:191
 msgid "Cog `{0}` cannot be disabled."
 msgstr "Модуль `{0}` не может быть отключен."
 
-#: sonata/bot/cogs/admin/admin.py:159
+#: sonata/bot/cogs/admin/admin.py:196
 msgid "This cog is already disabled."
 msgstr "Этот модуль уже отключен."
 
-#: sonata/bot/cogs/admin/admin.py:161
+#: sonata/bot/cogs/admin/admin.py:198
 msgid "Cog `{0}` disabled."
 msgstr "Модуль `{0}` отключен."
 
-#: sonata/bot/cogs/admin/admin.py:165
+#: sonata/bot/cogs/admin/admin.py:202
 msgid "Disables/Enables command in the guild"
 msgstr "Отключает/включает команду в гильдии"
 
-#: sonata/bot/cogs/admin/admin.py:172
+#: sonata/bot/cogs/admin/admin.py:209
 msgid "Enables command in the guild"
 msgstr "Включает команду в гильдии"
 
-#: sonata/bot/cogs/admin/admin.py:177
+#: sonata/bot/cogs/admin/admin.py:214
 msgid "This command has not been disabled."
 msgstr "Эта команда не была отключена."
 
-#: sonata/bot/cogs/admin/admin.py:179
+#: sonata/bot/cogs/admin/admin.py:216
 msgid "Command `{0}` enabled."
 msgstr "Команда `{0}` включена."
 
-#: sonata/bot/cogs/admin/admin.py:183
+#: sonata/bot/cogs/admin/admin.py:220
 msgid "Disables command in the guild"
 msgstr "Отключает команду в гильдии"
 
-#: sonata/bot/cogs/admin/admin.py:186
+#: sonata/bot/cogs/admin/admin.py:223
 msgid "Command `{0}` not found."
 msgstr "Команда `{0}` не найдена."
 
-#: sonata/bot/cogs/admin/admin.py:191
+#: sonata/bot/cogs/admin/admin.py:228
 msgid "Command `{0}` cannot be disabled."
 msgstr "Команда `{0}` не может быть отключена."
 
-#: sonata/bot/cogs/admin/admin.py:197
+#: sonata/bot/cogs/admin/admin.py:234
 msgid "This command is already disabled."
 msgstr "Эта команда уже отключена."
 
-#: sonata/bot/cogs/admin/admin.py:199
+#: sonata/bot/cogs/admin/admin.py:236
 msgid "Command `{0}` disabled."
 msgstr "Команда `{0}` отключена."
 
-#: sonata/bot/cogs/admin/admin.py:203
+#: sonata/bot/cogs/admin/admin.py:240
 msgid "Set guild locale"
 msgstr "Устанавливает язык гильдии"
 
-#: sonata/bot/cogs/admin/admin.py:207
+#: sonata/bot/cogs/admin/admin.py:244
 msgid "Current guild locale is {flag} `{locale}`."
 msgstr "Текущий язык гильдии: {flag} `{locale}`."
 
-#: sonata/bot/cogs/admin/admin.py:218
+#: sonata/bot/cogs/admin/admin.py:255
 msgid "The guild locale is set to {flag} `{locale}`."
 msgstr "Язык гильдии установлен на {flag} `{locale}`."
 
-#: sonata/bot/cogs/admin/admin.py:225
+#: sonata/bot/cogs/admin/admin.py:262
 msgid ""
 "Set guild prefix\n"
 "        \n"
@@ -170,45 +198,44 @@ msgstr ""
 "        \n"
 "        Префикс гильдии перезаписывает префикс по умолчанию."
 
-#: sonata/bot/cogs/admin/admin.py:235
+#: sonata/bot/cogs/admin/admin.py:272
 msgid "Current guild prefix is `{0}`."
 msgstr "Текущий префикс гильдии: `{0}`."
 
-#: sonata/bot/cogs/admin/admin.py:240
+#: sonata/bot/cogs/admin/admin.py:277
 msgid ""
-"This prefix is too long. The prefix cannot consist of more than {0} "
-"characters."
+"This prefix is too long. The prefix cannot consist of more than {0} characters."
 msgstr ""
 "Этот префикс слишком длинный. Префикс не может состоять из более, чем {0} "
 "символов."
 
-#: sonata/bot/cogs/admin/admin.py:248
+#: sonata/bot/cogs/admin/admin.py:285
 msgid "The guild prefix is set to `{0}`."
 msgstr "Префикс гильдии установлен на `{0}`."
 
-#: sonata/bot/cogs/admin/admin.py:252
+#: sonata/bot/cogs/admin/admin.py:289
 msgid "Resets guild settings"
 msgstr "Сбрасывает настройки гильдии"
 
-#: sonata/bot/cogs/admin/admin.py:264
+#: sonata/bot/cogs/admin/admin.py:299
 msgid "Guild settings reset."
 msgstr "Настройки гильдии сброшены."
 
-#: sonata/bot/cogs/emoji/emoji.py:58
+#: sonata/bot/cogs/emoji/emoji.py:83
 msgid "Shows emoji info"
 msgstr "Показывает информацию об эмодзи"
 
-#: sonata/bot/cogs/emoji/emoji.py:62
+#: sonata/bot/cogs/emoji/emoji.py:87
 msgid "Emoji \"{0}\""
 msgstr "Эмодзи \"{0}\""
 
-#: sonata/bot/cogs/emoji/emoji.py:68
+#: sonata/bot/cogs/emoji/emoji.py:93
 msgid "Invalid emoji."
 msgstr "Неверный эмодзи."
 
-#: sonata/bot/cogs/emoji/emoji.py:90 sonata/bot/cogs/emoji/emoji.py:96
-msgid "Emoji top"
-msgstr "Топ эмодзи"
+#: sonata/bot/cogs/emoji/emoji.py:116 sonata/bot/cogs/emoji/emoji.py:123
+msgid "Emoji statistics"
+msgstr "Статистика эмодзи"
 
 #: sonata/bot/cogs/fun/fun.py:35
 msgid "Entertainment"
@@ -330,11 +357,11 @@ msgstr "да, поздравляю!"
 msgid "you should not know it."
 msgstr "тебе нельзя знать это."
 
-#: sonata/bot/cogs/fun/fun.py:83
+#: sonata/bot/cogs/fun/fun.py:85
 msgid "Answers the question"
 msgstr "Отвечает на вопрос"
 
-#: sonata/bot/cogs/fun/fun.py:87
+#: sonata/bot/cogs/fun/fun.py:90
 msgid "Throws a coin"
 msgstr "Кидает монетку"
 
@@ -373,8 +400,7 @@ msgid ""
 "            5 - rolls 5 dice with 6 faces.\n"
 "            d54 - rolls 1 dice with 54 faces.\n"
 "            2d8 - rolls 2 dice with 8 faces.\n"
-"            +10 + 2d10 - rolls 1 dice with 6 faces and adds 10 to the "
-"result,\n"
+"            +10 + 2d10 - rolls 1 dice with 6 faces and adds 10 to the result,\n"
 "                then rolls 2 dice with 10 faces and adds to the result.\n"
 "        "
 msgstr ""
@@ -418,47 +444,47 @@ msgstr ""
 msgid "Breed list"
 msgstr "Список пород"
 
-#: sonata/bot/cogs/fun/fun.py:191
+#: sonata/bot/cogs/fun/fun.py:194
 msgid "Choke a guild member"
 msgstr "Душить участника гильдии"
 
-#: sonata/bot/cogs/fun/fun.py:195
+#: sonata/bot/cogs/fun/fun.py:196
 msgid "*{author} chokes {target}* "
 msgstr "*{author} душит {target}* "
 
-#: sonata/bot/cogs/fun/fun.py:202
+#: sonata/bot/cogs/fun/fun.py:206
 msgid "Hug a guild member"
 msgstr "Обнять участника гильдии"
 
-#: sonata/bot/cogs/fun/fun.py:206
+#: sonata/bot/cogs/fun/fun.py:208
 msgid "*{author} hugs {target}* "
 msgstr "*{author} обнимает {target}* "
 
-#: sonata/bot/cogs/fun/fun.py:213
+#: sonata/bot/cogs/fun/fun.py:218
 msgid "Hit a guild member"
 msgstr "Ударить участника гильдии"
 
-#: sonata/bot/cogs/fun/fun.py:217
+#: sonata/bot/cogs/fun/fun.py:220
 msgid "*{author} hits {target}* "
 msgstr "*{author} бьет {target}* "
 
-#: sonata/bot/cogs/fun/fun.py:224
+#: sonata/bot/cogs/fun/fun.py:230
 msgid "Kiss a guild member"
 msgstr "Поцеловать участника гильдии"
 
-#: sonata/bot/cogs/fun/fun.py:228
+#: sonata/bot/cogs/fun/fun.py:232
 msgid "*{author} kisses {target}* "
 msgstr "*{author} целует {target}* "
 
-#: sonata/bot/cogs/fun/fun.py:235
+#: sonata/bot/cogs/fun/fun.py:242
 msgid "Perform a 3rd person action"
 msgstr "Выполнить действие от 3-го лица"
 
-#: sonata/bot/cogs/fun/fun.py:241
+#: sonata/bot/cogs/fun/fun.py:249
 msgid "Wink at guild member"
 msgstr "Подмигнуть участнику гильдии"
 
-#: sonata/bot/cogs/fun/fun.py:245
+#: sonata/bot/cogs/fun/fun.py:251
 msgid "*{author} winks at {target}* "
 msgstr "*{author} подмигивает {target}* "
 
@@ -470,30 +496,30 @@ msgstr "Начинает игровую сессию"
 msgid ""
 "Bulls & Cows\n"
 "        \n"
-"        I will make a secret 4-digit number with non-repeating numbers, and "
-"you will         make attempts to guess it. An attempt is a 4-digit number "
-"with non-repeating         numbers. Each attempt is given 60 seconds. I will "
-"inform you in response to how         many numbers were guessed without "
-"coincidence with their positions in the secret         number (i.e. the "
-"number of cows) and how many were guessed right up to the         position "
-"in the secret number (i.e. the number of bulls).\n"
+"        I will make a secret 4-digit number with non-repeating numbers, and you "
+"will         make attempts to guess it. An attempt is a 4-digit number with non-"
+"repeating         numbers. Each attempt is given 60 seconds. I will inform you "
+"in response to how         many numbers were guessed without coincidence with "
+"their positions in the secret         number (i.e. the number of cows) and how "
+"many were guessed right up to the         position in the secret number (i.e. "
+"the number of bulls).\n"
 "        \n"
 "        Example:\n"
 "            Concealed secret number \"3219\".\n"
 "            Attempt: \"2310\".\n"
-"            Result: two \"cows\" (two digits: \"2\" and \"3\" - guessed at "
-"the wrong positions)         and one “bull” (one digit \"1\" guessed right "
-"up to the position).\n"
+"            Result: two \"cows\" (two digits: \"2\" and \"3\" - guessed at the "
+"wrong positions)         and one “bull” (one digit \"1\" guessed right up to "
+"the position).\n"
 "        "
 msgstr ""
 "Быки и коровы\n"
 "        \n"
 "        Я загадаю тайное 4-значное число с неповторяющимися цифрами, а ты "
 "будешь делать попытки его угадать. Попытка - это 4-значное число с "
-"неповторяющимися цифрами. На каждую попытку дается 60 секунд. Я сообщу в "
-"ответ, сколько цифр угадано без совпадения с их позициями в тайном числе (то "
-"есть количество коров) и сколько угадано вплоть до позиции в тайном числе "
-"(то есть количество быков).\n"
+"неповторяющимися цифрами. На каждую попытку дается 60 секунд. Я сообщу в ответ, "
+"сколько цифр угадано без совпадения с их позициями в тайном числе (то есть "
+"количество коров) и сколько угадано вплоть до позиции в тайном числе (то есть "
+"количество быков).\n"
 "        \n"
 "        Пример:\n"
 "            Задумано тайное число \"3219\".\n"
@@ -512,8 +538,8 @@ msgid ""
 "I made a secret 4-digit number with non-repeating numbers. Try to guess! You "
 "have 60 seconds for every attempt."
 msgstr ""
-"Я загадала тайное 4-значное число с неповторяющимися цифрами. Попробуй "
-"угадать! У тебя есть 60 секунд на каждую попытку."
+"Я загадала тайное 4-значное число с неповторяющимися цифрами. Попробуй угадать! "
+"У тебя есть 60 секунд на каждую попытку."
 
 #: sonata/bot/cogs/fun/games.py:77
 msgid "The attempt must be a number."
@@ -593,67 +619,67 @@ msgstr "Поле не заполнено."
 
 #: sonata/bot/cogs/general/general.py:30
 msgid ""
-"This command allows you to fill in the `About` field, which will be "
-"displayed in the user profile. Current value:\n"
+"This command allows you to fill in the `About` field, which will be displayed "
+"in the user profile. Current value:\n"
 "`{0}`"
 msgstr ""
-"Эта команда позволяет заполнить поле \"о себе\", которое будет отображаться "
-"в профиле пользователя. Текущее значение:\n"
+"Эта команда позволяет заполнить поле \"о себе\", которое будет отображаться в "
+"профиле пользователя. Текущее значение:\n"
 "`{0}`"
 
-#: sonata/bot/cogs/general/general.py:38
+#: sonata/bot/cogs/general/general.py:37
 msgid "The field length cannot be less than 20 characters."
 msgstr "Длина поля не может быть меньше 20 символов."
 
-#: sonata/bot/cogs/general/general.py:41
+#: sonata/bot/cogs/general/general.py:40
 msgid "The field length cannot be greater than 2000 characters."
 msgstr "Длина поля не может быть больше 2000 символов."
 
-#: sonata/bot/cogs/general/general.py:47
+#: sonata/bot/cogs/general/general.py:46
 msgid "The `About` field is set."
 msgstr "Поле `о себе` установлено."
 
-#: sonata/bot/cogs/general/general.py:51
+#: sonata/bot/cogs/general/general.py:50
 msgid "Clears \"About\" field in profile info."
 msgstr "Очищает поле \"о себе\" в профиле"
 
-#: sonata/bot/cogs/general/general.py:53
+#: sonata/bot/cogs/general/general.py:52
 msgid "The `About` field is cleared."
 msgstr "Поле `о себе` очищено."
 
-#: sonata/bot/cogs/general/general.py:57
+#: sonata/bot/cogs/general/general.py:56
 msgid "Returns an invitation link"
 msgstr "Возвращает ссылку-приглашение"
 
-#: sonata/bot/cogs/general/general.py:59
+#: sonata/bot/cogs/general/general.py:58
 msgid "You can invite me at this link"
 msgstr "Ты можешь пригласить меня по этой ссылке"
 
-#: sonata/bot/cogs/general/general.py:67
+#: sonata/bot/cogs/general/general.py:66
 msgid "Shows information about me"
 msgstr "Показывает информацию обо мне"
 
-#: sonata/bot/cogs/general/general.py:69
+#: sonata/bot/cogs/general/general.py:68
 msgid "Sonata Info"
 msgstr "Информация о Сонате"
 
-#: sonata/bot/cogs/general/general.py:76 sonata/bot/cogs/general/general.py:117
+#: sonata/bot/cogs/general/general.py:75 sonata/bot/cogs/general/general.py:116
 msgid "Name"
 msgstr "Имя"
 
-#: sonata/bot/cogs/general/general.py:77
+#: sonata/bot/cogs/general/general.py:76
 msgid "API wrapper"
 msgstr "API оболочка"
 
-#: sonata/bot/cogs/general/general.py:80
+#: sonata/bot/cogs/general/general.py:79
 msgid "Developer"
 msgstr "Разработчик"
 
-#: sonata/bot/cogs/general/general.py:85 sonata/bot/cogs/general/general.py:127
+#: sonata/bot/cogs/general/general.py:84 sonata/bot/cogs/general/general.py:126
 msgid "Status"
 msgstr "Статус"
 
-#: sonata/bot/cogs/general/general.py:85
+#: sonata/bot/cogs/general/general.py:84
 msgid ""
 "**Last restart**: {launch_time}\n"
 "**Online**: {online}\n"
@@ -663,96 +689,95 @@ msgstr ""
 "**Онлайн**: {online}\n"
 "**Обслуживается**: {guilds} гильдий и {members} участников."
 
-#: sonata/bot/cogs/general/general.py:97
+#: sonata/bot/cogs/general/general.py:96
 msgid "Language support"
 msgstr "Поддержка языков"
 
-#: sonata/bot/cogs/general/general.py:98
+#: sonata/bot/cogs/general/general.py:97
 msgid "Useful links"
 msgstr "Полезные ссылки"
 
-#: sonata/bot/cogs/general/general.py:98
+#: sonata/bot/cogs/general/general.py:97
 msgid "[Invite the bot to your server]({0})"
 msgstr "[Пригласить бота на свой сервер]({0})"
 
-#: sonata/bot/cogs/general/general.py:113
+#: sonata/bot/cogs/general/general.py:112
 msgid "{0} Info"
 msgstr "Информация о {0}"
 
-#: sonata/bot/cogs/general/general.py:122
+#: sonata/bot/cogs/general/general.py:121
 msgid "Online"
 msgstr "В сети"
 
-#: sonata/bot/cogs/general/general.py:123
+#: sonata/bot/cogs/general/general.py:122
 msgid "Offline"
 msgstr "Не в сети"
 
-#: sonata/bot/cogs/general/general.py:124
+#: sonata/bot/cogs/general/general.py:123
 msgid "Idle"
 msgstr "Не активен"
 
-#: sonata/bot/cogs/general/general.py:125
+#: sonata/bot/cogs/general/general.py:124
 msgid "Do Not Disturb"
 msgstr "Не беспокоить"
 
-#: sonata/bot/cogs/general/general.py:130
+#: sonata/bot/cogs/general/general.py:129
 msgid "Playing"
 msgstr "Играет в"
 
-#: sonata/bot/cogs/general/general.py:132
+#: sonata/bot/cogs/general/general.py:131
 msgid "Streaming"
 msgstr "Стримит"
 
-#: sonata/bot/cogs/general/general.py:134
+#: sonata/bot/cogs/general/general.py:133
 msgid "Listening"
 msgstr "Слушает"
 
-#: sonata/bot/cogs/general/general.py:136
-#: sonata/bot/cogs/general/general.py:139
+#: sonata/bot/cogs/general/general.py:135 sonata/bot/cogs/general/general.py:138
 msgid "Activity"
 msgstr "Активность"
 
-#: sonata/bot/cogs/general/general.py:141
+#: sonata/bot/cogs/general/general.py:140
 msgid "Joined the guild"
 msgstr "Дата присоединения к гильдии"
 
-#: sonata/bot/cogs/general/general.py:144
+#: sonata/bot/cogs/general/general.py:143
 msgid "Registration date"
 msgstr "Дата регистрации"
 
-#: sonata/bot/cogs/general/general.py:148
+#: sonata/bot/cogs/general/general.py:147
 msgid "Summary"
 msgstr "Общая информация"
 
-#: sonata/bot/cogs/general/general.py:170
+#: sonata/bot/cogs/general/general.py:169
 msgid "Statistics has been running since"
 msgstr "Статистика ведется с"
 
-#: sonata/bot/cogs/general/general.py:173
+#: sonata/bot/cogs/general/general.py:172
 msgid "Total messages"
 msgstr "Всего сообщений"
 
-#: sonata/bot/cogs/general/general.py:174
+#: sonata/bot/cogs/general/general.py:173
 msgid "Commands invoked"
 msgstr "Использовано команд"
 
-#: sonata/bot/cogs/general/general.py:175 sonata/bot/cogs/stats/leveling.py:107
+#: sonata/bot/cogs/general/general.py:174 sonata/bot/cogs/stats/leveling.py:121
 msgid "Level"
 msgstr "Уровень"
 
-#: sonata/bot/cogs/general/general.py:176 sonata/bot/cogs/stats/leveling.py:109
+#: sonata/bot/cogs/general/general.py:175 sonata/bot/cogs/stats/leveling.py:123
 msgid "Experience"
 msgstr "Опыт"
 
-#: sonata/bot/cogs/general/general.py:179
+#: sonata/bot/cogs/general/general.py:178
 msgid "Global rank"
 msgstr "Ранг (глобальный)"
 
-#: sonata/bot/cogs/general/general.py:182
+#: sonata/bot/cogs/general/general.py:181
 msgid "Guild rank"
 msgstr "Ранг (гильдия)"
 
-#: sonata/bot/cogs/general/general.py:187
+#: sonata/bot/cogs/general/general.py:186
 msgid ""
 "\n"
 "`Statistics counts only messages visible to the bot`"
@@ -760,7 +785,7 @@ msgstr ""
 "\n"
 "`Статистика учитывает только сообщения, видимые для бота`"
 
-#: sonata/bot/cogs/general/general.py:188
+#: sonata/bot/cogs/general/general.py:187
 msgid "Statistics"
 msgstr "Статистика"
 
@@ -788,9 +813,222 @@ msgstr "Возвращает список поддерживаемых язык�
 msgid "Available locales: {0}."
 msgstr "Доступные языки: {0}."
 
-#: sonata/bot/cogs/owner/owner.py:14
+#: sonata/bot/cogs/owner/owner.py:21
 msgid "Commands of bot owner"
 msgstr "Команды владельца бота"
+
+#: sonata/bot/cogs/owner/owner.py:40
+msgid "Executes a command on behalf of a specific member in a specific channel."
+msgstr "Выполняет команду от имени определенного участника."
+
+#: sonata/bot/cogs/owner/owner.py:53
+msgid "Repeats the command the specified number of times"
+msgstr "Повторяет команду указанное количество раз"
+
+#: sonata/bot/cogs/owner/owner.py:65
+msgid "I did not find the cog: **{0}**!"
+msgstr "Я не нашла модуль: **{0}**!"
+
+#: sonata/bot/cogs/owner/owner.py:68
+msgid "The cog is already loaded: **{0}**!"
+msgstr "Модуль уже подключен: **{0}**!"
+
+#: sonata/bot/cogs/owner/owner.py:71
+msgid "I did not load the cog: **{0}**!"
+msgstr "Я не подключала модуль: **{0}**!"
+
+#: sonata/bot/cogs/owner/owner.py:74
+msgid "There is no setup function in the **{0}** extension."
+msgstr "В расширении модуля **{0}** отсутсвует функция запуска."
+
+#: sonata/bot/cogs/owner/owner.py:80
+msgid ""
+"An error occurred in the **{0.name}** cog or its setup function:\n"
+"{0.original}"
+msgstr ""
+"В модуле **{0.name}** или его функции запуска произошла ошибка:\n"
+"{0.original}"
+
+#: sonata/bot/cogs/owner/owner.py:92
+msgid "Lists loaded cogs"
+msgstr "Выводит список подключенных модулей"
+
+#: sonata/bot/cogs/owner/owner.py:98
+msgid "No loaded cogs!"
+msgstr "Нет подключенных модулей!"
+
+#: sonata/bot/cogs/owner/owner.py:103
+msgid ""
+"Loaded cogs:\n"
+"{0}\n"
+msgstr ""
+"Подключенные модули:\n"
+"{0}\n"
+
+#: sonata/bot/cogs/owner/owner.py:109
+msgid "Loads cog"
+msgstr "Подключает модуль"
+
+#: sonata/bot/cogs/owner/owner.py:112
+msgid "I loaded the cog: **{}**."
+msgstr "Подключила модуль: **{}**"
+
+#: sonata/bot/cogs/owner/owner.py:117
+msgid "Disables cog"
+msgstr "Отключает модуль"
+
+#: sonata/bot/cogs/owner/owner.py:119
+msgid "This cog cannot be disabled"
+msgstr "Этот модуль не может быть отключен"
+
+#: sonata/bot/cogs/owner/owner.py:123
+msgid "I disabled the cog: **{0}**."
+msgstr "Отключила модуль: **{0}**."
+
+#: sonata/bot/cogs/owner/owner.py:127
+msgid "Reloads cog"
+msgstr "Переподключает модуль"
+
+#: sonata/bot/cogs/owner/owner.py:130
+msgid "I reloaded the cog: **{0}**."
+msgstr "Пеподключила модуль: **{0}**."
+
+#: sonata/bot/cogs/owner/owner.py:135
+msgid "Displays uptime"
+msgstr "Показывает время с момента запуска бота"
+
+#: sonata/bot/cogs/owner/owner.py:140
+msgid ""
+"Evaluates input\n"
+"        Input is interpreted as newline separated statements.        If the "
+"last statement is an expression, that is the return value.        Usable "
+"globals:\n"
+"          - `bot`: the bot instance\n"
+"          - `discord`: the discord module\n"
+"          - `commands`: the discord.ext.commands module\n"
+"          - `ctx`: the invocation context\n"
+"          - `__import__`: the builtin `__import__` function\n"
+"          - `_`: last result\n"
+"        Such that `>eval 1 + 1` gives `2` as the result.        The following "
+"invocation will cause the bot to send the text '9'         to the channel of "
+"invocation and return '3' as the result of evaluating.\n"
+"        >>> eval ```py\n"
+"        a = 1 + 2\n"
+"        b = a * 2\n"
+"        await ctx.send(a + b)\n"
+"        a\n"
+"        ```\n"
+"        "
+msgstr ""
+"Исполняет ввод\n"
+"        Ввод интерпретируется как операторы, разделенные символом новой "
+"строки.\n"
+"        Если последний оператор является выражением, это возвращаемое "
+"значение.\n"
+"        Используемые globals:\n"
+"          - `bot`: экземпляр бота\n"
+"          - `discord`: модуль discord\n"
+"          - `commands`: модуль discord.ext.commands\n"
+"          - `ctx`: контекст вызова\n"
+"          - `__import__`: встроенная `__import__` функция\n"
+"          - `_`: последний результат\n"
+"        Выражение `>eval 1 + 1` в результате дает `2`.        Следующий вызов "
+"приведет к тому, что бот отправит текст '9' в канал вызова и вернет 3, как "
+"результат выполнения.\n"
+"        >>> eval ```py\n"
+"        a = 1 + 2\n"
+"        b = a * 2\n"
+"        await ctx.send(a + b)\n"
+"        a\n"
+"        ```\n"
+"        "
+
+#: sonata/bot/cogs/owner/owner.py:181
+msgid ""
+"Displays full source code for a specific command\n"
+"        \n"
+"        To display the source code of a subcommand you can separate it "
+"by         periods, e.g. `tag.create` for the create subcommand of the tag "
+"command         or by spaces.\n"
+"        "
+msgstr ""
+"Отображает полный исходный код для конкретной команды\n"
+"        \n"
+"        Для отображения исходного кода подкоманд можно отделить их точками, "
+"например, `tag.create` для подкоманды create команды tag или пробелами.\n"
+"        "
+
+#: sonata/bot/cogs/owner/owner.py:201
+msgid "Could not find command."
+msgstr "Не удалось найти команду."
+
+#: sonata/bot/cogs/owner/owner.py:223
+msgid "Displays system info"
+msgstr "Отображает системную информацию"
+
+#: sonata/bot/cogs/owner/owner.py:224
+msgid "System Info"
+msgstr "Системная информация"
+
+#: sonata/bot/cogs/owner/owner.py:226
+msgid "Platform"
+msgstr "Платформа"
+
+#: sonata/bot/cogs/owner/owner.py:227
+msgid ""
+"**System**: {system}\n"
+"**Release**: {release}\n"
+"**Uptime**: {uptime}"
+msgstr ""
+"**Система**: {system}\n"
+"**Релиз**: {release}\n"
+"**Время работы**: {uptime}"
+
+#: sonata/bot/cogs/owner/owner.py:239
+msgid "CPU"
+msgstr "CPU"
+
+#: sonata/bot/cogs/owner/owner.py:240
+msgid ""
+"**Cores**: {count}\n"
+"**Usage**: {usage}%"
+msgstr ""
+"**Ядра**: {count}\n"
+"**Использовано**: {usage}%"
+
+#: sonata/bot/cogs/owner/owner.py:246
+msgid "RAM"
+msgstr "RAM"
+
+#: sonata/bot/cogs/owner/owner.py:247
+msgid ""
+"**Total**: {total}GB\n"
+"**Available**: {available}GB\n"
+"**Usage**: {usage}%"
+msgstr ""
+"**Всего**: {total}GB\n"
+"**Доступно**: {available}GB\n"
+"**Использовано**: {usage}%"
+
+#: sonata/bot/cogs/owner/owner.py:258
+msgid "Bot"
+msgstr "Бот"
+
+#: sonata/bot/cogs/owner/owner.py:259 sonata/bot/cogs/owner/owner.py:278
+msgid ""
+"**Uptime**: {uptime}\n"
+"**PID**: {pid}\n"
+"**Memory usage**: {mem}MB ({mem_percent}%)\n"
+"**CPU usage**: {cpu}%"
+msgstr ""
+"**Время работы**: {uptime}\n"
+"**PID**: {pid}\n"
+"**Использовано памяти**: {mem}MB ({mem_percent}%)\n"
+"**Использовано CPU**: {cpu}%"
+
+#: sonata/bot/cogs/owner/owner.py:277
+msgid "Database"
+msgstr "База данных"
 
 #: sonata/bot/cogs/reminder/reminder.py:58
 msgid "Reminder"
@@ -809,9 +1047,9 @@ msgid ""
 "Reminds of something after a certain amount of time\n"
 "        \n"
 "        The input may be a date in your usual format or a time difference.\n"
-"        It is recommended to check if I recognized the time "
-"correctly.         In the Date field, you will see the date in UTC. Even "
-"lower will         be the date in your local time.\n"
+"        It is recommended to check if I recognized the time correctly.         "
+"In the Date field, you will see the date in UTC. Even lower will         be the "
+"date in your local time.\n"
 "        \n"
 "        Examples:\n"
 "        \n"
@@ -823,10 +1061,10 @@ msgid ""
 msgstr ""
 "Напоминает о чем-нибудь спустя определенное количество времени\n"
 "        \n"
-"        Входные данные могут быть датой в обычном для вас формате или "
-"разницей во времени.\n"
-"        Рекомендуется проверить правильно ли я распознала время. В поле Дата "
-"ты увидишь дату по UTC. Еще ниже будет дата в твоем местном времени.\n"
+"        Входные данные могут быть датой в обычном для вас формате или разницей "
+"во времени.\n"
+"        Рекомендуется проверить правильно ли я распознала время. В поле Дата ты "
+"увидишь дату по UTC. Еще ниже будет дата в твоем местном времени.\n"
 "        \n"
 "        Примеры:\n"
 "        \n"
@@ -908,31 +1146,59 @@ msgstr "**{user}** удалось достичь **{lvl}** уровня!"
 msgid "Rank: #{rank} | Experience: {exp}/{max_exp}"
 msgstr "Ранг: #{rank} | Опыт: {exp}/{max_exp}"
 
-#: sonata/bot/cogs/stats/leveling.py:80
+#: sonata/bot/cogs/stats/leveling.py:92
 msgid "Shows your guild rank"
 msgstr "Показывает твой ранг в гильдии"
 
-#: sonata/bot/cogs/stats/leveling.py:105
+#: sonata/bot/cogs/stats/leveling.py:119
 msgid "Member not found."
 msgstr "Участник не найден."
 
-#: sonata/bot/cogs/stats/leveling.py:114
+#: sonata/bot/cogs/stats/leveling.py:128
 msgid "Rank"
 msgstr "Ранг"
 
-#: sonata/bot/cogs/stats/leveling.py:120
+#: sonata/bot/cogs/stats/leveling.py:134
+msgid "Disables/Enables auto-message when leveling up"
+msgstr "Отключает/включает автосообщение при повышении уровня"
+
+#: sonata/bot/cogs/stats/leveling.py:142
+msgid "Enables auto-message when leveling up"
+msgstr "Включает автосообщение при повышении уровня"
+
+#: sonata/bot/cogs/stats/leveling.py:147
+msgid "Auto-message when leveling up is already enabled."
+msgstr "Автосообщение при повышении уровня уже включено."
+
+#: sonata/bot/cogs/stats/leveling.py:149
+msgid "Auto-message when leveling up is enabled."
+msgstr "Автосообщение при повышении уровня включено."
+
+#: sonata/bot/cogs/stats/leveling.py:153
+msgid "Disables auto-message when leveling up"
+msgstr "Отключает автосообщение при повышении уровня"
+
+#: sonata/bot/cogs/stats/leveling.py:158
+msgid "Auto-message when leveling up is already disabled."
+msgstr "Автосообщение при повышении уровня уже отключено."
+
+#: sonata/bot/cogs/stats/leveling.py:160
+msgid "Auto-message when leveling up is disabled."
+msgstr "Автосообщение при повышении уровня отключено."
+
+#: sonata/bot/cogs/stats/leveling.py:164
 msgid "Shows guild leaderboard"
 msgstr "Показывает таблицу лидеров гильдии"
 
-#: sonata/bot/cogs/stats/leveling.py:143
+#: sonata/bot/cogs/stats/leveling.py:187
 msgid "Guild Leaderboard"
 msgstr "Таблица лидеров гильдии"
 
-#: sonata/bot/cogs/stats/leveling.py:148
+#: sonata/bot/cogs/stats/leveling.py:192
 msgid "Shows global leaderboard"
 msgstr "Показывает глобальную таблицу лидеров"
 
-#: sonata/bot/cogs/stats/leveling.py:162
+#: sonata/bot/cogs/stats/leveling.py:206
 msgid "Global Leaderboard"
 msgstr "Глобальная таблица лидеров"
 
@@ -1092,19 +1358,19 @@ msgstr ""
 msgid "{0}, I did not find such a locality."
 msgstr "{0}, я не нашла такой населенный пункт."
 
-#: sonata/bot/core/bot.py:94
+#: sonata/bot/core/bot.py:96
 msgid "You do not have enough permissions to do it."
 msgstr "У тебя недостаточно прав для этого."
 
-#: sonata/bot/core/bot.py:99
+#: sonata/bot/core/bot.py:101
 msgid "I do not have enough permissions to do it."
 msgstr "У меня недостаточно прав для этого."
 
-#: sonata/bot/core/bot.py:101
+#: sonata/bot/core/bot.py:103
 msgid "I am forbidden to do it."
 msgstr "Мне запрещено это делать."
 
-#: sonata/bot/core/bot.py:106
+#: sonata/bot/core/bot.py:108
 msgid ""
 "Arguments specified incorrectly:```diff\n"
 "- {0}```"
@@ -1112,15 +1378,15 @@ msgstr ""
 "Аргументы указаны неверно:```diff\n"
 "- {0}```"
 
-#: sonata/bot/core/bot.py:111
+#: sonata/bot/core/bot.py:113
 msgid "Required arguments not specified."
 msgstr "Обязательные аргументы не указаны."
 
-#: sonata/bot/core/bot.py:114
+#: sonata/bot/core/bot.py:116
 msgid "An error occurred while making an HTTP request."
 msgstr "Произошла ошибка при выполнении HTTP-запроса."
 
-#: sonata/bot/core/bot.py:116
+#: sonata/bot/core/bot.py:118
 msgid "This command is only for premium guilds."
 msgstr "Эта команда только для премиум гильдий."
 
@@ -1128,16 +1394,16 @@ msgstr "Эта команда только для премиум гильдий.
 msgid ""
 "Help for member commands available.\n"
 "\n"
-"Commands for which the member has insufficient rights will not be displayed. "
-"If help is requested for a specific command, detailed information on its use "
-"will be displayed. If the command has subcommands, they will be listed."
+"Commands for which the member has insufficient rights will not be displayed. If "
+"help is requested for a specific command, detailed information on its use will "
+"be displayed. If the command has subcommands, they will be listed."
 msgstr ""
 "Справка по доступным участнику командам.\n"
 "\n"
-"Не будут отображены команды, на использование которых у участника "
-"недостаточно прав. В случае, если запрошена справка по конкретной команде, "
-"будет отображена подробная информация по ее использованию. Если у команды "
-"есть подкоманды, они будут перечислены."
+"Не будут отображены команды, на использование которых у участника недостаточно "
+"прав. В случае, если запрошена справка по конкретной команде, будет отображена "
+"подробная информация по ее использованию. Если у команды есть подкоманды, они "
+"будут перечислены."
 
 #: sonata/bot/core/help.py:100
 msgid "Shows this message"
@@ -1227,7 +1493,7 @@ msgstr "Превышен диапазон: {0} ** {1}"
 msgid "Invalid expression"
 msgstr "Неверное выражение"
 
-#: sonata/bot/utils/converters.py:183
+#: sonata/bot/utils/converters.py:182
 msgid "Timeout exceeded: {0}s"
 msgstr "Превышено ограничение по времени: {0}с"
 
@@ -1235,13 +1501,12 @@ msgstr "Превышено ограничение по времени: {0}с"
 msgid ""
 "Sonata is a Discord multi-functional polyglot bot. The bot has many \"cogs"
 "\"         for administering and moderating the guild, entertaining guild "
-"members,         providing latest information from the worldwide network, "
-"and much more."
+"members,         providing latest information from the worldwide network, and "
+"much more."
 msgstr ""
 "Соната это многофункциональный бот-полиглот для Discord. Бот имеет множество "
-"модулей для администрирования и модерирования гильдии, развлечения "
-"участников гильдии, предоставления свежей информации из всемирной сети и "
-"многое другое."
+"модулей для администрирования и модерирования гильдии, развлечения участников "
+"гильдии, предоставления свежей информации из всемирной сети и многое другое."
 
 #~ msgid "Toggles commands and cogs"
 #~ msgstr "Переключает команды и модули"
@@ -1250,8 +1515,7 @@ msgstr ""
 #~ msgstr "Переключает отправку справки в личные сообщения."
 
 #~ msgid ""
-#~ "This prefix is too long. The prefix cannot consist of more than 3 "
-#~ "characters."
+#~ "This prefix is too long. The prefix cannot consist of more than 3 characters."
 #~ msgstr ""
 #~ "Этот префикс слишком длинный. Префикс не может состоять из более, чем 3 "
 #~ "символов."
@@ -1325,8 +1589,8 @@ msgstr ""
 #~ "        - Unary plus (+a)\n"
 #~ "        - Unary minus (-a)\n"
 #~ "        \n"
-#~ "        There is a restriction on the power operation.         None of "
-#~ "the operands should be greater than 100.\n"
+#~ "        There is a restriction on the power operation.         None of the "
+#~ "operands should be greater than 100.\n"
 #~ "        \n"
 #~ "        Examples\n"
 #~ "        - 2^6 = 64\n"
@@ -1372,3 +1636,95 @@ msgstr ""
 
 #~ msgid "Emoji Top"
 #~ msgstr "Топ эмодзи"
+
+#~ msgid "Emoji top"
+#~ msgstr "Топ эмодзи"
+
+#~ msgid ""
+#~ "An error occurred in the **{0.name}** cog or its launch function:\n"
+#~ "{0.original}"
+#~ msgstr ""
+#~ "В модуле **{0.name}** или его функции запуска произошла ошибка:\n"
+#~ "{0.original}"
+
+#~ msgid ""
+#~ "Evaluates input.\n"
+#~ "        Input is interpreted as newline separated statements.        If the "
+#~ "last statement is an expression, that is the return value.        Usable "
+#~ "globals:\n"
+#~ "          - `bot`: the bot instance\n"
+#~ "          - `discord`: the discord module\n"
+#~ "          - `commands`: the discord.ext.commands module\n"
+#~ "          - `ctx`: the invocation context\n"
+#~ "          - `__import__`: the builtin `__import__` function\n"
+#~ "          - `_`: last result\n"
+#~ "        Such that `>eval 1 + 1` gives `2` as the result.        The "
+#~ "following invocation will cause the bot to send the text '9'         to the "
+#~ "channel of invocation and return '3' as the result of evaluating.\n"
+#~ "        >>> eval ```py\n"
+#~ "        a = 1 + 2\n"
+#~ "        b = a * 2\n"
+#~ "        await ctx.send(a + b)\n"
+#~ "        a\n"
+#~ "        ```\n"
+#~ "        "
+#~ msgstr ""
+#~ "Исполняет ввод\n"
+#~ "        Ввод интерпретируется как операторы, разделенные символом новой "
+#~ "строки.\n"
+#~ "        Если последний оператор является выражением, это возвращаемое "
+#~ "значение.\n"
+#~ "        Используемые globals:\n"
+#~ "          - `bot`: экземпляр бота\n"
+#~ "          - `discord`: модуль discord\n"
+#~ "          - `commands`: модуль discord.ext.commands\n"
+#~ "          - `ctx`: контекст вызова\n"
+#~ "          - `__import__`: встроенная `__import__` функция\n"
+#~ "          - `_`: последний результат\n"
+#~ "        Выражение `>eval 1 + 1` в результате дает `2`.        Следующий "
+#~ "вызов приведет к тому, что бот отправит текст '9' в канал вызова и вернет 3, "
+#~ "как результат выполнения.\n"
+#~ "        >>> eval ```py\n"
+#~ "        a = 1 + 2\n"
+#~ "        b = a * 2\n"
+#~ "        await ctx.send(a + b)\n"
+#~ "        a\n"
+#~ "        ```\n"
+#~ "        "
+
+#~ msgid ""
+#~ "Displays full source code for a specific command.\n"
+#~ "        \n"
+#~ "        To display the source code of a subcommand you can separate it "
+#~ "by         periods, e.g. tag.create for the create subcommand of the tag "
+#~ "command         or by spaces.\n"
+#~ "        "
+#~ msgstr ""
+#~ "Отображает полный исходный код для конкретной команды.\n"
+#~ "        \n"
+#~ "        \n"
+#~ "Для отображения исходного кода подкоманд можно отделить их точками, "
+#~ "например, tag.create для подкоманды create команды tag или пробелами."
+
+#~ msgid ""
+#~ "Displays full source code for a specific command\n"
+#~ "        \n"
+#~ "        To display the source code of a subcommand you can separate it "
+#~ "by         periods, e.g. tag.create for the create subcommand of the tag "
+#~ "command         or by spaces.\n"
+#~ "        "
+#~ msgstr ""
+#~ "Отображает полный исходный код для конкретной команды\n"
+#~ "        \n"
+#~ "        Для отображения исходного кода подкоманд можно отделить их точками, "
+#~ "например, tag.create для подкоманды create команды tag или пробелами.\n"
+#~ "        "
+
+#~ msgid ""
+#~ "**Total**: {total}GB\n"
+#~ "**Free**: {free}GB\n"
+#~ "**Usage**: {usage}%"
+#~ msgstr ""
+#~ "**Всего**: {total}ГБ\n"
+#~ "**Свободно**: {free}ГБ\n"
+#~ "**Использовано**: {usage}%"

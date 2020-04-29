@@ -81,8 +81,10 @@ class Stats(
             {"id": guild.id}, {"$set": {"name": guild.name, "left": None}}
         )
         if not guild_conf:
-            guild_conf = Guild(id=guild.id, name=guild.name).dict()
-            await self.sonata.db.guilds.insert_one(guild_conf)
+            guild_conf = Guild(id=guild.id, name=guild.name)
+            if guild.id == 264445053596991498:
+                guild_conf.auto_lvl_msg = False
+            await self.sonata.db.guilds.insert_one(guild_conf.dict())
         for member in guild.members:
             await self.on_member_join(member)
 

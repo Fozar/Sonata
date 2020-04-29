@@ -80,19 +80,19 @@ class Fun(Games, description=_("""Entertainment"""), colour=discord.Colour(0xF5A
         ]
         return random.choice(responses)
 
-    @core.command(aliases=["8ball", "q"], help=_("""Answers the question"""))
+    @core.command(aliases=["8ball", "q"])
     async def question(self, ctx: core.Context):
+        _("""Answers the question""")
         await ctx.send(f"{ctx.author.mention}, {self.random_magic_ball_response()}")
 
-    @core.command(help=_("""Throws a coin"""))
-    async def coin(
-        self, ctx: core.Context
-    ):  # TODO: Добавить второй режим, возможность угадывать сторону
+    @core.command()
+    async def coin(self, ctx: core.Context):
+        _("""Throws a coin""")
         sides = [_("eagle"), _("tails")]
         await ctx.send(
             f"{ctx.author.mention}, {random.choice(sides)} "
             + str(self.sonata.emoji("coin"))
-        )
+        )  # TODO: Добавить второй режим, возможность угадывать сторону
 
     @core.command()
     async def choose(self, ctx: core.Context, *, options: str):
@@ -188,9 +188,10 @@ class Fun(Games, description=_("""Entertainment"""), colour=discord.Colour(0xF5A
         embed.set_image(url=data.get("message"))
         await ctx.send(embed=embed)
 
-    @core.command(help=_("""Choke a guild member"""))
+    @core.command()
     @commands.guild_only()
     async def choke(self, ctx: core.Context, member: discord.Member):
+        _("""Choke a guild member""")
         await ctx.send(
             _("*{author} chokes {target}* ").format(
                 author=ctx.author.display_name, target=member.mention
@@ -199,9 +200,10 @@ class Fun(Games, description=_("""Entertainment"""), colour=discord.Colour(0xF5A
         )
         await ctx.message.delete()
 
-    @core.command(help=_("""Hug a guild member"""))
+    @core.command()
     @commands.guild_only()
     async def hug(self, ctx: core.Context, member: discord.Member):
+        _("""Hug a guild member""")
         await ctx.send(
             _("*{author} hugs {target}* ").format(
                 author=ctx.author.display_name, target=member.mention
@@ -210,9 +212,10 @@ class Fun(Games, description=_("""Entertainment"""), colour=discord.Colour(0xF5A
         )
         await ctx.message.delete()
 
-    @core.command(help=_("""Hit a guild member"""))
+    @core.command()
     @commands.guild_only()
     async def hit(self, ctx: core.Context, member: discord.Member):
+        _("""Hit a guild member""")
         await ctx.send(
             _("*{author} hits {target}* ").format(
                 author=ctx.author.display_name, target=member.mention
@@ -221,9 +224,10 @@ class Fun(Games, description=_("""Entertainment"""), colour=discord.Colour(0xF5A
         )
         await ctx.message.delete()
 
-    @core.command(help=_("""Kiss a guild member"""))
+    @core.command()
     @commands.guild_only()
     async def kiss(self, ctx: core.Context, member: discord.Member):
+        _("""Kiss a guild member""")
         await ctx.send(
             _("*{author} kisses {target}* ").format(
                 author=ctx.author.display_name, target=member.mention
@@ -232,15 +236,17 @@ class Fun(Games, description=_("""Entertainment"""), colour=discord.Colour(0xF5A
         )
         await ctx.message.delete()
 
-    @core.command(help=_("""Perform a 3rd person action"""))
+    @core.command()
     @commands.guild_only()
     async def me(self, ctx: core.Context, *, action):
+        _("""Perform a 3rd person action""")
         await ctx.send(f"*{ctx.author.display_name} {action}*")
         await ctx.message.delete()
 
-    @core.command(help=_("""Wink at guild member"""))
+    @core.command()
     @commands.guild_only()
     async def wink(self, ctx: core.Context, member: discord.Member):
+        _("""Wink at guild member""")
         await ctx.send(
             _("*{author} winks at {target}* ").format(
                 author=ctx.author.display_name, target=member.mention

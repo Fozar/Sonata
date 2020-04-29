@@ -32,6 +32,7 @@ class User(DiscordConfigModel, CounterMixin):
     exp: int = 0
     lvl: int = 0
     last_exp_at: datetime = None
+    auto_lvl_msg: bool = True
     guilds: List[int] = []
 
 
@@ -42,6 +43,8 @@ class Channel(DiscordConfigModel):
 class Guild(DiscordConfigModel):
     premium: bool = False
     dm_help: bool = False
+    auto_lvl_msg: bool = True
+    last_message_at: datetime = None
     admin_role: Optional[int] = None
     mod_role: Optional[int] = None
     modlog: Optional[int] = None

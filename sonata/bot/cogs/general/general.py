@@ -26,13 +26,12 @@ class General(
                 {"id": ctx.author.id}, {"about": True}
             )
             about = user_conf.get("about") or _("The field is not filled.")
-            await ctx.inform(
+            return await ctx.inform(
                 _(
                     "This command allows you to fill in the `About` field, "
                     "which will be displayed in the user profile. Current value:\n`{0}`"
                 ).format(about)
             )
-            return await ctx.send_help()
 
         if len(about) < 20:
             await ctx.inform(_("The field length cannot be less than 20 characters."))

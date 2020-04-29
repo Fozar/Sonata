@@ -8,8 +8,7 @@ from babel.dates import format_datetime
 from dateutil import parser
 
 from sonata.bot import core
-from sonata.bot.utils import i18n
-from sonata.bot.utils.converters import Expression, to_lower, locale_to_lang
+from sonata.bot.utils.converters import MathExpression, to_lower, locale_to_lang
 from sonata.bot.utils.misc import format_e
 from sonata.bot.utils.paginator import EmbedPaginator
 
@@ -83,7 +82,7 @@ class Utils(core.Cog, colour=discord.Colour(0x7ED321)):
         await ctx.send(embed=embed)
 
     @core.command(aliases=["calc"])
-    async def calculate(self, ctx: core.Context, *, expression: Expression() = None):
+    async def calculate(self, ctx: core.Context, *, expression: MathExpression() = None):
         _(
             """Calculates an expression
         

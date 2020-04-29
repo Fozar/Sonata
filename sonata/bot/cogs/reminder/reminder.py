@@ -179,7 +179,7 @@ class Reminder(core.Cog, colour=discord.Colour(0x50E3C2)):
             return
         desc = _("**Remind**: {remind}\n**Date**: {date}").format(
             remind=remind.arg,
-            date=format_datetime(remind.dt, format="long", locale=self.sonata.loop),
+            date=format_datetime(remind.dt, format="long", locale=self.sonata.locale),
         )
         msg, response = await ctx.confirm(
             desc, title=_("Create a reminder?"), timestamp=remind.dt

@@ -5,6 +5,7 @@ from typing import Union, Optional
 
 import aiohttp
 import discord
+from aiohttp.web_app import Application
 from discord.ext import commands
 from motor import motor_asyncio as motorio
 
@@ -21,6 +22,7 @@ class Sonata(commands.Bot):
         default_prefix,
         db: motorio.AsyncIOMotorDatabase,
         config: dict,
+        app: Application,
         logger: Logger = None,
         *args,
         **kwargs,
@@ -36,6 +38,7 @@ class Sonata(commands.Bot):
         self.default_prefix = default_prefix
         self.db = db
         self.logger = logger
+        self.app = app
         self.session = aiohttp.ClientSession(loop=self.loop)
         self.launch_time = None
 

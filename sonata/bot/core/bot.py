@@ -1,4 +1,5 @@
 import inspect
+import traceback
 from datetime import datetime
 from logging import Logger
 from typing import Union, Optional
@@ -84,6 +85,10 @@ class Sonata(commands.Bot):
 
         await self.process_commands(message)
 
+    async def on_guild_join(self, guild: discord.Guild):
+        owner = self.get_user(self.owner_id) or await self.fetch_user(self.owner_id)
+        await owner.send(f"New guild joined: {guild.name}")
+
     async def on_command_error(self, ctx: Context, exception: Exception):
         if ctx.cog:
             if getattr(Cog, "_get_overridden_method")(
@@ -119,6 +124,13 @@ class Sonata(commands.Bot):
         else:
             self.logger.warning(
                 f"Ignoring exception in command {ctx.command}: {exception}"
+            )
+            self.logger.warning(
+                "\n".join(
+                    traceback.format_exception(
+                        type(exception), exception, exception.__traceback__
+                    )
+                )
             )
 
     # Methods

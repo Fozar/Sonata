@@ -58,7 +58,7 @@ def use_current_gettext(*args, **kwargs):
     if not gettext_translations:
         return gettext.gettext(*args, **kwargs)
 
-    locale = current_locale.get()
+    locale = current_locale.get(default_locale)
     return gettext_translations.get(
         locale, gettext_translations[default_locale]
     ).gettext(*args, **kwargs)

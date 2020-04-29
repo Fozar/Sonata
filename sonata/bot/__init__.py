@@ -19,7 +19,6 @@ def setup_logger():
         when="midnight",
         backupCount=3,
         encoding="utf-8",
-        utc=True,
     )
     file_handler.setFormatter(
         logging.Formatter("%(asctime)s [%(levelname)s] - %(filename)s - %(message)s")
@@ -33,6 +32,7 @@ def setup_logger():
 
 
 async def init_bot(app):
+    print(type(app))
     logger = setup_logger()
     loop = asyncio.get_event_loop()
     bot_config = app["config"]["bot"]
@@ -42,6 +42,7 @@ async def init_bot(app):
         description=bot_config.description,
         db=app.get("db"),
         logger=logger,
+        app=app,
         loop=loop,
         config=app["config"],
     )

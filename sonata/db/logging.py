@@ -67,7 +67,6 @@ def setup_logger():
         when="midnight",
         backupCount=3,
         encoding="utf-8",
-        utc=True,
     )
     file_handler.setFormatter(
         logging.Formatter("%(asctime)s [%(levelname)s] - %(filename)s - %(message)s")

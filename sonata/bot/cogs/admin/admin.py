@@ -2,7 +2,6 @@ import discord
 from babel import Locale
 
 from sonata.bot import core
-from sonata.bot.utils import i18n
 from sonata.bot.utils.converters import to_lower, locale_to_flag, validate_locale
 from sonata.db.models import Channel, Guild
 
@@ -84,6 +83,44 @@ class Admin(
         if ctx.invoked_subcommand is not None:
             return
         await ctx.send_help()
+
+    @guild.group(name="auto-message", aliases=["automsg"])
+    async def guild_auto_message(self, ctx: core.Context):
+        _("""Disables/Enables auto-message when leveling up for all members""")
+        if ctx.invoked_subcommand is not None:
+            return
+
+        await ctx.send_help()
+
+    @guild_auto_message.command(name="enable", aliases=["on"])
+    async def guild_auto_message_enable(self, ctx: core.Context):
+        _("""Enables auto-message when leveling up for all members""")
+        result = await ctx.db.guilds.update_one(
+            {"id": ctx.guild.id}, {"$set": {"auto_lvl_msg": True}}
+        )
+        if result.modified_count == 0:
+            await ctx.inform(
+                _("Auto-message when leveling up is already enabled for all members.")
+            )
+        else:
+            await ctx.inform(
+                _("Auto-message when leveling up is enabled for all members.")
+            )
+
+    @guild_auto_message.command(name="disable", aliases=["off"])
+    async def guild_auto_message_disable(self, ctx: core.Context):
+        _("""Disables auto-message when leveling up for all members""")
+        result = await ctx.db.guilds.update_one(
+            {"id": ctx.guild.id}, {"$set": {"auto_lvl_msg": False}}
+        )
+        if result.modified_count == 0:
+            await ctx.inform(
+                _("Auto-message when leveling up is already disabled for all members.")
+            )
+        else:
+            await ctx.inform(
+                _("Auto-message when leveling up is disabled for all members.")
+            )
 
     @guild.group(name="dmhelp")
     async def guild_dmhelp(self, ctx: core.Context):
@@ -255,8 +292,6 @@ class Admin(
             id=guild["id"],
             name=guild["name"],
             premium=guild["premium"],
-            total_messages=guild["total_messages"],
-            commands_invoked=guild["commands_invoked"],
             created_at=guild["created_at"],
             last_message_at=guild["last_message_at"],
         ).dict()

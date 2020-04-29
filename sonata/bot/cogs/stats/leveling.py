@@ -56,8 +56,20 @@ class Leveling(core.Cog):
         rank = await self.sonata.db.users.count_documents(
             {"guilds": message.guild.id, "exp": {"$gte": exp}}
         )
-        embed = self.make_lvlup_embed(message.author, lvl, exp, rank)
-        await message.channel.send(embed=embed)
+        guild = await self.sonata.db.guilds.find_one(
+            {"id": message.guild.id}, {"auto_lvl_msg": True}
+        )
+        if guild.get("auto_lvl_msg", True):
+            user = await self.sonata.db.users.find_one(
+                {"id": message.author.id}, {"auto_lvl_msg": True}
+            )
+            send_msg = user.get("auto_lvl_msg", True)
+        else:
+            send_msg = guild.get["auto_lvl_msg"]
+
+        if send_msg:
+            embed = self.make_lvlup_embed(message.author, lvl, exp, rank)
+            await message.channel.send(embed=embed)
 
     async def update_user_exp(self, message, exp, lvl):
         exp = random.randint(5, 15) * int(1 + lvl / 100) + exp
@@ -72,12 +84,14 @@ class Leveling(core.Cog):
         if lvl == next_lvl:
             await self.lvl_up(message, exp, lvl)
 
-    @core.command()
+    @core.group(invoke_without_command=True)
     @commands.guild_only()
     async def rank(
         self, ctx: core.Context, member: Union[discord.Member, int] = None,
     ):
         _("""Shows your guild rank""")
+        if ctx.invoked_subcommand is not None:
+            return
         if member is None:
             member = ctx.author
         if isinstance(member, int):
@@ -114,6 +128,36 @@ class Leveling(core.Cog):
         embed.add_field(name=_("Rank"), value=str(rank))
         embed.set_thumbnail(url=member.avatar_url)
         await ctx.send(embed=embed)
+
+    @rank.group(name="message", aliases=["msg"], invoke_without_command=True)
+    async def rank_message(self, ctx: core.Context):
+        _("""Disables/Enables auto-message when leveling up""")
+        if ctx.invoked_subcommand is not None:
+            return
+
+        await ctx.send_help()
+
+    @rank_message.command(name="enable", aliases=["on"])
+    async def rank_message_enable(self, ctx: core.Context):
+        _("""Enables auto-message when leveling up""")
+        result = await ctx.db.users.update_one(
+            {"id": ctx.author.id}, {"$set": {"auto_lvl_msg": True}}
+        )
+        if result.modified_count == 0:
+            await ctx.inform(_("Auto-message when leveling up is already enabled."))
+        else:
+            await ctx.inform(_("Auto-message when leveling up is enabled."))
+
+    @rank_message.command(name="disable", aliases=["off"])
+    async def rank_message_disable(self, ctx: core.Context):
+        _("""Disables auto-message when leveling up""")
+        result = await ctx.db.users.update_one(
+            {"id": ctx.author.id}, {"$set": {"auto_lvl_msg": False}}
+        )
+        if result.modified_count == 0:
+            await ctx.inform(_("Auto-message when leveling up is already disabled."))
+        else:
+            await ctx.inform(_("Auto-message when leveling up is disabled."))
 
     @core.group()
     async def top(self, ctx: core.Context):

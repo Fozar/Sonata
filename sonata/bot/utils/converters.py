@@ -130,7 +130,7 @@ class UserFriendlyTime(commands.Converter):
         return self
 
 
-class Expression(commands.Converter):
+class MathExpression(commands.Converter):
     def __init__(self, timeout: float = 0.5):
         self.operators = {
             ast.Add: op.add,
@@ -182,3 +182,40 @@ class Expression(commands.Converter):
                     _("Timeout exceeded: {0}s").format(self.timeout)
                 )
         return result
+
+
+class EvalExpression(commands.Converter):
+    def __init__(self):
+        self.parsed = None
+        self.fn_name = "_eval_expr"
+
+    def insert_returns(self, body):
+        # insert return stmt if the last expression is a expression statement
+        if isinstance(body[-1], ast.Expr):
+            body[-1] = ast.Return(body[-1].value)
+            ast.fix_missing_locations(body[-1])
+
+        # for if statements, we insert returns into the body and the orelse
+        if isinstance(body[-1], ast.If):
+            self.insert_returns(body[-1].body)
+            self.insert_returns(body[-1].orelse)
+
+        # for with blocks, again we insert returns into the body
+        if isinstance(body[-1], ast.With):
+            self.insert_returns(body[-1].body)
+
+    async def convert(self, ctx: core.Context, argument):
+        cmd = argument.strip("` ").splitlines()
+        if cmd[0] in ("py", "python"):
+            cmd.pop(0)
+        # add a layer of indentation
+        cmd = "\n".join(f"    {i}" for i in cmd)
+
+        # wrap in async def body
+        body = f"async def {self.fn_name}():\n{cmd}"
+
+        self.parsed = ast.parse(body)
+        body = self.parsed.body[0].body
+
+        self.insert_returns(body)
+        return self

@@ -1,9 +1,10 @@
 import discord
 from babel import Locale
+from discord.ext.commands import clean_content
 
 from sonata.bot import core
 from sonata.bot.utils.converters import to_lower, locale_to_flag, validate_locale
-from sonata.db.models import Channel, Guild
+from sonata.db.models import Channel, Guild, Greeting
 
 
 class Admin(
@@ -20,6 +21,31 @@ class Admin(
             and ctx.author.guild_permissions.administrator
             or await self.sonata.is_owner(ctx.author)
         )
+
+    @core.Cog.listener()
+    async def on_member_join(self, member: discord.Member):
+        if member.bot:
+            return
+
+        guild = await self.sonata.db.guilds.find_one(
+            {"id": member.guild.id}, {"_id": False, "greeting": True}
+        )
+        if not guild or not guild.get("greeting"):
+            return
+
+        greeting = guild["greeting"]
+        channel = discord.utils.get(
+            member.guild.text_channels, id=greeting["channel_id"]
+        )
+        if channel is None:
+            return
+
+        msg = (
+            greeting["message"]
+            .replace("[member]", member.display_name)
+            .replace("[mention]", member.mention)
+        )
+        await channel.send(msg)
 
     # CHANNELS SETTINGS. PREMIUM ONLY
 
@@ -234,6 +260,58 @@ class Admin(
             await ctx.inform(_("This command is already disabled."))
         else:
             await ctx.inform(_("Command `{0}` disabled.").format(command))
+
+    @guild.group(name="greeting", aliases=["welcome"])
+    async def guild_greeting(self, ctx: core.Context):
+        if ctx.invoked_subcommand is not None:
+            return
+
+        guild = await ctx.db.guilds.find_one({"id": ctx.guild.id}, {"greeting": True})
+        if not guild.get("greeting"):
+            return await ctx.inform(_("Welcome message not set."))
+
+        greeting = guild["greeting"]
+        channel = discord.utils.get(ctx.guild.text_channels, id=greeting["channel_id"])
+        if channel is None:
+            return await ctx.inform(_("Channel not found. Set a new welcome message."))
+
+        await ctx.inform(
+            _("**Channel**: {channel}\n**Message**: ```{msg}```").format(
+                channel=channel.mention, msg=greeting["message"]
+            )
+        )
+
+    @guild_greeting.command(name="disable")
+    async def guild_greeting_disable(self, ctx: core.Context):
+        _("""Disables the greeting message.""")
+        await ctx.db.guilds.update_one(
+            {"id": ctx.guild.id}, {"$set": {"greeting": None}}
+        )
+        await ctx.inform(_("Welcome message is disabled."))
+
+    @guild_greeting.command(name="set")
+    async def guild_greeting_set(
+        self,
+        ctx: core.Context,
+        channel: discord.TextChannel,
+        *,
+        message: clean_content()
+    ):
+        _(
+            """Sets welcome message
+
+        Use [member] to display the member name in the message or [mention] to @mention.
+        Example:
+        - guild greeting set #channel Hi, [member]! Welcome to our guild!"""
+        )
+        if len(message) > 2000:
+            return await ctx.inform(_("Welcome message cannot exceed 2000 characters."))
+
+        greeting = Greeting(channel_id=channel.id, message=message).dict()
+        await ctx.db.guilds.update_one(
+            {"id": ctx.guild.id}, {"$set": {"greeting": greeting}}
+        )
+        await ctx.inform(_("Welcome message set."))
 
     @guild.command(name="locale")
     async def guild_locale(self, ctx: core.Context, locale: validate_locale = None):

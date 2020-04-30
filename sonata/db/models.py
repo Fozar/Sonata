@@ -40,10 +40,16 @@ class Channel(DiscordConfigModel):
     pass
 
 
+class Greeting(BaseModel):
+    channel_id: int
+    message: str
+
+
 class Guild(DiscordConfigModel):
     premium: bool = False
     dm_help: bool = False
     auto_lvl_msg: bool = True
+    greeting: Optional[Greeting] = None
     last_message_at: datetime = None
     admin_role: Optional[int] = None
     mod_role: Optional[int] = None

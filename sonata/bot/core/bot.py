@@ -36,6 +36,7 @@ class Sonata(commands.Bot):
             *args,
             **kwargs,
         )
+        self.description = kwargs.get("description", "")
         self.default_prefix = default_prefix
         self.db = db
         self.logger = logger

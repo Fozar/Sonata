@@ -32,7 +32,6 @@ def setup_logger():
 
 
 async def init_bot(app):
-    print(type(app))
     logger = setup_logger()
     loop = asyncio.get_event_loop()
     bot_config = app["config"]["bot"]

@@ -19,7 +19,7 @@ from sonata.bot.utils import i18n
 def flag_to_locale(flag: str) -> str:
     locale = f.dflagize(flag)
     r = re.compile(r".{2}_" + locale.strip(":"))
-    return list(filter(r.match, i18n.gettext_translations.keys()))[0]
+    return list(filter(r.match, i18n.LOCALES))[0]
 
 
 def to_lower(arg: str) -> str:
@@ -27,7 +27,7 @@ def to_lower(arg: str) -> str:
 
 
 def validate_locale(arg: str) -> str:
-    if arg not in i18n.gettext_translations:
+    if arg not in i18n.LOCALES:
         raise commands.BadArgument(_("Locale not found"))
     return arg
 
@@ -88,9 +88,7 @@ class UserFriendlyTime(commands.Converter):
         me = _("me")  # Like as "Remind me..."
         if argument.startswith(me):
             argument = argument[len(me) :].strip()
-        languages = [
-            locale_to_lang(locale) for locale in i18n.gettext_translations.keys()
-        ]
+        languages = [locale_to_lang(locale) for locale in i18n.LOCALES]
         date = search.search_dates(argument, languages=languages)
         if date is None:
             raise commands.BadArgument(_("Could not recognize the date."))

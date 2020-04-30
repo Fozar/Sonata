@@ -3,13 +3,13 @@ from typing import Union
 
 from babel import Locale
 
+from . import i18n
 from .converters import locale_to_flag
-from .i18n import gettext_translations
 
 
 def make_locale_list(flag=True, display_name=False):
     locales = []
-    for locale in gettext_translations.keys():
+    for locale in i18n.LOCALES:
         string = f"`{locale if not display_name else Locale.parse(locale, sep='_').display_name}`"
         if flag:
             string = f"{locale_to_flag(locale)} {string}"

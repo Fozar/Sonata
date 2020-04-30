@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-04-29 23:35+0700\n"
-"PO-Revision-Date: 2020-04-29 23:35+0700\n"
+"POT-Creation-Date: 2020-04-30 15:57+0700\n"
+"PO-Revision-Date: 2020-04-30 15:57+0700\n"
 "Last-Translator: \n"
 "Language: ru_RU\n"
 "Language-Team: ru_RU <LL@li.org>\n"
@@ -813,35 +813,35 @@ msgstr "Возвращает список поддерживаемых язык�
 msgid "Available locales: {0}."
 msgstr "Доступные языки: {0}."
 
-#: sonata/bot/cogs/owner/owner.py:24
+#: sonata/bot/cogs/owner/owner.py:25
 msgid "Commands of bot owner"
 msgstr "Команды владельца бота"
 
-#: sonata/bot/cogs/owner/owner.py:43
+#: sonata/bot/cogs/owner/owner.py:61
 msgid "Executes a command on behalf of a specific member in a specific channel."
 msgstr "Выполняет команду от имени определенного участника."
 
-#: sonata/bot/cogs/owner/owner.py:56
+#: sonata/bot/cogs/owner/owner.py:74
 msgid "Repeats the command the specified number of times"
 msgstr "Повторяет команду указанное количество раз"
 
-#: sonata/bot/cogs/owner/owner.py:68
+#: sonata/bot/cogs/owner/owner.py:86
 msgid "I did not find the cog: **{0}**!"
 msgstr "Я не нашла модуль: **{0}**!"
 
-#: sonata/bot/cogs/owner/owner.py:71
+#: sonata/bot/cogs/owner/owner.py:89
 msgid "The cog is already loaded: **{0}**!"
 msgstr "Модуль уже подключен: **{0}**!"
 
-#: sonata/bot/cogs/owner/owner.py:74
+#: sonata/bot/cogs/owner/owner.py:92
 msgid "I did not load the cog: **{0}**!"
 msgstr "Я не подключала модуль: **{0}**!"
 
-#: sonata/bot/cogs/owner/owner.py:77
+#: sonata/bot/cogs/owner/owner.py:95
 msgid "There is no setup function in the **{0}** extension."
 msgstr "В расширении модуля **{0}** отсутсвует функция запуска."
 
-#: sonata/bot/cogs/owner/owner.py:83
+#: sonata/bot/cogs/owner/owner.py:101
 msgid ""
 "An error occurred in the **{0.name}** cog or its setup function:\n"
 "{0.original}"
@@ -849,15 +849,15 @@ msgstr ""
 "В модуле **{0.name}** или его функции запуска произошла ошибка:\n"
 "{0.original}"
 
-#: sonata/bot/cogs/owner/owner.py:95
+#: sonata/bot/cogs/owner/owner.py:113
 msgid "Lists loaded cogs"
 msgstr "Выводит список подключенных модулей"
 
-#: sonata/bot/cogs/owner/owner.py:101
+#: sonata/bot/cogs/owner/owner.py:119
 msgid "No loaded cogs!"
 msgstr "Нет подключенных модулей!"
 
-#: sonata/bot/cogs/owner/owner.py:106
+#: sonata/bot/cogs/owner/owner.py:124
 msgid ""
 "Loaded cogs:\n"
 "{0}\n"
@@ -865,39 +865,39 @@ msgstr ""
 "Подключенные модули:\n"
 "{0}\n"
 
-#: sonata/bot/cogs/owner/owner.py:112
+#: sonata/bot/cogs/owner/owner.py:130
 msgid "Loads cog"
 msgstr "Подключает модуль"
 
-#: sonata/bot/cogs/owner/owner.py:115
+#: sonata/bot/cogs/owner/owner.py:133
 msgid "I loaded the cog: **{}**."
 msgstr "Подключила модуль: **{}**"
 
-#: sonata/bot/cogs/owner/owner.py:120
+#: sonata/bot/cogs/owner/owner.py:138
 msgid "Disables cog"
 msgstr "Отключает модуль"
 
-#: sonata/bot/cogs/owner/owner.py:122
+#: sonata/bot/cogs/owner/owner.py:140
 msgid "This cog cannot be disabled"
 msgstr "Этот модуль не может быть отключен"
 
-#: sonata/bot/cogs/owner/owner.py:126
+#: sonata/bot/cogs/owner/owner.py:144
 msgid "I disabled the cog: **{0}**."
 msgstr "Отключила модуль: **{0}**."
 
-#: sonata/bot/cogs/owner/owner.py:130
+#: sonata/bot/cogs/owner/owner.py:148
 msgid "Reloads cog"
 msgstr "Переподключает модуль"
 
-#: sonata/bot/cogs/owner/owner.py:133
+#: sonata/bot/cogs/owner/owner.py:151
 msgid "I reloaded the cog: **{0}**."
 msgstr "Пеподключила модуль: **{0}**."
 
-#: sonata/bot/cogs/owner/owner.py:138
+#: sonata/bot/cogs/owner/owner.py:156
 msgid "Displays uptime"
-msgstr "Показывает время с момента запуска бота"
+msgstr "Показывает время работы"
 
-#: sonata/bot/cogs/owner/owner.py:143
+#: sonata/bot/cogs/owner/owner.py:161
 msgid ""
 "Evaluates input\n"
 "        Input is interpreted as newline separated statements.        If the "
@@ -943,7 +943,7 @@ msgstr ""
 "        ```\n"
 "        "
 
-#: sonata/bot/cogs/owner/owner.py:184
+#: sonata/bot/cogs/owner/owner.py:203
 msgid ""
 "Displays full source code for a specific command\n"
 "        \n"
@@ -958,23 +958,23 @@ msgstr ""
 "например, `tag.create` для подкоманды create команды tag или пробелами.\n"
 "        "
 
-#: sonata/bot/cogs/owner/owner.py:204
+#: sonata/bot/cogs/owner/owner.py:223
 msgid "Could not find command."
 msgstr "Не удалось найти команду."
 
-#: sonata/bot/cogs/owner/owner.py:226
+#: sonata/bot/cogs/owner/owner.py:245
 msgid "Displays system info"
 msgstr "Отображает системную информацию"
 
-#: sonata/bot/cogs/owner/owner.py:227
+#: sonata/bot/cogs/owner/owner.py:246
 msgid "System Info"
 msgstr "Системная информация"
 
-#: sonata/bot/cogs/owner/owner.py:229
+#: sonata/bot/cogs/owner/owner.py:248
 msgid "Platform"
 msgstr "Платформа"
 
-#: sonata/bot/cogs/owner/owner.py:230
+#: sonata/bot/cogs/owner/owner.py:249
 msgid ""
 "**System**: {system}\n"
 "**Release**: {release}\n"
@@ -984,11 +984,11 @@ msgstr ""
 "**Релиз**: {release}\n"
 "**Время работы**: {uptime}"
 
-#: sonata/bot/cogs/owner/owner.py:242
+#: sonata/bot/cogs/owner/owner.py:261
 msgid "CPU"
 msgstr "CPU"
 
-#: sonata/bot/cogs/owner/owner.py:243
+#: sonata/bot/cogs/owner/owner.py:262
 msgid ""
 "**Cores**: {count}\n"
 "**Usage**: {usage}%"
@@ -996,11 +996,11 @@ msgstr ""
 "**Ядра**: {count}\n"
 "**Использовано**: {usage}%"
 
-#: sonata/bot/cogs/owner/owner.py:249
+#: sonata/bot/cogs/owner/owner.py:268
 msgid "RAM"
 msgstr "RAM"
 
-#: sonata/bot/cogs/owner/owner.py:250
+#: sonata/bot/cogs/owner/owner.py:269
 msgid ""
 "**Total**: {total}GB\n"
 "**Available**: {available}GB\n"
@@ -1010,11 +1010,11 @@ msgstr ""
 "**Доступно**: {available}GB\n"
 "**Использовано**: {usage}%"
 
-#: sonata/bot/cogs/owner/owner.py:274
+#: sonata/bot/cogs/owner/owner.py:293
 msgid "Bot"
 msgstr "Бот"
 
-#: sonata/bot/cogs/owner/owner.py:275 sonata/bot/cogs/owner/owner.py:293
+#: sonata/bot/cogs/owner/owner.py:294 sonata/bot/cogs/owner/owner.py:312
 msgid ""
 "**Uptime**: {uptime}\n"
 "**PID**: {pid}\n"
@@ -1026,9 +1026,13 @@ msgstr ""
 "**Использовано памяти**: {mem}MB ({mem_percent}%)\n"
 "**Использовано CPU**: {cpu}%"
 
-#: sonata/bot/cogs/owner/owner.py:292
+#: sonata/bot/cogs/owner/owner.py:311
 msgid "Database"
 msgstr "База данных"
+
+#: sonata/bot/cogs/owner/owner.py:330
+msgid "Runs a shell command"
+msgstr "Запускает команду оболочки"
 
 #: sonata/bot/cogs/reminder/reminder.py:58
 msgid "Reminder"
@@ -1499,11 +1503,126 @@ msgstr "Превышено ограничение по времени: {0}с"
 
 #: sonata/config/settings.py:8
 msgid ""
-"Sonata is a Discord multi-functional polyglot bot. The bot has many \"cogs"
-"\"         for administering and moderating the guild, entertaining guild "
-"members,         providing latest information from the worldwide network, and "
-"much more."
+"Sonata is a multi-functional polyglot bot. The bot has many modules for         "
+"entertaining members, providing useful utilities, useful information from "
+"a         worldwide network and much more.\n"
+"        \n"
+"        The sonata has a global leveling system. Users can gain experience for "
+"activity         and increase levels on different servers to which the bot is "
+"connected. This         red-haired girl keeps various statistics. Thanks to "
+"this, you can find out the         average number of messages per day in the "
+"guild, how many teams were used, which         emoji is the most popular, etc. "
+"A brief of each of the modules:\n"
+"        \n"
+"        `Admin` This module is responsible for the unique behavior of the bot "
+"on your         server. You can disable and enable modules and commands, change "
+"the language and         prefix of the bot, etc.\n"
+"        `Emoji` The module allows you to get detailed information about emoji, "
+"and also         keeps statistics on the use of emoji.\n"
+"        `Reminder` This module allows you to create reminders for a specific "
+"event after         a certain amount of time.\n"
+"        `Utils` Various useful utilities, such as a calculator, weather and "
+"virus info.\n"
+"        `Stats` The module is responsible for general statistics and level "
+"system. It         has user rank card command and a leaderboard.\n"
+"        `Locale` This module allows you to set the language in direct messages "
+"and         display a list of supported languages.\n"
+"        `Fun` A large set of entertainment teams. Everything from 8ball to cat "
+"pictures.         Also has an advanced version of roll.\n"
+"        `General` Main commands and information."
 msgstr ""
-"Соната это многофункциональный бот-полиглот для Discord. Бот имеет множество "
-"модулей для администрирования и модерирования гильдии, развлечения участников "
-"гильдии, предоставления свежей информации из всемирной сети и многое другое."
+"Соната - это многофункциональный бот-полиглот. Бот имеет множество модулей для "
+"развлечения участников, предоставления полезных утилит, полезной информации из "
+"всемирной сети и многое другое.\n"
+"        \n"
+"        Соната имеет глобальную уровневую систему. Пользователи могут получать "
+"опыт за активность и повышать уровни на разных серверах, к которым подключен "
+"бот. Эта рыжая девушка ведет различную статистику. Благодаря этому, можно "
+"узнать среднее количество сообщений в день в гильдии, сколько команд было "
+"использовано, какой эмодзи самый популярный и т.д. Небольшое описание каждого "
+"из модулей:\n"
+"        \n"
+"        `Admin` Этот модуль отвечает за уникальное поведение бота на вашем "
+"сервере. Вы можете отключать и включать модули и команды, изменять язык и "
+"префикс бота и др.\n"
+"        `Emoji` Модуль позволяет получить подробную информацию об эмодзи, а "
+"также ведет статистку использований эмодзи.\n"
+"        `Reminder` Этот модуль позволяет создавать напоминания о каком-то "
+"определенном событии через определенное количество времени.\n"
+"        `Utils` Различные полезные утилиты, такие как калькулятор, информация о "
+"погоде, вирусе.\n"
+"        `Stats` Модуль отвечает за общую статистку и уровневую систему. Имеет "
+"команды вывода карты ранга пользователя и список лидеров.\n"
+"        `Locale` Этот модуль позволяет установить язык в личных сообщениях и "
+"вывести список поддерживаемых языков.\n"
+"        `Fun` Большой набор развлекательных команд. Все от 8ball до картинок "
+"котиков. Также имеет продвинутую версию roll.\n"
+"        `General` Основные команды и информация."
+
+#~ msgid ""
+#~ "Sonata is a Discord multi-functional polyglot bot. The bot has many \"cogs"
+#~ "\"         for administering and moderating the guild, entertaining guild "
+#~ "members,         providing latest information from the worldwide network, "
+#~ "and much more."
+#~ msgstr ""
+#~ "Соната это многофункциональный бот-полиглот для Discord. Бот имеет множество "
+#~ "модулей для администрирования и модерирования гильдии, развлечения "
+#~ "участников гильдии, предоставления свежей информации из всемирной сети и "
+#~ "многое другое."
+
+#~ msgid ""
+#~ "Sonata is a multi-functional polyglot bot. The bot has many modules "
+#~ "for         entertaining members, providing useful utilities, useful "
+#~ "information from a         worldwide network and much more.\n"
+#~ "        \n"
+#~ "        The sonata has a global leveling system. Users can gain experience "
+#~ "for activity         and increase levels on different servers to which the "
+#~ "bot is connected. This         red-haired girl keeps various statistics. "
+#~ "Thanks to this, you can find out the         average number of messages per "
+#~ "day in the guild, how many teams were used, which         emoji is the most "
+#~ "popular, etc. A brief of each of the modules:\n"
+#~ "        \n"
+#~ "        `Admin` This module is responsible for the unique behavior of the "
+#~ "bot on your         server. You can disable and enable modules and commands, "
+#~ "change the language and         prefix of the bot, etc.\n"
+#~ "        `Emoji` The module allows you to get detailed information about "
+#~ "emoji, and also         keeps statistics on the use of emoji.\n"
+#~ "        `Reminder` This module allows you to create reminders for a specific "
+#~ "event after         a certain amount of time.\n"
+#~ "        `Utils` Various useful utilities, such as a calculator, weather and "
+#~ "virus info.\n"
+#~ "        `Stats` The module is responsible for general statistics and level "
+#~ "system. It         has user rank card command and a leaderboard.\n"
+#~ "        `Locale` This module allows you to set the language in direct "
+#~ "messages and         display a list of supported languages.\n"
+#~ "        `Fun` A large set of entertainment teams. Everything from 8ball to "
+#~ "cat pictures.         Also has an advanced version of roll.\n"
+#~ "        `General` Main commands and information"
+#~ msgstr ""
+#~ "Соната - это многофункциональный бот-полиглот. Бот имеет множество модулей "
+#~ "для развлечения участников, предоставления полезных утилит, полезной "
+#~ "информации из всемирной сети и многое другое.\n"
+#~ "        \n"
+#~ "        Соната имеет глобальную уровневую систему. Пользователи могут "
+#~ "получать опыт за активность и повышать уровни на разных серверах, к которым "
+#~ "подключен бот. Эта рыжая девушка ведет различную статистику. Благодаря "
+#~ "этому, можно узнать среднее количество сообщений в день в гильдии, сколько "
+#~ "команд было использовано, какой эмодзи самый популярный и т.д. Небольшое "
+#~ "описание каждого из модулей:\n"
+#~ "        \n"
+#~ "        `Admin` Этот модуль отвечает за уникальное поведение бота на вашем "
+#~ "сервере. Вы можете отключать и включать модули и команды, изменять язык и "
+#~ "префикс бота и др.\n"
+#~ "        `Emoji` Модуль позволяет получить подробную информацию об эмодзи, а "
+#~ "также ведет статистку использований эмодзи.\n"
+#~ "        `Reminder` Этот модуль позволяет создавать напоминания о каком-то "
+#~ "определенном событии через определенное количество времени.\n"
+#~ "        `Utils` Различные полезные утилиты, такие как калькулятор, "
+#~ "информация о погоде, вирусе.\n"
+#~ "        `Stats` Модуль отвечает за общую статистку и уровневую систему. "
+#~ "Имеет команды вывода карты ранга пользователя и список лидеров.\n"
+#~ "        `Locale` Этот модуль позволяет установить язык в личных сообщениях и "
+#~ "вывести список поддерживаемых языков.\n"
+#~ "        `Fun` Большой набор развлекательных команд. Все от 8ball до картинок "
+#~ "котиков. Также имеет продвинутую версию roll.\n"
+#~ "        `General` Основные команды и информация"

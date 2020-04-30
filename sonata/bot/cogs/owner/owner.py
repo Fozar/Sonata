@@ -4,6 +4,7 @@ import copy
 import inspect
 import os
 import platform
+import subprocess
 import time
 from datetime import timedelta
 from functools import partial
@@ -30,6 +31,23 @@ class Owner(
 
     async def cog_check(self, ctx: core.Context):
         return await self.sonata.is_owner(ctx.author)
+
+    async def run_process(self, command):
+        try:
+            process = await asyncio.create_subprocess_shell(
+                command, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+            )
+            result = await process.communicate()
+        except NotImplementedError:
+            with subprocess.Popen(
+                command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+            ) as p:
+                with concurrent.futures.ThreadPoolExecutor() as pool:
+                    result = await self.sonata.loop.run_in_executor(pool, p.communicate)
+        try:
+            return [output.decode() for output in result]
+        except UnicodeDecodeError:
+            return [output.decode("CP866") for output in result]
 
     @core.command()
     async def sudo(
@@ -58,9 +76,9 @@ class Owner(
         msg.content = ctx.prefix + command
 
         new_ctx = await self.sonata.get_context(msg, cls=type(ctx))
-
-        for i in range(times):
-            await new_ctx.reinvoke()
+        async with ctx.typing():
+            for i in range(times):
+                await new_ctx.reinvoke()
 
     async def cog_command_error(self, ctx: core.Context, error):
         original = error.original
@@ -84,6 +102,8 @@ class Owner(
                     "An error occurred in the **{0.name}** cog or its setup function:\n{0.original}"
                 ).format(original)
             )
+        else:
+            await ctx.bot.on_command_error(ctx, error)
 
     @core.command()
     async def ping(self, ctx: core.Context):
@@ -170,14 +190,15 @@ class Owner(
             "__import__": __import__,
             "_": self._last_result,
         }
-        exec(compile(cmd.parsed, filename="<ast>", mode="exec"), env)
-        try:
-            result = await eval(f"{cmd.fn_name}()", env)
-        except Exception as e:
-            await ctx.send(f"```py\n{e.__class__.__name__}: {e}\n```")
-        else:
-            self._last_result = result
-            await ctx.send(f"```py\n{result}\n```")
+        async with ctx.typing():
+            exec(compile(cmd.parsed, filename="<ast>", mode="exec"), env)
+            try:
+                result = await eval(f"{cmd.fn_name}()", env)
+            except Exception as e:
+                await ctx.send(f"```py\n{e.__class__.__name__}: {e}\n```")
+            else:
+                self._last_result = result
+                await ctx.send(f"```py\n{result}\n```")
 
     @core.command()
     async def source(self, ctx: core.Context, *, command: str = None):
@@ -261,15 +282,15 @@ class Owner(
         mongo = psutil.Process(mongo_info["pid"])
         bot_cpu_percent = partial(bot.cpu_percent, 1.0)
         mongo_cpu_percent = partial(mongo.cpu_percent, 1.0)
-
-        with concurrent.futures.ThreadPoolExecutor() as pool:
-            bot_cpu, mongo_cpu = tuple(
-                await asyncio.gather(
-                    ctx.bot.loop.run_in_executor(pool, bot_cpu_percent),
-                    ctx.bot.loop.run_in_executor(pool, mongo_cpu_percent),
-                    loop=ctx.bot.loop,
+        async with ctx.typing():
+            with concurrent.futures.ThreadPoolExecutor() as pool:
+                bot_cpu, mongo_cpu = tuple(
+                    await asyncio.gather(
+                        ctx.bot.loop.run_in_executor(pool, bot_cpu_percent),
+                        ctx.bot.loop.run_in_executor(pool, mongo_cpu_percent),
+                        loop=ctx.bot.loop,
+                    )
                 )
-            )
         embed.add_field(
             name=_("Bot"),
             value=_(
@@ -305,3 +326,20 @@ class Owner(
             ),
         )
         await ctx.send(embed=embed)
+
+    @core.command()
+    async def sh(self, ctx: core.Context, *, command: str):
+        _("""Runs a shell command""")
+        async with ctx.typing():
+            stdout, stderr = await self.run_process(command)
+
+        if stderr:
+            text = f"\nstderr:\n```autohotkey\n{stderr}```"
+            if stdout:
+                text = f"stdout:\n```autohotkey\n{stdout}```\n" + text
+        elif stdout:
+            text = f"```autohotkey\n{stdout}```"
+        else:
+            text = "```OK```"
+
+        await ctx.send(text)

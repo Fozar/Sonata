@@ -37,9 +37,17 @@ class Locale(
             )
         )
 
-    @core.command()
+    @core.group()
     async def locales(self, ctx: core.Context):
         _("""Returns a list of supported locales""")
+        if ctx.invoked_subcommand is not None:
+            return
         await ctx.inform(
             _("Available locales: {0}.").format(", ".join(make_locale_list()))
         )
+
+    @locales.command(name="update")
+    @commands.is_owner()
+    async def locales_update(self, ctx: core.Context):
+        i18n.update_translations()
+        await ctx.inform(_("Locales updated"))

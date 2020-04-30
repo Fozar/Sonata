@@ -29,38 +29,43 @@ from glob import glob
 from babel.support import Translations, NullTranslations
 
 BASE_DIR = os.getcwd()
+GETTEXT_TRANSLATIONS = {}
+LOCALES = frozenset()
 default_locale = "en_US"
 locales_dir = "locales"
 
-locales = frozenset(
-    map(
-        os.path.basename,
-        filter(os.path.isdir, glob(os.path.join(BASE_DIR, locales_dir, "*"))),
-    )
-)
 
-gettext_translations = {
-    locale: Translations.load(
-        locales=[locale], dirname=os.path.join(BASE_DIR, locales_dir)
+def update_translations():
+    global GETTEXT_TRANSLATIONS, LOCALES
+    LOCALES = frozenset(
+        map(
+            os.path.basename,
+            filter(os.path.isdir, glob(os.path.join(BASE_DIR, locales_dir, "*"))),
+        )
     )
-    for locale in locales
-    if not locale.startswith("_")
-}
 
-# source code is already in en_US.
-# we don't use default_locale as the key here
-# because the default locale for this installation may not be en_US
-gettext_translations["en_US"] = NullTranslations()
-locales = locales | {"en_US"}
+    GETTEXT_TRANSLATIONS = {
+        locale: Translations.load(
+            locales=[locale], dirname=os.path.join(BASE_DIR, locales_dir)
+        )
+        for locale in LOCALES
+        if not locale.startswith("_")
+    }
+
+    # source code is already in en_US.
+    # we don't use default_locale as the key here
+    # because the default locale for this installation may not be en_US
+    GETTEXT_TRANSLATIONS["en_US"] = NullTranslations()
+    LOCALES = LOCALES | {"en_US"}
 
 
 def use_current_gettext(*args, **kwargs):
-    if not gettext_translations:
+    if not GETTEXT_TRANSLATIONS:
         return gettext.gettext(*args, **kwargs)
 
     locale = current_locale.get(default_locale)
-    return gettext_translations.get(
-        locale, gettext_translations[default_locale]
+    return GETTEXT_TRANSLATIONS.get(
+        locale, GETTEXT_TRANSLATIONS[default_locale]
     ).gettext(*args, **kwargs)
 
 
@@ -91,6 +96,7 @@ def i18n_docstring(func):
     return func
 
 
+update_translations()
 current_locale = contextvars.ContextVar("i18n")
 builtins._ = use_current_gettext
 

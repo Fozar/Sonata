@@ -1,7 +1,6 @@
 import asyncio
 import logging
 import os
-from datetime import date
 from logging import handlers
 
 from aiohttp import web
@@ -27,7 +26,7 @@ def setup_logger():
     )
     stream_handler.setLevel(logging.INFO)
     file_handler = handlers.TimedRotatingFileHandler(
-        filename=f"{os.getcwd()}/logs/app/{date.today()}.log",
+        filename=os.getcwd() + "/logs/app/app.log",
         when="midnight",
         backupCount=3,
         encoding="utf-8",

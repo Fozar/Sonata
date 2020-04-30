@@ -1,6 +1,5 @@
 import logging
 import os
-from datetime import date
 from logging import handlers
 
 from pymongo import monitoring
@@ -63,7 +62,7 @@ def setup_logger():
     )
     stream_handler.setLevel(logging.INFO)
     file_handler = handlers.TimedRotatingFileHandler(
-        filename=f"{os.getcwd()}/logs/mongo/{date.today()}.log",
+        filename=os.getcwd() + "/logs/mongo/mongo.log",
         when="midnight",
         backupCount=3,
         encoding="utf-8",

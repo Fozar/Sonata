@@ -1,7 +1,6 @@
 import asyncio
 import logging
 import os
-from datetime import date
 from logging import handlers
 
 from sonata.bot.cogs import load_extension
@@ -15,7 +14,7 @@ def setup_logger():
     )
     stream_handler.setLevel(logging.INFO)
     file_handler = handlers.TimedRotatingFileHandler(
-        filename=f"{os.getcwd()}/logs/discord/{date.today()}.log",
+        filename=os.getcwd() + "/logs/discord/discord.log",
         when="midnight",
         backupCount=3,
         encoding="utf-8",

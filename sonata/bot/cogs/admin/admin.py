@@ -286,7 +286,11 @@ class Admin(
 
     @guild.command(name="reset")
     async def guild_reset(self, ctx: core.Context):
-        _("""Resets guild settings""")  # TODO: Are u sure?
+        _("""Resets guild settings""")
+        msg, resp = await ctx.confirm(_("Are you sure?"), timeout=30.0)
+        if not resp:
+            return
+
         guild = await ctx.db.guilds.find_one({"id": ctx.guild.id}, {"_id": False})
         new_guild = Guild(
             id=guild["id"],

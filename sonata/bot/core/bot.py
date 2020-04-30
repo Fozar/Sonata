@@ -93,12 +93,6 @@ class Sonata(commands.Bot):
         await owner.send(f"New guild joined: {guild.name}")
 
     async def on_command_error(self, ctx: Context, exception: Exception):
-        if ctx.cog:
-            if getattr(Cog, "_get_overridden_method")(
-                ctx.cog.cog_command_error
-            ) is not None or hasattr(ctx.command, "on_error"):
-                return
-
         if isinstance(exception, commands.MissingPermissions):
             await ctx.send(
                 _("You do not have enough permissions to do it.").format(
@@ -125,6 +119,12 @@ class Sonata(commands.Bot):
         elif isinstance(exception, NoPremium):
             await ctx.send(_("This command is only for premium guilds."))
         else:
+            if ctx.cog and (
+                getattr(Cog, "_get_overridden_method")(ctx.cog.cog_command_error)
+                is not None
+                or hasattr(ctx.command, "on_error")
+            ):
+                return
             self.logger.warning(
                 f"Ignoring exception in command {ctx.command}: {exception}"
             )

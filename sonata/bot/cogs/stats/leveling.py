@@ -187,7 +187,7 @@ class Leveling(core.Cog):
         embed.title = _("Guild Leaderboard")
         await ctx.send(embed=embed)
 
-    @top.command(name="global")
+    @top.command(name="global", enabled=False)
     async def top_global(self, ctx: core.Context):
         _("""Shows global leaderboard""")
         cursor = ctx.db.users.find(

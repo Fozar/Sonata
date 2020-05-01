@@ -123,6 +123,8 @@ class Sonata(commands.Bot):
             await ctx.send(_("An error occurred while making an HTTP request."))
         elif isinstance(exception, NoPremium):
             await ctx.send(_("This command is only for premium guilds."))
+        elif isinstance(exception, commands.errors.DisabledCommand):
+            await ctx.send(_("Command `{0}` is disabled.").format(ctx.command.qualified_name))
         else:
             if ctx.cog and (
                 getattr(Cog, "_get_overridden_method")(ctx.cog.cog_command_error)

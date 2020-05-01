@@ -156,9 +156,6 @@ class General(
                 "exp": True,
             },
         )
-        # global_rank = await ctx.db.users.count_documents(
-        #     {"exp": {"$gte": user_stats["exp"]}}
-        # )
 
         if user.get("about"):
             embed.description = user["about"]
@@ -172,8 +169,7 @@ class General(
             _("Level"): user_stats["lvl"],
             _(
                 "Experience"
-            ): f"{user_stats['exp']}/{stats_cog.calculate_exp(user_stats['lvl'] + 1)}"
-            # _("Global rank"): global_rank,
+            ): f"{user_stats['exp']}/{stats_cog.calculate_exp(user_stats['lvl'] + 1)}",
         }
         if ctx.guild and ctx.guild.get_member(member.id):
             statistics[_("Guild rank")] = await ctx.db.user_stats.count_documents(

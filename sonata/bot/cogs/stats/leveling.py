@@ -193,22 +193,3 @@ class Leveling(core.Cog):
         embed = self.make_leaderboard_embed(user_list)
         embed.title = _("Guild Leaderboard")
         await ctx.send(embed=embed)
-
-    # @top.command(name="global", enabled=False)
-    # async def top_global(self, ctx: core.Context):
-    #     _("""Shows global leaderboard""")
-    #     cursor = ctx.db.users.find(
-    #         {}, {"id": True, "exp": True, "lvl": True}, sort=[("exp", -1)],
-    #     ).limit(10)
-    #     user_list = dict(enumerate(await cursor.to_list(length=None), start=1))
-    #     if not next(
-    #         (user for user in user_list.values() if user["id"] == ctx.author.id), False,
-    #     ):
-    #         author = await ctx.db.users.find_one(
-    #             {"id": ctx.author.id}, {"id": True, "lvl": True, "exp": True}
-    #         )
-    #         rank = await ctx.db.users.count_documents({"exp": {"$gte": author["exp"]}})
-    #         user_list[rank] = author
-    #     embed = self.make_leaderboard_embed(user_list)
-    #     embed.title = _("Global Leaderboard")
-    #     await ctx.send(embed=embed)

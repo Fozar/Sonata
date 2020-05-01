@@ -27,12 +27,17 @@ class DiscordConfigModel(CreatedAtMixin, DiscordModel):
     custom_prefix: Optional[str] = None
 
 
-class User(DiscordConfigModel, CounterMixin):
-    about: Optional[str] = None
+class UserStats(CreatedAtMixin, CounterMixin):
+    user_id: int
+    guild_id: int
     exp: int = 0
     lvl: int = 0
     last_exp_at: datetime = None
     auto_lvl_msg: bool = True
+
+
+class User(DiscordConfigModel):
+    about: Optional[str] = None
     guilds: List[int] = []
 
 

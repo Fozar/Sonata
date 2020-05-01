@@ -148,6 +148,8 @@ class HelpCommand(commands.HelpCommand):
             embed.description = description
         if fields:
             for name, value in fields.items():
+                if not name or not value:
+                    continue
                 embed.add_field(name=name, value=value, inline=False)
         embed.set_footer(text=self.make_footer())
         return embed

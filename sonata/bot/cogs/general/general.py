@@ -2,6 +2,7 @@ from typing import Union
 
 import discord
 from babel.dates import format_datetime, format_timedelta
+from discord.ext import commands
 from discord.ext.commands import clean_content
 
 from sonata.bot import core, Sonata
@@ -103,54 +104,51 @@ class General(
         await ctx.send(embed=embed)
 
     @core.command(aliases=["user"])
-    async def profile(
-        self, ctx: core.Context, user: Union[discord.Member, discord.User] = None
-    ):
-        if user is None:
-            user = ctx.author
+    @commands.guild_only()
+    async def profile(self, ctx: core.Context, member: discord.Member = None):
+        if member is None:
+            member = ctx.author
         embed = discord.Embed(
-            title=_("{0} Info").format(user.display_name), colour=self.colour
+            title=_("{0} Info").format(member.display_name), colour=self.colour
         )
-        embed.set_footer(text=f"ID: {user.id}")
-        embed.set_thumbnail(url=user.avatar_url)
-        main_info = {_("Name"): str(user)}
-        if ctx.guild:
-            member = ctx.guild.get_member(user.id)
-            if member:
-                status_map = {
-                    discord.Status.online: _("Online"),
-                    discord.Status.offline: _("Offline"),
-                    discord.Status.idle: _("Idle"),
-                    discord.Status.do_not_disturb: _("Do Not Disturb"),
-                }
-                main_info[_("Status")] = status_map.get(member.status)
-                if member.activity:
-                    if member.activity.type == discord.ActivityType.playing:
-                        main_info[_("Playing")] = member.activity.name
-                    elif member.activity.type == discord.ActivityType.streaming:
-                        main_info[_("Streaming")] = member.activity.name
-                    elif member.activity.type == discord.ActivityType.listening:
-                        main_info[_("Listening")] = member.activity.title
-                    elif member.activity.type == discord.ActivityType.custom:
-                        main_info[_("Activity")] = member.activity.name
-                        if member.activity.emoji:
-                            main_info[
-                                _("Activity")
-                            ] = f"{member.activity.emoji} {main_info[_('Activity')]}"
-                main_info[_("Joined the guild")] = format_datetime(
-                    member.joined_at, locale=ctx.locale
-                )
+        embed.set_footer(text=f"ID: {member.id}")
+        embed.set_thumbnail(url=member.avatar_url)
+        main_info = {_("Name"): str(member)}
+
+        status_map = {
+            discord.Status.online: _("Online"),
+            discord.Status.offline: _("Offline"),
+            discord.Status.idle: _("Idle"),
+            discord.Status.do_not_disturb: _("Do Not Disturb"),
+        }
+        main_info[_("Status")] = status_map.get(member.status)
+        if member.activity:
+            if member.activity.type == discord.ActivityType.playing:
+                main_info[_("Playing")] = member.activity.name
+            elif member.activity.type == discord.ActivityType.streaming:
+                main_info[_("Streaming")] = member.activity.name
+            elif member.activity.type == discord.ActivityType.listening:
+                main_info[_("Listening")] = member.activity.title
+            elif member.activity.type == discord.ActivityType.custom:
+                main_info[_("Activity")] = member.activity.name
+                if member.activity.emoji:
+                    main_info[
+                        _("Activity")
+                    ] = f"{member.activity.emoji} {main_info[_('Activity')]}"
+        main_info[_("Joined the guild")] = format_datetime(
+            member.joined_at, locale=ctx.locale
+        )
         main_info[_("Registration date")] = format_datetime(
-            user.created_at, locale=ctx.locale
+            member.created_at, locale=ctx.locale
         )
         main_info = [f"**{key}**: {value}" for key, value in main_info.items()]
         embed.add_field(name=_("Summary"), value="\n".join(main_info), inline=False)
-        if user.bot:
+        if member.bot:
             return await ctx.send(embed=embed)
-        user_conf = await ctx.db.users.find_one(
-            {"id": user.id},
+        user = await ctx.db.users.find_one({"id": member.id}, {"about": True})
+        user_stats = await ctx.db.user_stats.find_one(
+            {"guild_id": ctx.guild.id, "user_id": member.id},
             {
-                "about": True,
                 "created_at": True,
                 "total_messages": True,
                 "commands_invoked": True,
@@ -158,28 +156,28 @@ class General(
                 "exp": True,
             },
         )
-        global_rank = await ctx.db.users.count_documents(
-            {"exp": {"$gte": user_conf["exp"]}}
-        )
+        # global_rank = await ctx.db.users.count_documents(
+        #     {"exp": {"$gte": user_stats["exp"]}}
+        # )
 
-        if "about" in user_conf:
-            embed.description = user_conf["about"]
+        if user.get("about"):
+            embed.description = user["about"]
         stats_cog = self.sonata.cogs.get("Stats")
         statistics = {
             _("Statistics has been running since"): format_datetime(
-                user_conf["created_at"], locale=ctx.locale
+                user_stats["created_at"], locale=ctx.locale
             ),
-            _("Total messages"): user_conf["total_messages"],
-            _("Commands invoked"): user_conf["commands_invoked"],
-            _("Level"): user_conf["lvl"],
+            _("Total messages"): user_stats["total_messages"],
+            _("Commands invoked"): user_stats["commands_invoked"],
+            _("Level"): user_stats["lvl"],
             _(
                 "Experience"
-            ): f"{user_conf['exp']}/{stats_cog.calculate_exp(user_conf['lvl'] + 1)}",
-            _("Global rank"): global_rank,
+            ): f"{user_stats['exp']}/{stats_cog.calculate_exp(user_stats['lvl'] + 1)}"
+            # _("Global rank"): global_rank,
         }
-        if ctx.guild and ctx.guild.get_member(user.id):
-            statistics[_("Guild rank")] = await ctx.db.users.count_documents(
-                {"guilds": ctx.guild.id, "exp": {"$gte": user_conf["exp"]}}
+        if ctx.guild and ctx.guild.get_member(member.id):
+            statistics[_("Guild rank")] = await ctx.db.user_stats.count_documents(
+                {"guild_id": ctx.guild.id, "exp": {"$gte": user_stats["exp"]}}
             )
         statistics = [f"**{key}**: {value}" for key, value in statistics.items()]
         statistics = "\n".join(statistics)

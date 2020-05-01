@@ -7,7 +7,7 @@ from discord.ext import commands
 
 from sonata.bot import core
 from sonata.bot.cogs.stats.leveling import Leveling
-from sonata.db.models import Guild, User, Command, DailyStats
+from sonata.db.models import Guild, User, Command, DailyStats, UserStats
 
 
 class Stats(
@@ -55,8 +55,8 @@ class Stats(
         await ctx.db.commands.update_one(
             {"name": ctx.command.qualified_name}, {"$inc": {"invocation_counter": 1}}
         )
-        await ctx.db.users.update_one(
-            {"id": ctx.author.id}, {"$inc": {"commands_invoked": 1}}
+        await ctx.db.user_stats.update_one(
+            {"guild_id": ctx.guild.id, "user_id": ctx.author.id}, {"$inc": {"commands_invoked": 1}}
         )
         if ctx.guild:
             date = ctx.message.created_at.replace(
@@ -145,18 +145,21 @@ class Stats(
         await super().lvl_up(message, exp, lvl)
 
     async def update_user_stats(self, message: discord.Message):
-        user = await self.sonata.db.users.find_one_and_update(
-            {"id": message.author.id},
+        stats = await self.sonata.db.user_stats.find_one_and_update(
+            {"guild_id": message.guild.id, "user_id": message.author.id},
             {"$inc": {"total_messages": 1}},
             {"_id": False, "last_exp_at": True, "exp": True, "lvl": True},
         )
-        if not user:
-            return
+        if not stats:
+            stats = UserStats(
+                guild_id=message.guild.id, user_id=message.author.id, total_messages=1
+            ).dict()
+            await self.sonata.db.user_stats.insert_one(stats)
         if (
-            user["last_exp_at"] is None
-            or (message.created_at - user["last_exp_at"]).total_seconds() >= 60
+            stats.get("last_exp_at") is None
+            or (message.created_at - stats["last_exp_at"]).total_seconds() >= 60
         ):
-            await self.update_user_exp(message, user["exp"], user["lvl"])
+            await self.update_user_exp(message, stats["exp"], stats["lvl"])
 
     async def update_daily_stats(self, dt: datetime, guild: discord.Guild):
         date = dt.replace(hour=0, minute=0, second=0, microsecond=0)
@@ -179,11 +182,17 @@ class Stats(
     @core.command(name="recalc.stats")
     @commands.is_owner()
     async def recalculate_stats(self, ctx: core.Context, *, date: str):
-        status = await ctx.send("```Initialization...```")
         self.recalc_started_at = ctx.message.created_at
+        status = await ctx.send("```Initialization...```")
         date = parse(date)
         now = datetime.utcnow()
-        await ctx.db.users.update_many(
+        await ctx.db.commands.update_many(
+            {}, {"$set": {"invocation_counter": 0, "error_count": 0}}
+        )
+        await status.edit(content="```Commands reset```")
+        await ctx.db.daily_stats.delete_many({})
+        await status.edit(content="```Daily stats reset```")
+        await ctx.db.user_stats.update_many(
             {},
             {
                 "$set": {
@@ -197,19 +206,13 @@ class Stats(
             },
         )
         await status.edit(content="```Users reset```")
-        await ctx.db.commands.update_many(
-            {}, {"$set": {"invocation_counter": 0, "error_count": 0}}
-        )
-        await status.edit(content="```Commands reset```")
-        await ctx.db.daily_stats.delete_many({})
-        await status.edit(content="```Daily stats reset```")
-        messages = []
         for guild in self.sonata.guilds:
             await ctx.db.guilds.update_one(
                 {"id": guild.id},
                 {"$set": {"last_message_at": None, "created_at": date}},
             )
             await status.edit(content=f"```Guild {guild.name} reset```")
+            messages = []
             for channel in guild.channels:
                 if not isinstance(channel, discord.TextChannel):
                     continue
@@ -220,15 +223,15 @@ class Stats(
                     .flatten()
                 )
 
-        messages = sorted(messages, key=lambda msg: msg.created_at)
-        date = None
-        for message in messages:
-            if message.created_at.date() != date:
-                date = message.created_at.date()
-                await status.edit(content=f"```Recalc: {date}```")
-            await self.on_message(message)
-            ctx = await self.sonata.get_context(message, cls=core.Context)
-            if ctx.command:
-                await self.on_command(ctx)
+            messages = sorted(messages, key=lambda msg: msg.created_at)
+            dt = None
+            for message in messages:
+                if message.created_at.date() != dt:
+                    dt = message.created_at.date()
+                    await status.edit(content=f"```Recalc: {dt}```")
+                await self.on_message(message)
+                ctx = await self.sonata.get_context(message, cls=core.Context)
+                if ctx.command:
+                    await self.on_command(ctx)
         self.recalc_started_at = None
         await status.edit(content="```Done```")

@@ -28,8 +28,8 @@ class DiscordConfigModel(CreatedAtMixin, DiscordModel):
 
 
 class UserStats(CreatedAtMixin, CounterMixin):
-    user_id: int
     guild_id: int
+    user_id: int
     exp: int = 0
     lvl: int = 0
     last_exp_at: datetime = None

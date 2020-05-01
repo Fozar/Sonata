@@ -23,7 +23,7 @@ class Leveling(core.Cog):
     def make_leaderboard_embed(self, user_list: Dict[int, Dict[str, int]]):
         embed = discord.Embed(colour=self.colour)
         for rank, user_conf in user_list.items():
-            user = self.sonata.get_user(user_conf["id"])
+            user = self.sonata.get_user(user_conf["user_id"])
             embed.add_field(
                 name=f"`#{rank}` **{user.display_name}**",
                 value=_("**Level**: {lvl} | **Experience**: {exp}/{max_exp}").format(
@@ -52,22 +52,23 @@ class Leveling(core.Cog):
         return embed
 
     async def lvl_up(self, message, exp, lvl):
-        await self.sonata.set_locale(message)
-        rank = await self.sonata.db.users.count_documents(
-            {"guilds": message.guild.id, "exp": {"$gte": exp}}
+        rank = await self.sonata.db.user_stats.count_documents(
+            {"guild_id": message.guild.id, "exp": {"$gte": exp}}
         )
         guild = await self.sonata.db.guilds.find_one(
             {"id": message.guild.id}, {"auto_lvl_msg": True}
         )
         if guild.get("auto_lvl_msg", True):
-            user = await self.sonata.db.users.find_one(
-                {"id": message.author.id}, {"auto_lvl_msg": True}
+            user = await self.sonata.db.user_stats.find_one(
+                {"guild_id": message.guild.id, "user_id": message.author.id},
+                {"auto_lvl_msg": True},
             )
             send_msg = user.get("auto_lvl_msg", True)
         else:
             send_msg = guild.get["auto_lvl_msg"]
 
         if send_msg:
+            await self.sonata.set_locale(message)
             embed = self.make_lvlup_embed(message.author, lvl, exp, rank)
             await message.channel.send(embed=embed)
 
@@ -80,7 +81,9 @@ class Leveling(core.Cog):
         if exp >= self.calculate_exp(next_lvl):
             lvl = next_lvl
             update["$set"]["lvl"] = lvl
-        await self.sonata.db.users.update_one({"id": message.author.id}, update)
+        await self.sonata.db.user_stats.update_one(
+            {"guild_id": message.guild.id, "user_id": message.author.id}, update
+        )
         if lvl == next_lvl:
             await self.lvl_up(message, exp, lvl)
 
@@ -97,9 +100,9 @@ class Leveling(core.Cog):
         if isinstance(member, int):
             rank = member
             cursor = (
-                ctx.db.users.find(
-                    {"guilds": ctx.guild.id},
-                    {"id": True, "exp": True, "lvl": True},
+                ctx.db.user_stats.find(
+                    {"guild_id": ctx.guild.id},
+                    {"user_id": True, "exp": True, "lvl": True},
                     sort=[("exp", -1)],
                 )
                 .skip(rank - 1)
@@ -107,13 +110,15 @@ class Leveling(core.Cog):
             )
             user = cursor.next_object() if await cursor.fetch_next else None
             if user:
-                member = ctx.guild.get_member(user["id"])
+                member = ctx.guild.get_member(
+                    user["user_id"]
+                ) or await ctx.guild.fetch_member(user["user_id"])
         else:
-            user = await ctx.db.users.find_one(
-                {"id": member.id}, {"exp": True, "lvl": True}
+            user = await ctx.db.user_stats.find_one(
+                {"user_id": member.id}, {"exp": True, "lvl": True}
             )
-            rank = await ctx.db.users.count_documents(
-                {"guilds": ctx.guild.id, "exp": {"$gte": user["exp"]}}
+            rank = await ctx.db.user_stats.count_documents(
+                {"guild_id": ctx.guild.id, "exp": {"$gte": user["exp"]}}
             )
         if not user:
             return await ctx.inform(_("Member not found."))
@@ -140,8 +145,9 @@ class Leveling(core.Cog):
     @rank_message.command(name="enable", aliases=["on"])
     async def rank_message_enable(self, ctx: core.Context):
         _("""Enables auto-message when leveling up""")
-        result = await ctx.db.users.update_one(
-            {"id": ctx.author.id}, {"$set": {"auto_lvl_msg": True}}
+        result = await ctx.db.user_stats.update_one(
+            {"guild_id": ctx.guild.id, "user_id": ctx.author.id},
+            {"$set": {"auto_lvl_msg": True}},
         )
         if result.modified_count == 0:
             await ctx.inform(_("Auto-message when leveling up is already enabled."))
@@ -151,8 +157,9 @@ class Leveling(core.Cog):
     @rank_message.command(name="disable", aliases=["off"])
     async def rank_message_disable(self, ctx: core.Context):
         _("""Disables auto-message when leveling up""")
-        result = await ctx.db.users.update_one(
-            {"id": ctx.author.id}, {"$set": {"auto_lvl_msg": False}}
+        result = await ctx.db.user_stats.update_one(
+            {"guild_id": ctx.guild.id, "user_id": ctx.author.id},
+            {"$set": {"auto_lvl_msg": False}},
         )
         if result.modified_count == 0:
             await ctx.inform(_("Auto-message when leveling up is already disabled."))
@@ -165,21 +172,21 @@ class Leveling(core.Cog):
         if ctx.invoked_subcommand is not None:
             return
 
-        cursor = ctx.db.users.find(
-            {"guilds": ctx.guild.id},
-            {"id": True, "exp": True, "lvl": True},
+        cursor = ctx.db.user_stats.find(
+            {"guild_id": ctx.guild.id},
+            {"user_id": True, "exp": True, "lvl": True},
             sort=[("exp", -1)],
         ).limit(10)
         user_list = dict(enumerate(await cursor.to_list(length=None), start=1))
 
         if not next(
-            (user for user in user_list.values() if user["id"] == ctx.author.id), False
+            (user for user in user_list.values() if user["user_id"] == ctx.author.id), False
         ):
-            author = await ctx.db.users.find_one(
-                {"id": ctx.author.id}, {"id": True, "lvl": True, "exp": True}
+            author = await ctx.db.user_stats.find_one(
+                {"guild_id": ctx.guild.id, "user_id": ctx.author.id}, {"user_id": True, "lvl": True, "exp": True}
             )
-            rank = await ctx.db.users.count_documents(
-                {"guilds": ctx.guild.id, "exp": {"$gte": author["exp"]}}
+            rank = await ctx.db.user_stats.count_documents(
+                {"guild_id": ctx.guild.id, "exp": {"$gte": author["exp"]}}
             )
             user_list[rank] = author
 
@@ -187,21 +194,21 @@ class Leveling(core.Cog):
         embed.title = _("Guild Leaderboard")
         await ctx.send(embed=embed)
 
-    @top.command(name="global", enabled=False)
-    async def top_global(self, ctx: core.Context):
-        _("""Shows global leaderboard""")
-        cursor = ctx.db.users.find(
-            {}, {"id": True, "exp": True, "lvl": True}, sort=[("exp", -1)],
-        ).limit(10)
-        user_list = dict(enumerate(await cursor.to_list(length=None), start=1))
-        if not next(
-            (user for user in user_list.values() if user["id"] == ctx.author.id), False,
-        ):
-            author = await ctx.db.users.find_one(
-                {"id": ctx.author.id}, {"id": True, "lvl": True, "exp": True}
-            )
-            rank = await ctx.db.users.count_documents({"exp": {"$gte": author["exp"]}})
-            user_list[rank] = author
-        embed = self.make_leaderboard_embed(user_list)
-        embed.title = _("Global Leaderboard")
-        await ctx.send(embed=embed)
+    # @top.command(name="global", enabled=False)
+    # async def top_global(self, ctx: core.Context):
+    #     _("""Shows global leaderboard""")
+    #     cursor = ctx.db.users.find(
+    #         {}, {"id": True, "exp": True, "lvl": True}, sort=[("exp", -1)],
+    #     ).limit(10)
+    #     user_list = dict(enumerate(await cursor.to_list(length=None), start=1))
+    #     if not next(
+    #         (user for user in user_list.values() if user["id"] == ctx.author.id), False,
+    #     ):
+    #         author = await ctx.db.users.find_one(
+    #             {"id": ctx.author.id}, {"id": True, "lvl": True, "exp": True}
+    #         )
+    #         rank = await ctx.db.users.count_documents({"exp": {"$gte": author["exp"]}})
+    #         user_list[rank] = author
+    #     embed = self.make_leaderboard_embed(user_list)
+    #     embed.title = _("Global Leaderboard")
+    #     await ctx.send(embed=embed)

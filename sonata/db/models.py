@@ -56,8 +56,8 @@ class Guild(DiscordConfigModel):
     auto_lvl_msg: bool = True
     greeting: Optional[Greeting] = None
     last_message_at: datetime = None
-    admin_role: Optional[int] = None
-    mod_role: Optional[int] = None
+    admin_roles: List[int] = []
+    mod_roles: List[int] = []
     modlog: Optional[int] = None
     alerts: Optional[int] = None
     disabled_cogs: List[str] = []

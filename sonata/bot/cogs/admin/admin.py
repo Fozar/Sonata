@@ -1,5 +1,6 @@
 import discord
 from babel import Locale
+from discord.ext import commands
 from discord.ext.commands import clean_content
 
 from sonata.bot import core
@@ -16,11 +17,27 @@ class Admin(
         self.sonata = sonata
 
     async def cog_check(self, ctx: core.Context):
-        return (
-            ctx.guild
-            and ctx.author.guild_permissions.administrator
-            or await self.sonata.is_owner(ctx.author)
+        if not ctx.guild:
+            return False
+        if ctx.author.guild_permissions.administrator or await self.sonata.is_owner(
+            ctx.author
+        ):
+            return True
+        guild = await ctx.db.guilds.find_one(
+            {"id": ctx.guild.id}, {"admin_roles": True}
         )
+        if (
+            guild
+            and guild.get("admin_roles")
+            and discord.utils.find(
+                lambda role: role.id in guild["admin_roles"], ctx.author.roles
+            )
+            is not None
+        ):
+            return True
+        return False
+
+    # Events
 
     @core.Cog.listener()
     async def on_member_join(self, member: discord.Member):
@@ -353,7 +370,8 @@ class Admin(
         if len(prefix) > max_len:
             return await ctx.inform(
                 _(
-                    "This prefix is too long. The prefix cannot consist of more than {0} characters."
+                    "This prefix is too long. "
+                    "The prefix cannot consist of more than {0} characters."
                 ).format(max_len)
             )
 
@@ -379,3 +397,82 @@ class Admin(
         ).dict()
         await ctx.db.guilds.update_one({"id": ctx.guild.id}, {"$set": new_guild})
         await ctx.inform(_("Guild settings reset."))
+
+    @guild.group(name="role")
+    async def guild_role(self, ctx: core.Context):
+        _("""Set privileged roles""")
+        if ctx.invoked_subcommand is not None:
+            return
+
+        await ctx.send_help()
+
+    @guild_role.group(name="admin", invoke_without_command=True)
+    async def guild_role_admin(self, ctx: core.Context):
+        _(
+            """Admin roles
+        
+        Members who have the at least one of admin roles can use Admin cog on a par \
+        with members who have administrator permissions."""
+        )
+        guild = await ctx.db.guilds.find_one(
+            {"id": ctx.guild.id}, {"admin_roles": True}
+        )
+        if not guild or not guild.get("admin_roles"):
+            return await ctx.inform(_("Admin roles not set."))
+
+        roles = []
+        for role_id in guild["admin_roles"]:
+            role = ctx.guild.get_role(role_id)
+            if role is None:
+                await ctx.db.guilds.update_one(
+                    {"id": ctx.guild.id}, {"$pull": {"admin_roles": role_id}}
+                )
+            else:
+                roles.append(role)
+        await ctx.inform(
+            _("Admin roles: {0}.").format(", ".join([str(role) for role in roles]))
+        )
+
+    @guild_role_admin.command(name="add")
+    async def guild_role_admin_add(
+        self, ctx: core.Context, roles: commands.Greedy[discord.Role]
+    ):
+        _(
+            """Add roles to admin role list
+            
+        You can specify roles using the ID, mention, or name of the role.
+        
+        Examples:
+        - guild role admin add @Admin
+        - guild role admin add @MiniAdmin @Admin @BotManager
+        - guild role admin add 705363996747759657 Admin"""
+        )
+        if not roles:
+            return await ctx.inform(_("You must specify at least one role."))
+        role_ids = [role.id for role in roles]
+        await ctx.db.guilds.update_one(
+            {"id": ctx.guild.id}, {"$addToSet": {"admin_roles": {"$each": role_ids}}}
+        )
+        await ctx.inform(_("Roles successfully added."))
+
+    @guild_role_admin.command(name="remove")
+    async def guild_role_admin_remove(
+        self, ctx: core.Context, roles: commands.Greedy[discord.Role]
+    ):
+        _(
+            """Removes roles from admin role list
+        
+        You can specify roles using the ID, mention, or name of the role.
+        
+        Examples:
+        - guild role admin remove @Admin
+        - guild role admin remove @MiniAdmin @Admin @BotManager
+        - guild role admin remove 705363996747759657 Admin"""
+        )
+        if not roles:
+            return await ctx.inform(_("You must specify at least one role."))
+        role_ids = [role.id for role in roles]
+        await ctx.db.guilds.update_one(
+            {"id": ctx.guild.id}, {"$pull": {"admin_roles": {"$in": role_ids}}}
+        )
+        await ctx.inform(_("Roles successfully removed."))

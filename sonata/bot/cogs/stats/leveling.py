@@ -115,7 +115,8 @@ class Leveling(core.Cog):
                 ) or await ctx.guild.fetch_member(user["user_id"])
         else:
             user = await ctx.db.user_stats.find_one(
-                {"user_id": member.id}, {"exp": True, "lvl": True}
+                {"guild_id": ctx.guild.id, "user_id": member.id},
+                {"exp": True, "lvl": True},
             )
             rank = await ctx.db.user_stats.count_documents(
                 {"guild_id": ctx.guild.id, "exp": {"$gte": user["exp"]}}
@@ -180,10 +181,12 @@ class Leveling(core.Cog):
         user_list = dict(enumerate(await cursor.to_list(length=None), start=1))
 
         if not next(
-            (user for user in user_list.values() if user["user_id"] == ctx.author.id), False
+            (user for user in user_list.values() if user["user_id"] == ctx.author.id),
+            False,
         ):
             author = await ctx.db.user_stats.find_one(
-                {"guild_id": ctx.guild.id, "user_id": ctx.author.id}, {"user_id": True, "lvl": True, "exp": True}
+                {"guild_id": ctx.guild.id, "user_id": ctx.author.id},
+                {"user_id": True, "lvl": True, "exp": True},
             )
             rank = await ctx.db.user_stats.count_documents(
                 {"guild_id": ctx.guild.id, "exp": {"$gte": author["exp"]}}

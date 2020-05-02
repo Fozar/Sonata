@@ -13,7 +13,7 @@ from dateparser import search
 from discord.ext import commands
 
 from sonata.bot import core
-from sonata.bot.utils import i18n
+from . import i18n
 
 
 def flag_to_locale(flag: str) -> str:
@@ -224,25 +224,27 @@ class ModeratedMember(commands.MemberConverter):
         member = await super().convert(ctx, argument)
         if ctx.author == member:
             raise commands.BadArgument(
-                _("Member `{0}` is the author of the message.").format(str(member))
+                _('Member "{0}" is the author of the message.').format(str(member))
             )
+        if ctx.guild.me == member:
+            raise commands.BadArgument(_('Member "{0}" is me.').format(str(member)))
         if ctx.author.top_role <= member.top_role:
             raise commands.BadArgument(
-                _("Member `{0}` is above moderator in the role hierarchy.").format(
+                _('Member "{0}" is above moderator in the role hierarchy.').format(
                     str(member)
                 )
             )
         if ctx.guild.me.top_role <= member.top_role:
             raise commands.BadArgument(
-                _("Member `{0}` is above me in the role hierarchy.").format(str(member))
+                _('Member "{0}" is above me in the role hierarchy.').format(str(member))
             )
         if ctx.guild.owner == member:
             raise commands.BadArgument(
-                _("Member `{0}` is the guild owner.").format(str(member))
+                _('Member "{0}" is the guild owner.').format(str(member))
             )
         if member.guild_permissions.administrator:
             raise commands.BadArgument(
-                _("Member `{0}` is guild administrator.").format(str(member))
+                _('Member "{0}" is guild administrator.').format(str(member))
             )
         guild = await ctx.db.guilds.find_one(
             {"id": ctx.guild.id}, {"admin_roles": True, "mod_roles": True}
@@ -252,10 +254,10 @@ class ModeratedMember(commands.MemberConverter):
 
         if guild.get("admin_roles") and member.id in guild["admin_roles"]:
             raise commands.BadArgument(
-                _("Member `{0}` is guild administrator.").format(str(member))
+                _('Member "{0}" is guild administrator.').format(str(member))
             )
         if guild.get("mod_roles") and member.id in guild["mod_roles"]:
             raise commands.BadArgument(
-                _("Member `{0}` is guild moderator.").format(str(member))
+                _('Member "{0}" is guild moderator.').format(str(member))
             )
         return member

@@ -352,6 +352,17 @@ class Admin(
             )
         )
 
+    @guild.group(name="modlog")
+    async def guild_modlog(self, ctx: core.Context, channel: discord.TextChannel):
+        _("""Set modlog channel""")
+        if not channel.permissions_for(ctx.guild.me).send_messages:
+            return await ctx.inform(_("I can't send messages in this channel."))
+
+        await ctx.db.guilds.update_one(
+            {"id": ctx.guild.id}, {"$set": {"modlog": channel.id}}
+        )
+        await ctx.inform(_("Modlog channel is set to {0}").format(channel.mention))
+
     @guild.command(name="prefix")
     async def guild_prefix(self, ctx: core.Context, prefix: str = None):
         _(
@@ -474,5 +485,74 @@ class Admin(
         role_ids = [role.id for role in roles]
         await ctx.db.guilds.update_one(
             {"id": ctx.guild.id}, {"$pull": {"admin_roles": {"$in": role_ids}}}
+        )
+        await ctx.inform(_("Roles successfully removed."))
+
+    @guild_role.group(name="mod", invoke_without_command=True)
+    async def guild_role_mod(self, ctx: core.Context):
+        _(
+            """Mod roles
+
+        Members who have the at least one of mod roles can use Mod cog without having \
+        to have the appropriate permissions."""
+        )
+        guild = await ctx.db.guilds.find_one({"id": ctx.guild.id}, {"mod_roles": True})
+        if not guild or not guild.get("mod_roles"):
+            return await ctx.inform(_("Mod roles not set."))
+
+        roles = []
+        for role_id in guild["mod_roles"]:
+            role = ctx.guild.get_role(role_id)
+            if role is None:
+                await ctx.db.guilds.update_one(
+                    {"id": ctx.guild.id}, {"$pull": {"mod_roles": role_id}}
+                )
+            else:
+                roles.append(role)
+        await ctx.inform(
+            _("Mod roles: {0}.").format(", ".join([str(role) for role in roles]))
+        )
+
+    @guild_role_mod.command(name="add")
+    async def guild_role_mod_add(
+        self, ctx: core.Context, roles: commands.Greedy[discord.Role]
+    ):
+        _(
+            """Add roles to mod role list
+
+        You can specify roles using the ID, mention, or name of the role.
+
+        Examples:
+        - guild role admin add @Mod
+        - guild role admin add @MiniMod @Mod
+        - guild role admin add 705363996747759657 Mod"""
+        )
+        if not roles:
+            return await ctx.inform(_("You must specify at least one role."))
+        role_ids = [role.id for role in roles]
+        await ctx.db.guilds.update_one(
+            {"id": ctx.guild.id}, {"$addToSet": {"mod_roles": {"$each": role_ids}}}
+        )
+        await ctx.inform(_("Roles successfully added."))
+
+    @guild_role_mod.command(name="remove")
+    async def guild_role_mod_remove(
+        self, ctx: core.Context, roles: commands.Greedy[discord.Role]
+    ):
+        _(
+            """Removes roles from mod role list
+
+        You can specify roles using the ID, mention, or name of the role.
+
+        Examples:
+        - guild role admin remove @Mod
+        - guild role admin remove @MiniMod @Mod
+        - guild role admin remove 705363996747759657 Mod"""
+        )
+        if not roles:
+            return await ctx.inform(_("You must specify at least one role."))
+        role_ids = [role.id for role in roles]
+        await ctx.db.guilds.update_one(
+            {"id": ctx.guild.id}, {"$pull": {"mod_roles": {"$in": role_ids}}}
         )
         await ctx.inform(_("Roles successfully removed."))

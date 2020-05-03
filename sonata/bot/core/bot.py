@@ -90,11 +90,7 @@ class Sonata(commands.Bot):
 
     async def on_guild_join(self, guild: discord.Guild):
         owner = self.get_user(self.owner_id) or await self.fetch_user(self.owner_id)
-        await owner.send(f"New guild joined: {guild.name}. ID: {guild.id}")
-        members_embed = discord.Embed(
-            description=f"Members: ```{', '.join(map(str, guild.members))}```"
-        )
-        await owner.send(embed=members_embed)
+        await owner.send(f"New guild joined: {guild.name}. ID: {guild.id}. Members: {guild.member_count}")
         await owner.send(f"Channels: ```{', '.join(map(str, guild.channels))}```")
 
     async def on_command_error(self, ctx: Context, exception: Exception):

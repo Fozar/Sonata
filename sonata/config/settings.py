@@ -3,7 +3,7 @@ from typing import FrozenSet
 
 class BotConfig:
     discord_token: str = None
-    test_token: str = None
+    topgg_token: str = None
     owner_id: int = 149722383165423616
     description: str = _(
         """Sonata is a multi-functional polyglot bot. The bot has many modules for \

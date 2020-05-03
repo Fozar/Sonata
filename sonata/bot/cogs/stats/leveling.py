@@ -65,7 +65,7 @@ class Leveling(core.Cog):
             )
             send_msg = user.get("auto_lvl_msg", True)
         else:
-            send_msg = guild.get["auto_lvl_msg"]
+            send_msg = guild.get("auto_lvl_msg")
 
         if send_msg:
             await self.sonata.set_locale(message)

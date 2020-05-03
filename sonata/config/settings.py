@@ -34,7 +34,7 @@ class BotConfig:
     )
     default_prefix: str = "!"
     core_cogs: FrozenSet[str] = frozenset(
-        {"Locale", "Owner", "General", "Admin", "Stats"}
+        {"Locale", "Owner", "General", "Admin", "Stats", "TopGG"}
     )
     other_cogs: FrozenSet[str] = frozenset({"Fun", "Reminder", "Utils", "Emoji"})
 

@@ -16,7 +16,6 @@ def setup_logger():
     file_handler = handlers.TimedRotatingFileHandler(
         filename=os.getcwd() + "/logs/discord/discord.log",
         when="midnight",
-        backupCount=3,
         encoding="utf-8",
     )
     file_handler.setFormatter(

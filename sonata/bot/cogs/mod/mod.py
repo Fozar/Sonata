@@ -20,8 +20,14 @@ class Mod(Modlog, colour=discord.Colour(0xD0021B)):
     async def kick(
         self, ctx: core.Context, member: ModeratedMember(), *, reason: clean_content(),
     ):
-        _("""Kick member from the guild.""")
-
+        _(
+            """Kick member from the guild
+        
+        Examples:
+        - kick @Member flood
+        - kick Member#1234 spam
+        - kick 239686604271124481 bad words"""
+        )
         await member.kick(reason=reason)
         try:
             await ctx.message.delete()
@@ -40,7 +46,22 @@ class Mod(Modlog, colour=discord.Colour(0xD0021B)):
         *,
         reason: clean_content(),
     ):
-        await member.ban(delete_message_days=delete_days, reason=reason)
+        _(
+            """Ban user in the guild
+        
+        You can specify number of days worth of messages to delete from the user in the \
+        guild. The minimum is 0 and the maximum is 7. Defaults to 0.
+        
+        Examples:
+        - ban @Member flood
+        - ban Member#1234 1 spam
+        - ban 239686604271124481 7 bad words"""
+        )
+        if 0 <= delete_days <= 7:
+            return await ctx.inform(
+                _("The minimum deleted days are 0 and the maximum is 7.")
+            )
+        await ctx.guild.ban(member, delete_message_days=delete_days, reason=reason)
         try:
             await ctx.message.delete()
         except discord.Forbidden:
@@ -53,6 +74,14 @@ class Mod(Modlog, colour=discord.Colour(0xD0021B)):
     async def unban(
         self, ctx: core.Context, user: discord.User, *, reason: clean_content()
     ):
+        _(
+            """Unban user in the guild
+        
+        Examples:
+        - unban @Member conflict resolved
+        - unban Member#1234 1 apologized
+        - unban 239686604271124481 7 amnesty"""
+        )
         await ctx.guild.unban(user, reason=reason)
         try:
             await ctx.message.delete()

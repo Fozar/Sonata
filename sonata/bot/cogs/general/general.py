@@ -95,8 +95,11 @@ class General(
                 members=len(self.sonata.users),
             ),
             _("Language support"): ", ".join(make_locale_list(display_name=True)),
-            _("Useful links"): _("[Invite the bot to your server]({0})").format(
-                ctx.bot.invite
+            _("Useful links"): _(
+                "[Invite the bot to your server]({invite})\n"
+                "[Vote for the bot]({vote})"
+            ).format(
+                invite=ctx.bot.invite, vote=f"https://top.gg/bot/{ctx.bot.user.id}"
             ),
         }
         for name, value in fields.items():

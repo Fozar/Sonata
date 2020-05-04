@@ -93,3 +93,12 @@ class EmojiStats(CreatedAtMixin):
     id: int
     guild_id: int
     total: int
+
+
+class ModlogCase(CreatedAtMixin):
+    guild_id: int
+    id: int
+    action: int
+    user_id: int
+    target_id: int
+    reason: Optional[str]

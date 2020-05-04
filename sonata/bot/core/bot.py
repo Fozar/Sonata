@@ -43,6 +43,11 @@ class Sonata(commands.Bot):
         self.app = app
         self.session = aiohttp.ClientSession(loop=self.loop)
         self.launch_time = None
+        self.dblpy = (
+            dbl.DBLClient(self, self.config["bot"].dbl_token, autopost=True)
+            if self.config["bot"].dbl_token
+            else None
+        )
 
     # Properties
 
@@ -138,6 +143,9 @@ class Sonata(commands.Bot):
                     )
                 )
             )
+
+    async def on_guild_post(self):
+        self.logger.debug("Server count posted successfully")
 
     # Methods
 

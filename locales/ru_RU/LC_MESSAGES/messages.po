@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-05-04 20:11+0700\n"
-"PO-Revision-Date: 2020-05-04 20:12+0700\n"
+"POT-Creation-Date: 2020-05-04 21:01+0700\n"
+"PO-Revision-Date: 2020-05-04 21:01+0700\n"
 "Last-Translator: \n"
 "Language: ru_RU\n"
 "Language-Team: ru_RU <LL@li.org>\n"
@@ -918,6 +918,10 @@ msgstr ""
 msgid "Statistics"
 msgstr "Статистика"
 
+#: sonata/bot/cogs/general/general.py:193
+msgid "Vote for the bot"
+msgstr "Проголосовать за бота"
+
 #: sonata/bot/cogs/locale/locale.py:12
 msgid "Multilingual support"
 msgstr "Поддержка мультиязычности"
@@ -1487,19 +1491,19 @@ msgstr ""
 msgid "{0}, I did not find such a locality."
 msgstr "{0}, я не нашла такой населенный пункт."
 
-#: sonata/bot/core/bot.py:100
+#: sonata/bot/core/bot.py:102
 msgid "You do not have enough permissions to do it."
 msgstr "У тебя недостаточно прав для этого."
 
-#: sonata/bot/core/bot.py:105
+#: sonata/bot/core/bot.py:107
 msgid "I do not have enough permissions to do it."
 msgstr "У меня недостаточно прав для этого."
 
-#: sonata/bot/core/bot.py:107
+#: sonata/bot/core/bot.py:109
 msgid "I am forbidden to do it."
 msgstr "Мне запрещено это делать."
 
-#: sonata/bot/core/bot.py:112
+#: sonata/bot/core/bot.py:114
 msgid ""
 "Arguments specified incorrectly:```diff\n"
 "- {0}```"
@@ -1507,19 +1511,19 @@ msgstr ""
 "Аргументы указаны неверно:```diff\n"
 "- {0}```"
 
-#: sonata/bot/core/bot.py:117
+#: sonata/bot/core/bot.py:119
 msgid "Required arguments not specified."
 msgstr "Обязательные аргументы не указаны."
 
-#: sonata/bot/core/bot.py:120
+#: sonata/bot/core/bot.py:122
 msgid "An error occurred while making an HTTP request."
 msgstr "Произошла ошибка при выполнении HTTP-запроса."
 
-#: sonata/bot/core/bot.py:122
+#: sonata/bot/core/bot.py:124
 msgid "This command is only for premium guilds."
 msgstr "Эта команда только для премиум гильдий."
 
-#: sonata/bot/core/bot.py:125
+#: sonata/bot/core/bot.py:127
 msgid "Command `{0}` is disabled."
 msgstr "Команда `{0}` отключена."
 

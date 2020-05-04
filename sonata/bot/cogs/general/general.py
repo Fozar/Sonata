@@ -184,3 +184,15 @@ class General(
         embed.add_field(name=_("Statistics"), value=statistics, inline=False)
 
         await ctx.send(embed=embed)
+
+    @core.command()
+    @commands.check(lambda ctx: ctx.bot.dblpy is not None)
+    async def widget(self, ctx: core.Context):
+        embed = discord.Embed(
+            colour=self.colour,
+            title=_("Vote for the bot"),
+            url=f"https://top.gg/bot/{ctx.bot.user.id}",
+        )
+        widget = await ctx.bot.dblpy.get_widget_large()
+        embed.set_image(url=widget)
+        await ctx.send(embed=embed)

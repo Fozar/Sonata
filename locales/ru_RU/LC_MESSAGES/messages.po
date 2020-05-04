@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-05-04 21:01+0700\n"
-"PO-Revision-Date: 2020-05-04 21:01+0700\n"
+"POT-Creation-Date: 2020-05-05 00:29+0700\n"
+"PO-Revision-Date: 2020-05-05 00:40+0700\n"
 "Last-Translator: \n"
 "Language: ru_RU\n"
 "Language-Team: ru_RU <LL@li.org>\n"
@@ -238,6 +238,18 @@ msgid "The guild locale is set to {flag} `{locale}`."
 msgstr "Язык гильдии установлен на {flag} `{locale}`."
 
 #: sonata/bot/cogs/admin/admin.py:357
+msgid "Set modlog channel"
+msgstr "Устанавливает канал журнала модераторов"
+
+#: sonata/bot/cogs/admin/admin.py:359
+msgid "I can't send messages in this channel."
+msgstr "Я не могу отправлять сообщения в этот канал."
+
+#: sonata/bot/cogs/admin/admin.py:364
+msgid "Modlog channel is set to {0}"
+msgstr "Журнал модераторов установлен на {0}"
+
+#: sonata/bot/cogs/admin/admin.py:368
 msgid ""
 "Set guild prefix\n"
 "        \n"
@@ -247,38 +259,38 @@ msgstr ""
 "        \n"
 "        Префикс гильдии перезаписывает префикс по умолчанию."
 
-#: sonata/bot/cogs/admin/admin.py:367
+#: sonata/bot/cogs/admin/admin.py:378
 msgid "Current guild prefix is `{0}`."
 msgstr "Текущий префикс гильдии: `{0}`."
 
-#: sonata/bot/cogs/admin/admin.py:372
+#: sonata/bot/cogs/admin/admin.py:383
 msgid ""
 "This prefix is too long. The prefix cannot consist of more than {0} characters."
 msgstr ""
 "Этот префикс слишком длинный. Префикс не может состоять из более, чем {0} "
 "символов."
 
-#: sonata/bot/cogs/admin/admin.py:381
+#: sonata/bot/cogs/admin/admin.py:392
 msgid "The guild prefix is set to `{0}`."
 msgstr "Префикс гильдии установлен на `{0}`."
 
-#: sonata/bot/cogs/admin/admin.py:385
+#: sonata/bot/cogs/admin/admin.py:396
 msgid "Resets guild settings"
 msgstr "Сбрасывает настройки гильдии"
 
-#: sonata/bot/cogs/admin/admin.py:386
+#: sonata/bot/cogs/admin/admin.py:397
 msgid "Are you sure?"
 msgstr "Вы уверены?"
 
-#: sonata/bot/cogs/admin/admin.py:399
+#: sonata/bot/cogs/admin/admin.py:410
 msgid "Guild settings reset."
 msgstr "Настройки гильдии сброшены."
 
-#: sonata/bot/cogs/admin/admin.py:403
+#: sonata/bot/cogs/admin/admin.py:414
 msgid "Set privileged roles"
 msgstr "Устанавливает привилегированные роли"
 
-#: sonata/bot/cogs/admin/admin.py:411
+#: sonata/bot/cogs/admin/admin.py:422
 msgid ""
 "Admin roles\n"
 "        \n"
@@ -290,15 +302,15 @@ msgstr ""
 "        Участники которые имеют роль администратора могут пользоваться модулем "
 "наравне с участниками, которые имеют права администратора."
 
-#: sonata/bot/cogs/admin/admin.py:421
+#: sonata/bot/cogs/admin/admin.py:432
 msgid "Admin roles not set."
 msgstr "Роли администраторов не установлены."
 
-#: sonata/bot/cogs/admin/admin.py:433
+#: sonata/bot/cogs/admin/admin.py:444
 msgid "Admin roles: {0}."
 msgstr "Роли администраторов: {0}."
 
-#: sonata/bot/cogs/admin/admin.py:440
+#: sonata/bot/cogs/admin/admin.py:451
 msgid ""
 "Add roles to admin role list\n"
 "            \n"
@@ -318,15 +330,16 @@ msgstr ""
 "        - guild role admin add @MiniAdmin @Admin @BotManager\n"
 "        - guild role admin add 705363996747759657 Admin"
 
-#: sonata/bot/cogs/admin/admin.py:451 sonata/bot/cogs/admin/admin.py:473
+#: sonata/bot/cogs/admin/admin.py:462 sonata/bot/cogs/admin/admin.py:484
+#: sonata/bot/cogs/admin/admin.py:531 sonata/bot/cogs/admin/admin.py:553
 msgid "You must specify at least one role."
 msgstr "Тебе нужно указать хотя бы одну роль."
 
-#: sonata/bot/cogs/admin/admin.py:456
+#: sonata/bot/cogs/admin/admin.py:467 sonata/bot/cogs/admin/admin.py:536
 msgid "Roles successfully added."
 msgstr "Роли успешно добавлены."
 
-#: sonata/bot/cogs/admin/admin.py:462
+#: sonata/bot/cogs/admin/admin.py:473
 msgid ""
 "Removes roles from admin role list\n"
 "        \n"
@@ -346,9 +359,69 @@ msgstr ""
 "        - guild role admin remove @MiniAdmin @Admin @BotManager\n"
 "        - guild role admin remove 705363996747759657 Admin"
 
-#: sonata/bot/cogs/admin/admin.py:478
+#: sonata/bot/cogs/admin/admin.py:489 sonata/bot/cogs/admin/admin.py:558
 msgid "Roles successfully removed."
 msgstr "Роли успешно удалены."
+
+#: sonata/bot/cogs/admin/admin.py:493
+msgid ""
+"Mod roles\n"
+"\n"
+"        Members who have the at least one of mod roles can use Mod cog without "
+"having         to have the appropriate permissions."
+msgstr ""
+"Роли модераторов\n"
+"\n"
+"        Участники, у которых есть хотя бы одна из ролей модераторов могут "
+"использовать модуль Mod без необходимости иметь соответствующие права."
+
+#: sonata/bot/cogs/admin/admin.py:501
+msgid "Mod roles not set."
+msgstr "Роли модераторов не установлены."
+
+#: sonata/bot/cogs/admin/admin.py:513
+msgid "Mod roles: {0}."
+msgstr "Роли модераторов: {0}."
+
+#: sonata/bot/cogs/admin/admin.py:520
+msgid ""
+"Add roles to mod role list\n"
+"\n"
+"        You can specify roles using the ID, mention, or name of the role.\n"
+"\n"
+"        Examples:\n"
+"        - guild role mod add @Mod\n"
+"        - guild role mod add @MiniMod @Mod\n"
+"        - guild role mod add 705363996747759657 Mod"
+msgstr ""
+"Добавляет роли в список ролей модераторов\n"
+"\n"
+"        Вы можете указать роли используя ID, упоминание или имя роли.\n"
+"\n"
+"        Примеры:\n"
+"        - guild role mod add @Mod\n"
+"        - guild role mod add @MiniMod @Mod\n"
+"        - guild role mod add 705363996747759657 Mod"
+
+#: sonata/bot/cogs/admin/admin.py:542
+msgid ""
+"Removes roles from mod role list\n"
+"\n"
+"        You can specify roles using the ID, mention, or name of the role.\n"
+"\n"
+"        Examples:\n"
+"        - guild role mod remove @Mod\n"
+"        - guild role mod remove @MiniMod @Mod\n"
+"        - guild role mod remove 705363996747759657 Mod"
+msgstr ""
+"Удаляет роли из списка ролей модераторов\n"
+"        \n"
+"        Вы можете указать роли используя ID, упоминание или имя роли.\n"
+"        \n"
+"        Примеры:\n"
+"        - guild role mod remove @Mod\n"
+"        - guild role mod remove @MiniMod @Mod\n"
+"        - guild role mod remove 705363996747759657 Mod"
 
 #: sonata/bot/cogs/emoji/emoji.py:83
 msgid "Shows emoji info"
@@ -950,6 +1023,139 @@ msgstr "Доступные языки: {0}."
 msgid "Locales updated"
 msgstr "Локали обновлены"
 
+#: sonata/bot/cogs/mod/mod.py:23
+msgid ""
+"Kick member from the guild\n"
+"        \n"
+"        Examples:\n"
+"        - kick @Member flood\n"
+"        - kick Member#1234 spam\n"
+"        - kick 239686604271124481 bad words"
+msgstr ""
+"Выгоняет участника из гильдии\n"
+"        \n"
+"        Примеры:\n"
+"        - kick @Member флуд\n"
+"        - kick Member#1234 спам\n"
+"        - kick 239686604271124481 ругательства"
+
+#: sonata/bot/cogs/mod/mod.py:35
+msgid "Member kicked: {0}"
+msgstr "Участник выгнан: {0}"
+
+#: sonata/bot/cogs/mod/mod.py:49
+msgid ""
+"Ban user in the guild\n"
+"        \n"
+"        You can specify number of days worth of messages to delete from the "
+"user in the         guild. The minimum is 0 and the maximum is 7. Defaults to "
+"0.\n"
+"        \n"
+"        Examples:\n"
+"        - ban @Member flood\n"
+"        - ban Member#1234 1 spam\n"
+"        - ban 239686604271124481 7 bad words"
+msgstr ""
+"Банит пользователя в гильдии\n"
+"        \n"
+"        Вы можете указать количество дней для удаления сообщений пользователя в "
+"гильдии. Минимум 0 и максимум 7. По умолчанию 0.\n"
+"        \n"
+"        Примеры:\n"
+"        - ban @Member флуд\n"
+"        - ban Member#1234 1 спам\n"
+"        - ban 239686604271124481 7 ругательства"
+
+#: sonata/bot/cogs/mod/mod.py:62
+msgid "The minimum deleted days are 0 and the maximum is 7."
+msgstr "Минимальное количество удаленных дней - 0, а максимальное - 7."
+
+#: sonata/bot/cogs/mod/mod.py:68
+msgid "Member banned: {0}"
+msgstr "Участник забанен: {0}."
+
+#: sonata/bot/cogs/mod/mod.py:77
+msgid ""
+"Unban user in the guild\n"
+"        \n"
+"        Examples:\n"
+"        - unban @Member conflict resolved\n"
+"        - unban Member#1234 1 apologized\n"
+"        - unban 239686604271124481 7 amnesty"
+msgstr ""
+"Разбанивает пользователя в гильдии\n"
+"        \n"
+"        Примеры:\n"
+"        - unban @Member конфликт разрешен\n"
+"        - unban Member#1234 1 извинился\n"
+"        - unban 239686604271124481 7 амнистия"
+
+#: sonata/bot/cogs/mod/mod.py:89
+msgid "Member unbanned: {0}"
+msgstr "Участник разбанен: {0}"
+
+#: sonata/bot/cogs/mod/mod.py:103
+msgid ""
+"Purges messages in the channel\n"
+"        \n"
+"        You can specify message before which to start purging. The message must "
+"be in         the same channel.\n"
+"        \n"
+"        Examples:\n"
+"        - purge 10 flood\n"
+"        - purge 20 706903341934051489 spam\n"
+"        - purge 100 <message url> raid"
+msgstr ""
+"Чистит сообщения в канале\n"
+"        \n"
+"        Вы можете указать сообщения до которого начать чистку. Сообщение должно "
+"быть в этом же канале.\n"
+"        \n"
+"        Примеры:\n"
+"        - purge 10 флуд\n"
+"        - purge 20 706903341934051489 спам\n"
+"        - purge 100 <message url> рейд"
+
+#: sonata/bot/cogs/mod/mod.py:117
+msgid "`Before` message must be in the same channel."
+msgstr "Сообщение \"до\" должно быть в том же канале."
+
+#: sonata/bot/cogs/mod/modlog.py:81
+msgid "Member kicked"
+msgstr "Участник выгнан"
+
+#: sonata/bot/cogs/mod/modlog.py:82
+msgid "User banned"
+msgstr "Пользователь забанен"
+
+#: sonata/bot/cogs/mod/modlog.py:83
+msgid "User unbanned"
+msgstr "Пользователь разбанен"
+
+#: sonata/bot/cogs/mod/modlog.py:84
+msgid "Messages purged"
+msgstr "Сообщения очищены"
+
+#: sonata/bot/cogs/mod/modlog.py:105
+msgid "User"
+msgstr "Пользователь"
+
+#: sonata/bot/cogs/mod/modlog.py:105 sonata/bot/cogs/owner/owner.py:295
+msgid "Bot"
+msgstr "Бот"
+
+#: sonata/bot/cogs/mod/modlog.py:108
+msgid "Channel"
+msgstr "Канал"
+
+#: sonata/bot/cogs/mod/modlog.py:112
+msgid "Moderator"
+msgstr "Модератор"
+
+#: sonata/bot/cogs/mod/modlog.py:114
+msgid "Reason"
+msgstr "Причина"
+
 #: sonata/bot/cogs/owner/owner.py:25
 msgid "Commands of bot owner"
 msgstr "Команды владельца бота"
@@ -1146,10 +1352,6 @@ msgstr ""
 "**Всего**: {total}GB\n"
 "**Доступно**: {available}GB\n"
 "**Использовано**: {usage}%"
-
-#: sonata/bot/cogs/owner/owner.py:295
-msgid "Bot"
-msgstr "Бот"
 
 #: sonata/bot/cogs/owner/owner.py:296 sonata/bot/cogs/owner/owner.py:314
 msgid ""
@@ -1634,6 +1836,34 @@ msgstr "Превышено ограничение по времени: {0}с"
 msgid "Range exceeded: {0} ** {1}"
 msgstr "Превышен диапазон: {0} ** {1}"
 
+#: sonata/bot/utils/converters.py:236
+msgid "Member \"{0}\" is the author of the message."
+msgstr "Участник \"{0}\" автор сообщения."
+
+#: sonata/bot/utils/converters.py:239
+msgid "Member \"{0}\" is me."
+msgstr "Участник \"{0}\" это я."
+
+#: sonata/bot/utils/converters.py:242
+msgid "Member \"{0}\" is above moderator in the role hierarchy."
+msgstr "Участник \"{0}\" выше модератора в иерархии ролей."
+
+#: sonata/bot/utils/converters.py:248
+msgid "Member \"{0}\" is above me in the role hierarchy."
+msgstr "Участник \"{0}\" выше меня в иерархии ролей."
+
+#: sonata/bot/utils/converters.py:252
+msgid "Member \"{0}\" is the guild owner."
+msgstr "Участник \"{0}\" владелец гильдии."
+
+#: sonata/bot/utils/converters.py:256 sonata/bot/utils/converters.py:266
+msgid "Member \"{0}\" is guild administrator."
+msgstr "Участник \"{0}\" администратор гильдии."
+
+#: sonata/bot/utils/converters.py:270
+msgid "Member \"{0}\" is guild moderator."
+msgstr "Участник \"{0}\" модератор гильдии."
+
 #: sonata/config/settings.py:8
 msgid ""
 "Sonata is a multi-functional polyglot bot. The bot has many modules for         "
@@ -1774,3 +2004,41 @@ msgstr ""
 
 #~ msgid "Division by zero: {0} / {1}"
 #~ msgstr "Деление на ноль: {0} / {1}"
+
+#~ msgid ""
+#~ "Add roles to mod role list\n"
+#~ "\n"
+#~ "        You can specify roles using the ID, mention, or name of the role.\n"
+#~ "\n"
+#~ "        Examples:\n"
+#~ "        - guild role admin add @Mod\n"
+#~ "        - guild role admin add @MiniMod @Mod\n"
+#~ "        - guild role admin add 705363996747759657 Mod"
+#~ msgstr ""
+#~ "Добавляет роли в список ролей модераторов\n"
+#~ "\n"
+#~ "        Вы можете указать роли используя ID, упоминание или имя роли.\n"
+#~ "\n"
+#~ "        Примеры:\n"
+#~ "        - guild role admin add @Mod\n"
+#~ "        - guild role admin add @MiniMod @Mod\n"
+#~ "        - guild role admin add 705363996747759657 Mod"
+
+#~ msgid ""
+#~ "Removes roles from mod role list\n"
+#~ "\n"
+#~ "        You can specify roles using the ID, mention, or name of the role.\n"
+#~ "\n"
+#~ "        Examples:\n"
+#~ "        - guild role admin remove @Mod\n"
+#~ "        - guild role admin remove @MiniMod @Mod\n"
+#~ "        - guild role admin remove 705363996747759657 Mod"
+#~ msgstr ""
+#~ "Удаляет роли из списка ролей модераторов\n"
+#~ "        \n"
+#~ "        Вы можете указать роли используя ID, упоминание или имя роли.\n"
+#~ "        \n"
+#~ "        Примеры:\n"
+#~ "        - guild role admin remove @Mod\n"
+#~ "        - guild role admin remove @MiniMod @Mod\n"
+#~ "        - guild role admin remove 705363996747759657 Mod"

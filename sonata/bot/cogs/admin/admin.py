@@ -523,9 +523,9 @@ class Admin(
         You can specify roles using the ID, mention, or name of the role.
 
         Examples:
-        - guild role admin add @Mod
-        - guild role admin add @MiniMod @Mod
-        - guild role admin add 705363996747759657 Mod"""
+        - guild role mod add @Mod
+        - guild role mod add @MiniMod @Mod
+        - guild role mod add 705363996747759657 Mod"""
         )
         if not roles:
             return await ctx.inform(_("You must specify at least one role."))
@@ -545,9 +545,9 @@ class Admin(
         You can specify roles using the ID, mention, or name of the role.
 
         Examples:
-        - guild role admin remove @Mod
-        - guild role admin remove @MiniMod @Mod
-        - guild role admin remove 705363996747759657 Mod"""
+        - guild role mod remove @Mod
+        - guild role mod remove @MiniMod @Mod
+        - guild role mod remove 705363996747759657 Mod"""
         )
         if not roles:
             return await ctx.inform(_("You must specify at least one role."))

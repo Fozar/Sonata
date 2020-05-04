@@ -81,17 +81,31 @@ class Modlog(core.Cog):
             discord.AuditLogAction.kick: _("Member kicked"),
             discord.AuditLogAction.ban: _("User banned"),
             discord.AuditLogAction.unban: _("User unbanned"),
+            discord.AuditLogAction.message_bulk_delete: _("Messages purged"),
         }
         action = discord.AuditLogAction.try_value(case.action)
         embed = discord.Embed(
             colour=self.colour, title=action_mapping[action], timestamp=case.created_at,
         )
-        target = self.sonata.get_user(case.target_id) or await self.sonata.fetch_user(
-            case.target_id
-        )
-        embed.add_field(
-            name=_("User") if not target.bot else _("Bot"), value=str(target)
-        )
+        try:
+            target = self.sonata.get_user(
+                case.target_id
+            ) or await self.sonata.fetch_user(case.target_id)
+        except discord.NotFound:
+            target = None
+        if target is None:
+            try:
+                target = self.sonata.get_channel(
+                    case.target_id
+                ) or await self.sonata.fetch_channel(case.target_id)
+            except discord.NotFound:
+                target = None
+        if isinstance(target, (discord.User, discord.Member)):
+            embed.add_field(
+                name=_("User") if not target.bot else _("Bot"), value=str(target)
+            )
+        elif isinstance(target, discord.TextChannel):
+            embed.add_field(name=_("Channel"), value=target.mention)
         user = self.sonata.get_user(case.user_id) or await self.sonata.fetch_user(
             case.user_id
         )

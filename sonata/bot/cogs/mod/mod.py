@@ -41,7 +41,7 @@ class Mod(Modlog, colour=discord.Colour(0xD0021B)):
     async def ban(
         self,
         ctx: core.Context,
-        member: Union[ModeratedMember(), discord.User],
+        member: Union[ModeratedMember, discord.User],
         delete_days: Optional[int] = 0,
         *,
         reason: clean_content(),
@@ -88,3 +88,36 @@ class Mod(Modlog, colour=discord.Colour(0xD0021B)):
         except discord.Forbidden:
             await ctx.send(_("Member unbanned: {0}").format(str(user)))
         await self.create_modlog_case(ctx, user, discord.AuditLogAction.unban, reason)
+
+    @core.group(aliases=["clear"])
+    @commands.bot_has_permissions(manage_messages=True)
+    @commands.check_any(commands.has_permissions(manage_messages=True), checks.is_mod())
+    async def purge(
+        self,
+        ctx: core.Context,
+        limit: int,
+        before: Optional[discord.Message] = None,
+        *,
+        reason: clean_content(),
+    ):
+        _(
+            """Purges messages in the channel
+        
+        You can specify message before which to start purging. The message must be in \
+        the same channel.
+        
+        Examples:
+        - purge 10 flood
+        - purge 20 706903341934051489 spam
+        - purge 100 <message url> raid"""
+        )
+        if before is not None:
+            if before.channel != ctx.channel:
+                return await ctx.inform(
+                    _("`Before` message must be in the same channel.")
+                )
+            before = before.created_at
+        await ctx.channel.purge(limit=limit, before=before)
+        await self.create_modlog_case(
+            ctx, ctx.channel, discord.AuditLogAction.message_bulk_delete, reason
+        )

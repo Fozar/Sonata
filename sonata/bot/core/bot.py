@@ -5,10 +5,10 @@ from logging import Logger
 from typing import Union, Optional
 
 import aiohttp
+import dbl
 import discord
 from aiohttp.web_app import Application
 from discord.ext import commands
-from motor import motor_asyncio as motorio
 
 from sonata.bot.utils import i18n
 from .cog import Cog
@@ -89,7 +89,9 @@ class Sonata(commands.Bot):
 
     async def on_guild_join(self, guild: discord.Guild):
         owner = self.get_user(self.owner_id) or await self.fetch_user(self.owner_id)
-        await owner.send(f"New guild joined: {guild.name}. ID: {guild.id}. Members: {guild.member_count}")
+        await owner.send(
+            f"New guild joined: {guild.name}. ID: {guild.id}. Members: {guild.member_count}"
+        )
         await owner.send(f"Channels: ```{', '.join(map(str, guild.channels))}```")
 
     async def on_command_error(self, ctx: Context, exception: Exception):
@@ -119,7 +121,9 @@ class Sonata(commands.Bot):
         elif isinstance(exception, NoPremium):
             await ctx.send(_("This command is only for premium guilds."))
         elif isinstance(exception, commands.errors.DisabledCommand):
-            await ctx.send(_("Command `{0}` is disabled.").format(ctx.command.qualified_name))
+            await ctx.send(
+                _("Command `{0}` is disabled.").format(ctx.command.qualified_name)
+            )
         else:
             if ctx.cog and (
                 getattr(Cog, "_get_overridden_method")(ctx.cog.cog_command_error)

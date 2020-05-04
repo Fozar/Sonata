@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-05-04 16:01+0700\n"
-"PO-Revision-Date: 2020-05-04 16:02+0700\n"
+"POT-Creation-Date: 2020-05-04 20:11+0700\n"
+"PO-Revision-Date: 2020-05-04 20:12+0700\n"
 "Last-Translator: \n"
 "Language: ru_RU\n"
 "Language-Team: ru_RU <LL@li.org>\n"
@@ -792,7 +792,7 @@ msgstr "Показывает информацию обо мне"
 msgid "Sonata Info"
 msgstr "Информация о Сонате"
 
-#: sonata/bot/cogs/general/general.py:76 sonata/bot/cogs/general/general.py:116
+#: sonata/bot/cogs/general/general.py:76 sonata/bot/cogs/general/general.py:119
 msgid "Name"
 msgstr "Имя"
 
@@ -804,7 +804,7 @@ msgstr "API оболочка"
 msgid "Developer"
 msgstr "Разработчик"
 
-#: sonata/bot/cogs/general/general.py:85 sonata/bot/cogs/general/general.py:124
+#: sonata/bot/cogs/general/general.py:85 sonata/bot/cogs/general/general.py:127
 msgid "Status"
 msgstr "Статус"
 
@@ -827,82 +827,86 @@ msgid "Useful links"
 msgstr "Полезные ссылки"
 
 #: sonata/bot/cogs/general/general.py:98
-msgid "[Invite the bot to your server]({0})"
-msgstr "[Пригласить бота на свой сервер]({0})"
+msgid ""
+"[Invite the bot to your server]({invite})\n"
+"[Vote for the bot]({vote})"
+msgstr ""
+"[Пригласить бота на свой сервер]({invite})\n"
+"[Проголосовать за бота]({vote})"
 
-#: sonata/bot/cogs/general/general.py:112
+#: sonata/bot/cogs/general/general.py:115
 msgid "{0} Info"
 msgstr "Информация о {0}"
 
-#: sonata/bot/cogs/general/general.py:119
+#: sonata/bot/cogs/general/general.py:122
 msgid "Online"
 msgstr "В сети"
 
-#: sonata/bot/cogs/general/general.py:120
+#: sonata/bot/cogs/general/general.py:123
 msgid "Offline"
 msgstr "Не в сети"
 
-#: sonata/bot/cogs/general/general.py:121
+#: sonata/bot/cogs/general/general.py:124
 msgid "Idle"
 msgstr "Не активен"
 
-#: sonata/bot/cogs/general/general.py:122
+#: sonata/bot/cogs/general/general.py:125
 msgid "Do Not Disturb"
 msgstr "Не беспокоить"
 
-#: sonata/bot/cogs/general/general.py:127
+#: sonata/bot/cogs/general/general.py:130
 msgid "Playing"
 msgstr "Играет в"
 
-#: sonata/bot/cogs/general/general.py:129
+#: sonata/bot/cogs/general/general.py:132
 msgid "Streaming"
 msgstr "Стримит"
 
-#: sonata/bot/cogs/general/general.py:131
+#: sonata/bot/cogs/general/general.py:134
 msgid "Listening"
 msgstr "Слушает"
 
-#: sonata/bot/cogs/general/general.py:133 sonata/bot/cogs/general/general.py:136
+#: sonata/bot/cogs/general/general.py:136 sonata/bot/cogs/general/general.py:139
 msgid "Activity"
 msgstr "Активность"
 
-#: sonata/bot/cogs/general/general.py:138
+#: sonata/bot/cogs/general/general.py:141
 msgid "Joined the guild"
 msgstr "Дата присоединения к гильдии"
 
-#: sonata/bot/cogs/general/general.py:141
+#: sonata/bot/cogs/general/general.py:144
 msgid "Registration date"
 msgstr "Дата регистрации"
 
-#: sonata/bot/cogs/general/general.py:145
+#: sonata/bot/cogs/general/general.py:148
 msgid "Summary"
 msgstr "Общая информация"
 
-#: sonata/bot/cogs/general/general.py:164
+#: sonata/bot/cogs/general/general.py:167
 msgid "Statistics has been running since"
 msgstr "Статистика ведется с"
 
-#: sonata/bot/cogs/general/general.py:167
+#: sonata/bot/cogs/general/general.py:170
 msgid "Total messages"
 msgstr "Всего сообщений"
 
-#: sonata/bot/cogs/general/general.py:168
+#: sonata/bot/cogs/general/general.py:171
 msgid "Commands invoked"
 msgstr "Использовано команд"
 
-#: sonata/bot/cogs/general/general.py:169 sonata/bot/cogs/stats/leveling.py:127
+#: sonata/bot/cogs/general/general.py:172 sonata/bot/cogs/stats/leveling.py:127
 msgid "Level"
 msgstr "Уровень"
 
-#: sonata/bot/cogs/general/general.py:170 sonata/bot/cogs/stats/leveling.py:129
+#: sonata/bot/cogs/general/general.py:173 sonata/bot/cogs/stats/leveling.py:129
 msgid "Experience"
 msgstr "Опыт"
 
-#: sonata/bot/cogs/general/general.py:175
+#: sonata/bot/cogs/general/general.py:178
 msgid "Guild rank"
 msgstr "Ранг (гильдия)"
 
-#: sonata/bot/cogs/general/general.py:180
+#: sonata/bot/cogs/general/general.py:183
 msgid ""
 "\n"
 "`Statistics counts only messages visible to the bot`"
@@ -910,7 +914,7 @@ msgstr ""
 "\n"
 "`Статистика учитывает только сообщения, видимые для бота`"
 
-#: sonata/bot/cogs/general/general.py:181
+#: sonata/bot/cogs/general/general.py:184
 msgid "Statistics"
 msgstr "Статистика"
 
@@ -1331,47 +1335,47 @@ msgstr "Таблица лидеров гильдии"
 msgid "Sonata statistics"
 msgstr "Статистика Сонаты"
 
-#: sonata/bot/cogs/utils/utils.py:43
+#: sonata/bot/cogs/utils/utils.py:42
 msgid "Temperature"
 msgstr "Температура"
 
-#: sonata/bot/cogs/utils/utils.py:48
+#: sonata/bot/cogs/utils/utils.py:47
 msgid "Feels like"
 msgstr "Ощущается как"
 
-#: sonata/bot/cogs/utils/utils.py:53
+#: sonata/bot/cogs/utils/utils.py:52
 msgid "Humidity"
 msgstr "Влажность"
 
-#: sonata/bot/cogs/utils/utils.py:56
+#: sonata/bot/cogs/utils/utils.py:55
 msgid "Pressure"
 msgstr "Давление"
 
-#: sonata/bot/cogs/utils/utils.py:57
+#: sonata/bot/cogs/utils/utils.py:56
 msgid "{0} mbar"
 msgstr "{0} мбар"
 
-#: sonata/bot/cogs/utils/utils.py:62
+#: sonata/bot/cogs/utils/utils.py:61
 msgid "Wind speed"
 msgstr "Скорость ветра"
 
-#: sonata/bot/cogs/utils/utils.py:63
+#: sonata/bot/cogs/utils/utils.py:62
 msgid "{0} m/s"
 msgstr "{0} м/с"
 
-#: sonata/bot/cogs/utils/utils.py:67
+#: sonata/bot/cogs/utils/utils.py:66
 msgid "Local time"
 msgstr "Местное время"
 
-#: sonata/bot/cogs/utils/utils.py:75
+#: sonata/bot/cogs/utils/utils.py:74
 msgid "Displays a member’s avatar in full size"
 msgstr "Показывает аватар участника в полном размере"
 
-#: sonata/bot/cogs/utils/utils.py:79
+#: sonata/bot/cogs/utils/utils.py:78
 msgid "{0} avatar"
 msgstr "Аватар {0}"
 
-#: sonata/bot/cogs/utils/utils.py:86
+#: sonata/bot/cogs/utils/utils.py:85
 msgid ""
 "Calculates an expression\n"
 "        \n"
@@ -1425,51 +1429,51 @@ msgstr ""
 "        \n"
 "        "
 
-#: sonata/bot/cogs/utils/utils.py:115
+#: sonata/bot/cogs/utils/utils.py:112
 msgid "Result: {0}"
 msgstr "Результат: {0}"
 
-#: sonata/bot/cogs/utils/utils.py:119
+#: sonata/bot/cogs/utils/utils.py:116
 msgid "Shows COVID-19 pandemic statistics"
 msgstr "Показывает статистику пандемии COVID-19"
 
-#: sonata/bot/cogs/utils/utils.py:130
+#: sonata/bot/cogs/utils/utils.py:127
 msgid "world"
 msgstr "мир"
 
-#: sonata/bot/cogs/utils/utils.py:135
+#: sonata/bot/cogs/utils/utils.py:132
 msgid "Country not found."
 msgstr "Страна не найдена."
 
-#: sonata/bot/cogs/utils/utils.py:158
+#: sonata/bot/cogs/utils/utils.py:155
 msgid " - World"
 msgstr " - Мир"
 
-#: sonata/bot/cogs/utils/utils.py:163
+#: sonata/bot/cogs/utils/utils.py:160
 msgid "Confirmed cases"
 msgstr "Подтвержденные случаи"
 
-#: sonata/bot/cogs/utils/utils.py:164
+#: sonata/bot/cogs/utils/utils.py:161
 msgid "Active cases"
 msgstr "Активные случаи"
 
-#: sonata/bot/cogs/utils/utils.py:165
+#: sonata/bot/cogs/utils/utils.py:162
 msgid "Closed cases"
 msgstr "Закрытые случаи"
 
-#: sonata/bot/cogs/utils/utils.py:166
+#: sonata/bot/cogs/utils/utils.py:163
 msgid "Recovered"
 msgstr "Выздоровления"
 
-#: sonata/bot/cogs/utils/utils.py:167
+#: sonata/bot/cogs/utils/utils.py:164
 msgid "Deaths"
 msgstr "Смерти"
 
-#: sonata/bot/cogs/utils/utils.py:168
+#: sonata/bot/cogs/utils/utils.py:165
 msgid "Deaths/Closed cases"
 msgstr "Смерти/Закрытые случаи"
 
-#: sonata/bot/cogs/utils/utils.py:175
+#: sonata/bot/cogs/utils/utils.py:172
 msgid ""
 "Finds out the weather\n"
 "\n"
@@ -1479,23 +1483,23 @@ msgstr ""
 "\n"
 "        Название населенного пункта может быть указано на любом языке."
 
-#: sonata/bot/cogs/utils/utils.py:190
+#: sonata/bot/cogs/utils/utils.py:187
 msgid "{0}, I did not find such a locality."
 msgstr "{0}, я не нашла такой населенный пункт."
 
-#: sonata/bot/core/bot.py:99
+#: sonata/bot/core/bot.py:100
 msgid "You do not have enough permissions to do it."
 msgstr "У тебя недостаточно прав для этого."
 
-#: sonata/bot/core/bot.py:104
+#: sonata/bot/core/bot.py:105
 msgid "I do not have enough permissions to do it."
 msgstr "У меня недостаточно прав для этого."
 
-#: sonata/bot/core/bot.py:106
+#: sonata/bot/core/bot.py:107
 msgid "I am forbidden to do it."
 msgstr "Мне запрещено это делать."
 
-#: sonata/bot/core/bot.py:111
+#: sonata/bot/core/bot.py:112
 msgid ""
 "Arguments specified incorrectly:```diff\n"
 "- {0}```"
@@ -1503,19 +1507,19 @@ msgstr ""
 "Аргументы указаны неверно:```diff\n"
 "- {0}```"
 
-#: sonata/bot/core/bot.py:116
+#: sonata/bot/core/bot.py:117
 msgid "Required arguments not specified."
 msgstr "Обязательные аргументы не указаны."
 
-#: sonata/bot/core/bot.py:119
+#: sonata/bot/core/bot.py:120
 msgid "An error occurred while making an HTTP request."
 msgstr "Произошла ошибка при выполнении HTTP-запроса."
 
-#: sonata/bot/core/bot.py:121
+#: sonata/bot/core/bot.py:122
 msgid "This command is only for premium guilds."
 msgstr "Эта команда только для премиум гильдий."
 
-#: sonata/bot/core/bot.py:123
+#: sonata/bot/core/bot.py:125
 msgid "Command `{0}` is disabled."
 msgstr "Команда `{0}` отключена."
 
@@ -1614,21 +1618,17 @@ msgstr "Максимальная разница во времени: {0}"
 msgid "Missing argument before or after the time."
 msgstr "Отсутствует аргумент до или после времени."
 
-#: sonata/bot/utils/converters.py:174 sonata/bot/utils/converters.py:180
+#: sonata/bot/utils/converters.py:163 sonata/bot/utils/converters.py:170
 msgid "Invalid expression"
 msgstr "Неверное выражение"
 
-#: sonata/bot/utils/converters.py:194
+#: sonata/bot/utils/converters.py:185
 msgid "Timeout exceeded: {0}s"
 msgstr "Превышено ограничение по времени: {0}с"
 
-#: sonata/bot/utils/converters.py:198
+#: sonata/bot/utils/converters.py:189
 msgid "Range exceeded: {0} ** {1}"
 msgstr "Превышен диапазон: {0} ** {1}"
-
-#: sonata/bot/utils/converters.py:202
-msgid "Division by zero: {0} / {1}"
-msgstr "Деление на ноль: {0} / {1}"
 
 #: sonata/config/settings.py:8
 msgid ""
@@ -1764,3 +1764,9 @@ msgstr ""
 
 #~ msgid "Global Leaderboard"
 #~ msgstr "Глобальная таблица лидеров"
+
+#~ msgid "[Invite the bot to your server]({0})"
+#~ msgstr "[Пригласить бота на свой сервер]({0})"
+
+#~ msgid "Division by zero: {0} / {1}"
+#~ msgstr "Деление на ноль: {0} / {1}"

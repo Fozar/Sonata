@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-05-02 18:38+0700\n"
-"PO-Revision-Date: 2020-05-02 18:45+0700\n"
+"POT-Creation-Date: 2020-05-04 16:01+0700\n"
+"PO-Revision-Date: 2020-05-04 16:02+0700\n"
 "Last-Translator: \n"
 "Language: ru_RU\n"
 "Language-Team: ru_RU <LL@li.org>\n"
@@ -1483,19 +1483,19 @@ msgstr ""
 msgid "{0}, I did not find such a locality."
 msgstr "{0}, я не нашла такой населенный пункт."
 
-#: sonata/bot/core/bot.py:103
+#: sonata/bot/core/bot.py:99
 msgid "You do not have enough permissions to do it."
 msgstr "У тебя недостаточно прав для этого."
 
-#: sonata/bot/core/bot.py:108
+#: sonata/bot/core/bot.py:104
 msgid "I do not have enough permissions to do it."
 msgstr "У меня недостаточно прав для этого."
 
-#: sonata/bot/core/bot.py:110
+#: sonata/bot/core/bot.py:106
 msgid "I am forbidden to do it."
 msgstr "Мне запрещено это делать."
 
-#: sonata/bot/core/bot.py:115
+#: sonata/bot/core/bot.py:111
 msgid ""
 "Arguments specified incorrectly:```diff\n"
 "- {0}```"
@@ -1503,19 +1503,19 @@ msgstr ""
 "Аргументы указаны неверно:```diff\n"
 "- {0}```"
 
-#: sonata/bot/core/bot.py:120
+#: sonata/bot/core/bot.py:116
 msgid "Required arguments not specified."
 msgstr "Обязательные аргументы не указаны."
 
-#: sonata/bot/core/bot.py:123
+#: sonata/bot/core/bot.py:119
 msgid "An error occurred while making an HTTP request."
 msgstr "Произошла ошибка при выполнении HTTP-запроса."
 
-#: sonata/bot/core/bot.py:125
+#: sonata/bot/core/bot.py:121
 msgid "This command is only for premium guilds."
 msgstr "Эта команда только для премиум гильдий."
 
-#: sonata/bot/core/bot.py:127
+#: sonata/bot/core/bot.py:123
 msgid "Command `{0}` is disabled."
 msgstr "Команда `{0}` отключена."
 
@@ -1578,53 +1578,57 @@ msgstr "__Использование:__"
 msgid "__Subcommands:__"
 msgstr "__Подкоманды:__"
 
-#: sonata/bot/utils/converters.py:31
+#: sonata/bot/utils/converters.py:32
 msgid "Locale not found"
 msgstr "Язык не найден"
 
-#: sonata/bot/utils/converters.py:53 sonata/bot/utils/converters.py:59
+#: sonata/bot/utils/converters.py:54 sonata/bot/utils/converters.py:60
 msgid "Could not find a channel by ID {0}."
 msgstr "Не удалось найти канал по ID {0}."
 
-#: sonata/bot/utils/converters.py:88
+#: sonata/bot/utils/converters.py:89
 msgid "me"
 msgstr "мне"
 
-#: sonata/bot/utils/converters.py:94
+#: sonata/bot/utils/converters.py:95
 msgid "Could not recognize the date."
 msgstr "Не могу распознать дату."
 
-#: sonata/bot/utils/converters.py:101
+#: sonata/bot/utils/converters.py:102
 msgid "An error occurred converting the date."
 msgstr "Возникла ошибка конвертации даты."
 
-#: sonata/bot/utils/converters.py:103
+#: sonata/bot/utils/converters.py:104
 msgid "This time is in the past."
 msgstr "Это время в прошлом."
 
-#: sonata/bot/utils/converters.py:105
+#: sonata/bot/utils/converters.py:106
 msgid "This time is in the future."
 msgstr "Это время в будущем."
 
-#: sonata/bot/utils/converters.py:108
+#: sonata/bot/utils/converters.py:109
 msgid "Maximum timedelta: {0}"
 msgstr "Максимальная разница во времени: {0}"
 
-#: sonata/bot/utils/converters.py:118
+#: sonata/bot/utils/converters.py:119
 msgid "Missing argument before or after the time."
 msgstr "Отсутствует аргумент до или после времени."
 
-#: sonata/bot/utils/converters.py:147
-msgid "Range exceeded: {0} ** {1}"
-msgstr "Превышен диапазон: {0} ** {1}"
-
-#: sonata/bot/utils/converters.py:160 sonata/bot/utils/converters.py:166
+#: sonata/bot/utils/converters.py:174 sonata/bot/utils/converters.py:180
 msgid "Invalid expression"
 msgstr "Неверное выражение"
 
-#: sonata/bot/utils/converters.py:180
+#: sonata/bot/utils/converters.py:194
 msgid "Timeout exceeded: {0}s"
 msgstr "Превышено ограничение по времени: {0}с"
+
+#: sonata/bot/utils/converters.py:198
+msgid "Range exceeded: {0} ** {1}"
+msgstr "Превышен диапазон: {0} ** {1}"
+
+#: sonata/bot/utils/converters.py:202
+msgid "Division by zero: {0} / {1}"
+msgstr "Деление на ноль: {0} / {1}"
 
 #: sonata/config/settings.py:8
 msgid ""

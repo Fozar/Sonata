@@ -9,7 +9,6 @@ from dateutil import parser
 
 from sonata.bot import core
 from sonata.bot.utils.converters import MathExpression, to_lower, locale_to_lang
-from sonata.bot.utils.misc import format_e
 from sonata.bot.utils.paginator import EmbedPaginator
 
 WEATHER_URL = "http://api.openweathermap.org/data/2.5/weather"
@@ -110,9 +109,7 @@ class Utils(core.Cog, colour=discord.Colour(0x7ED321)):
         
         """
         )
-        if len(str(expression)) > 20:
-            expression = format_e(expression)
-        await ctx.inform(_("Result: {0}").format(expression))
+        await ctx.inform(_("Result: {0}").format(expression.normalize()))
 
     @core.command(aliases=["virus"])
     async def covid(self, ctx: core.Context, *, country: to_lower = None):

@@ -4,7 +4,7 @@ import concurrent.futures
 import operator as op
 import re
 from datetime import timedelta
-from decimal import Decimal
+from decimal import Decimal, ExtendedContext, localcontext
 from functools import partial
 
 import flag as f
@@ -130,34 +130,17 @@ class UserFriendlyTime(commands.Converter):
 
 
 class MathExpression(commands.Converter):
-    def __init__(self, timeout: float = 0.5):
+    def __init__(self, timeout: float = 1.0):
         self.operators = {
-            ast.Add: self.add,
+            ast.Add: op.add,
             ast.Sub: op.sub,
             ast.Mult: op.mul,
-            ast.Div: self.truediv,
+            ast.Div: op.truediv,
             ast.Pow: self.power,
             ast.USub: op.neg,
             ast.UAdd: op.pos,
         }
-        self.names = {
-            "inf": float("inf"),
-            "nan": float("nan")
-        }
         self.timeout = timeout
-
-    @staticmethod
-    def add(a, b):
-        if any(n < 0.1 for n in [a, b]):
-            return float(op.add(Decimal(str(a)), Decimal(str(b))))
-        return op.add(a, b)
-
-    @staticmethod
-    def truediv(a, b):
-        try:
-            return op.truediv(a, b)
-        except ZeroDivisionError:
-            raise ZeroDivisionError(a, b)
 
     @staticmethod
     def power(a, b):
@@ -167,46 +150,44 @@ class MathExpression(commands.Converter):
 
     def eval_(self, node):
         if isinstance(node, ast.Num):  # <number>
-            return node.n
+            return Decimal(str(node.n))
         elif isinstance(node, ast.BinOp):  # <left> <operator> <right>
             return self.operators[type(node.op)](
                 self.eval_(node.left), self.eval_(node.right)
             )
         elif isinstance(node, ast.UnaryOp):  # <operator> <operand> e.g., -1
             return self.operators[type(node.op)](self.eval_(node.operand))
-        elif isinstance(node, ast.Name) and node.id.lower() in self.names:
-            return self.names[node.id]
+        elif isinstance(node, ast.Name):
+            return Decimal(node.id)
         else:
             raise commands.BadArgument(_("Invalid expression"))
 
     def eval_expr(self, expr):
         try:
-            return self.eval_(ast.parse(expr, mode="eval").body)
+            with localcontext(ExtendedContext):
+                return self.eval_(ast.parse(expr, mode="eval").body)
         except SyntaxError:
             raise commands.BadArgument(_("Invalid expression"))
 
     async def convert(self, ctx: core.Context, argument):
         argument = argument.strip(" `\n").replace(" ", "").replace("^", "**")
         eval_expr = partial(self.eval_expr, argument)
-        with concurrent.futures.ThreadPoolExecutor() as pool:
-            try:
-                result = await asyncio.wait_for(
-                    ctx.bot.loop.run_in_executor(pool, eval_expr),
-                    timeout=self.timeout,
-                    loop=ctx.bot.loop,
-                )
-            except asyncio.TimeoutError:
-                raise commands.BadArgument(
-                    _("Timeout exceeded: {0}s").format(self.timeout)
-                )
-            except OverflowError as e:
-                raise commands.BadArgument(
-                    _("Range exceeded: {0} ** {1}").format(e.args[0], e.args[1])
-                )
-            except ZeroDivisionError as e:
-                raise commands.BadArgument(
-                    _("Division by zero: {0} / {1}").format(e.args[0], e.args[1])
-                )
+        with ctx.typing():
+            with concurrent.futures.ThreadPoolExecutor() as pool:
+                try:
+                    result = await asyncio.wait_for(
+                        ctx.bot.loop.run_in_executor(pool, eval_expr),
+                        timeout=self.timeout,
+                        loop=ctx.bot.loop,
+                    )
+                except asyncio.TimeoutError:
+                    raise commands.BadArgument(
+                        _("Timeout exceeded: {0}s").format(self.timeout)
+                    )
+                except OverflowError as e:
+                    raise commands.BadArgument(
+                        _("Range exceeded: {0} ** {1}").format(e.args[0], e.args[1])
+                    )
         return result
 
 

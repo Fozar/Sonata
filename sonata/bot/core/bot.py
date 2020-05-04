@@ -19,28 +19,22 @@ from .help import HelpCommand
 
 class Sonata(commands.Bot):
     def __init__(
-        self,
-        default_prefix,
-        db: motorio.AsyncIOMotorDatabase,
-        config: dict,
-        app: Application,
-        logger: Logger = None,
-        *args,
-        **kwargs,
+        self, app: Application, logger: Logger = None, *args, **kwargs,
     ):
-        self.config = config
+        self.app = app
+        self.db = app.get("db")
+        self.logger = logger
+        self.config = app["config"]
         super().__init__(
+            owner_id=self.config["bot"].owner_id,
             command_prefix=determine_prefix,
             status=discord.Status.idle,
             help_command=HelpCommand(),
             *args,
             **kwargs,
         )
-        self.description = kwargs.get("description", "")
-        self.default_prefix = default_prefix
-        self.db = db
-        self.logger = logger
-        self.app = app
+        self.description = self.config["bot"].description
+        self.default_prefix = self.config["bot"].default_prefix
         self.session = aiohttp.ClientSession(loop=self.loop)
         self.launch_time = None
         self.dblpy = (

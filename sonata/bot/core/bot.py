@@ -38,7 +38,9 @@ class Sonata(commands.Bot):
         self.session = aiohttp.ClientSession(loop=self.loop)
         self.launch_time = None
         self.dblpy = (
-            dbl.DBLClient(self, self.config["bot"].dbl_token, autopost=True)
+            dbl.DBLClient(
+                self, self.config["bot"].dbl_token, session=self.session, autopost=True
+            )
             if self.config["bot"].dbl_token
             else None
         )

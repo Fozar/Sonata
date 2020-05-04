@@ -6,6 +6,7 @@ from discord.ext.commands import clean_content
 
 from sonata.bot import core
 from sonata.bot.cogs.mod.modlog import Modlog
+from sonata.bot.core import checks
 from sonata.bot.utils.converters import ModeratedMember
 
 
@@ -15,7 +16,7 @@ class Mod(Modlog, colour=discord.Colour(0xD0021B)):
 
     @core.command()
     @commands.bot_has_permissions(kick_members=True)
-    @commands.has_permissions(kick_members=True)
+    @commands.check_any(commands.has_permissions(kick_members=True), checks.is_mod())
     async def kick(
         self, ctx: core.Context, member: ModeratedMember(), *, reason: clean_content(),
     ):
@@ -30,7 +31,7 @@ class Mod(Modlog, colour=discord.Colour(0xD0021B)):
 
     @core.command()
     @commands.bot_has_permissions(ban_members=True)
-    @commands.has_permissions(ban_members=True)
+    @commands.check_any(commands.has_permissions(ban_members=True), checks.is_mod())
     async def ban(
         self,
         ctx: core.Context,
@@ -48,7 +49,7 @@ class Mod(Modlog, colour=discord.Colour(0xD0021B)):
 
     @core.command()
     @commands.bot_has_permissions(ban_members=True)
-    @commands.has_permissions(ban_members=True)
+    @commands.check_any(commands.has_permissions(ban_members=True), checks.is_mod())
     async def unban(
         self, ctx: core.Context, user: discord.User, *, reason: clean_content()
     ):

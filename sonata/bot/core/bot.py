@@ -44,6 +44,9 @@ class Sonata(commands.Bot):
             if self.config["bot"].dbl_token
             else None
         )
+        self.service_guild: Optional[discord.Guild] = None
+        self.errors_channel: Optional[discord.TextChannel] = None
+        self.reports_channel: Optional[discord.TextChannel] = None
 
     # Properties
 
@@ -78,6 +81,12 @@ class Sonata(commands.Bot):
 
     async def on_ready(self):
         self.help_command.cog = self.get_cog("General")
+        self.service_guild = self.get_guild(
+            313726240710197250
+        ) or await self.fetch_guild(313726240710197250)
+        self.errors_channel = self.service_guild.get_channel(707180649454370827)
+        self.reports_channel = self.service_guild.get_channel(707206460878356551)
+
         await self.change_presence(status=discord.Status.dnd)
         if not self.launch_time:
             self.launch_time = datetime.utcnow()

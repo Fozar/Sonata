@@ -17,13 +17,9 @@ class Stats(
     def __init__(self, sonata: core.Sonata):
         super().__init__(sonata)
         self.recalc_started_at = None
-        self.service_guild: Optional[discord.Guild] = None
-        self.errors_channel: Optional[discord.TextChannel] = None
 
     @core.Cog.listener()
     async def on_ready(self):
-        self.service_guild = self.sonata.get_guild(313726240710197250)
-        self.errors_channel = self.service_guild.get_channel(707180649454370827)
         for command in self.sonata.walk_commands():
             guild_conf = self.sonata.db.commands.find(
                 {"name": command.qualified_name}, {"name": True}

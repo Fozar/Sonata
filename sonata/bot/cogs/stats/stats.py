@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import Optional
 
 import discord
 from dateutil.parser import parse
@@ -82,16 +81,23 @@ class Stats(
                 timestamp=ctx.message.created_at,
             )
             embed.description = (
-                f"{ctx.message.content}\n\n" f"**- {exception}**```py\n{exception.args}```"
+                f"{ctx.message.content}\n\n"
+                f"**- {exception}**```py\n{exception.args}```"
             )
             while hasattr(exception, "original"):
                 exception = exception.original
                 if hasattr(exception, "args"):
                     embed.description += f"**- {exception}**```py\n{exception.args}```"
-            embed.add_field(name="Гильдия", value=ctx.guild.name)
+            if ctx.guild:
+                embed.add_field(
+                    name="Гильдия", value=f"{ctx.guild.name} (ID: {ctx.guild.id})"
+                )
+                embed.add_field(name="Владелец", value=str(ctx.guild.owner))
+            embed.add_field(
+                name="Канал", value=f"{ctx.channel.name} (ID: {ctx.channel.id})"
+            )
             embed.add_field(name="Автор", value=str(ctx.author))
-            embed.add_field(name="Канал", value=ctx.channel.name)
-            await self.errors_channel.send(embed=embed)
+            await self.sonata.errors_channel.send(embed=embed)
 
     @core.Cog.listener()
     async def on_guild_join(self, guild: discord.Guild):

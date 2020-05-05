@@ -108,33 +108,29 @@ class Sonata(commands.Bot):
     async def on_command_error(self, ctx: Context, exception: Exception):
         response = ""
         if isinstance(exception, commands.MissingPermissions):
-            response = (
-                _("You do not have enough permissions to do it.").format(
-                    ctx.author.mention
-                )
+            response = _("You do not have enough permissions to do it.").format(
+                ctx.author.mention
             )
         elif isinstance(exception, commands.BotMissingPermissions):
-            response = (_("I do not have enough permissions to do it."))
+            response = _("I do not have enough permissions to do it.")
         elif isinstance(exception, discord.errors.Forbidden):
-            response = (_("I am forbidden to do it."))
+            response = _("I am forbidden to do it.")
         elif isinstance(
             exception, (commands.errors.BadArgument, commands.errors.BadUnionArgument)
         ):
-            response = (
-                _("Arguments specified incorrectly:```diff\n- {0}```").format(
-                    "\n- ".join(list(exception.args))
-                )
+            response = _("Arguments specified incorrectly:```diff\n- {0}```").format(
+                "\n- ".join(list(exception.args))
             )
         elif isinstance(exception, commands.errors.MissingRequiredArgument):
-            response = (_("Required arguments not specified."))
+            response = _("Required arguments not specified.")
             await ctx.send_help()
         elif isinstance(exception, discord.errors.HTTPException):
-            response = (_("An error occurred while making an HTTP request."))
+            response = _("An error occurred while making an HTTP request.")
         elif isinstance(exception, NoPremium):
-            response = (_("This command is only for premium guilds."))
+            response = _("This command is only for premium guilds.")
         elif isinstance(exception, commands.errors.DisabledCommand):
-            response = (
-                _("Command `{0}` is disabled.").format(ctx.command.qualified_name)
+            response = _("Command `{0}` is disabled.").format(
+                ctx.command.qualified_name
             )
         if not response:
             if ctx.cog and (

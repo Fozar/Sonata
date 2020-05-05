@@ -186,6 +186,23 @@ class General(
         await ctx.send(embed=embed)
 
     @core.command()
+    async def report(self, ctx: core.Context, *, report: clean_content()):
+        _("""Sends a bug report to the bot owner""")
+        embed = discord.Embed(
+            colour=self.colour,
+            title="Отчет об ошибке",
+            description=report,
+            timestamp=ctx.message.created_at,
+        )
+        if ctx.guild:
+            embed.add_field(name="Гильдия", value=f"{ctx.guild.name} (ID: {ctx.guild.id})")
+            embed.add_field(name="Владелец", value=str(ctx.guild.owner))
+        embed.add_field(name="Канал", value=f"{ctx.channel.name} (ID: {ctx.channel.id})")
+        embed.add_field(name="Автор", value=str(ctx.author))
+        await ctx.bot.reports_channel.send(embed=embed)
+        await ctx.message.add_reaction("✅")
+
+    @core.command()
     @commands.check(lambda ctx: ctx.bot.dblpy is not None)
     async def widget(self, ctx: core.Context):
         embed = discord.Embed(

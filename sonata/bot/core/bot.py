@@ -71,7 +71,7 @@ class Sonata(commands.Bot):
     @property
     def invite(self):
         return discord.utils.oauth_url(
-            self.user.id, permissions=discord.Permissions(1141369920)
+            self.user.id, permissions=discord.Permissions(1141370054)
         )
 
     # Events

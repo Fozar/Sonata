@@ -1,4 +1,4 @@
-from typing import Optional, Union
+from typing import Optional
 
 import discord
 from discord.ext import commands
@@ -41,7 +41,7 @@ class Mod(Modlog, colour=discord.Colour(0xD0021B)):
     async def ban(
         self,
         ctx: core.Context,
-        member: Union[ModeratedMember, discord.User],
+        member: ModeratedMember(),
         delete_days: Optional[int] = 0,
         *,
         reason: clean_content(),
@@ -57,7 +57,7 @@ class Mod(Modlog, colour=discord.Colour(0xD0021B)):
         - ban Member#1234 1 spam
         - ban 239686604271124481 7 bad words"""
         )
-        if 0 <= delete_days <= 7:
+        if not 0 <= delete_days <= 7:
             return await ctx.inform(
                 _("The minimum deleted days are 0 and the maximum is 7.")
             )

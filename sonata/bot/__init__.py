@@ -16,16 +16,17 @@ def setup_logger():
     file_handler = handlers.TimedRotatingFileHandler(
         filename=os.getcwd() + "/logs/discord/discord.log",
         when="midnight",
+        backupCount=3,
         encoding="utf-8",
     )
     file_handler.setFormatter(
         logging.Formatter("%(asctime)s [%(levelname)s] - %(filename)s - %(message)s")
     )
-    file_handler.setLevel(logging.DEBUG)
+    file_handler.setLevel(logging.INFO)
     logger = logging.getLogger("discord")
     logger.addHandler(stream_handler)
     logger.addHandler(file_handler)
-    logger.setLevel(logging.DEBUG)
+    logger.setLevel(logging.INFO)
     return logger
 
 

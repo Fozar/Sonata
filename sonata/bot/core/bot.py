@@ -97,36 +97,37 @@ class Sonata(commands.Bot):
         await owner.send(f"Channels: ```{', '.join(map(str, guild.channels))}```")
 
     async def on_command_error(self, ctx: Context, exception: Exception):
+        response = ""
         if isinstance(exception, commands.MissingPermissions):
-            await ctx.send(
+            response = (
                 _("You do not have enough permissions to do it.").format(
                     ctx.author.mention
                 )
             )
         elif isinstance(exception, commands.BotMissingPermissions):
-            await ctx.send(_("I do not have enough permissions to do it."))
+            response = (_("I do not have enough permissions to do it."))
         elif isinstance(exception, discord.errors.Forbidden):
-            await ctx.send(_("I am forbidden to do it."))
+            response = (_("I am forbidden to do it."))
         elif isinstance(
             exception, (commands.errors.BadArgument, commands.errors.BadUnionArgument)
         ):
-            await ctx.send(
+            response = (
                 _("Arguments specified incorrectly:```diff\n- {0}```").format(
                     "\n- ".join(list(exception.args))
                 )
             )
         elif isinstance(exception, commands.errors.MissingRequiredArgument):
-            await ctx.send(_("Required arguments not specified."))
+            response = (_("Required arguments not specified."))
             await ctx.send_help()
         elif isinstance(exception, discord.errors.HTTPException):
-            await ctx.send(_("An error occurred while making an HTTP request."))
+            response = (_("An error occurred while making an HTTP request."))
         elif isinstance(exception, NoPremium):
-            await ctx.send(_("This command is only for premium guilds."))
+            response = (_("This command is only for premium guilds."))
         elif isinstance(exception, commands.errors.DisabledCommand):
-            await ctx.send(
+            response = (
                 _("Command `{0}` is disabled.").format(ctx.command.qualified_name)
             )
-        else:
+        if not response:
             if ctx.cog and (
                 getattr(Cog, "_get_overridden_method")(ctx.cog.cog_command_error)
                 is not None
@@ -143,6 +144,11 @@ class Sonata(commands.Bot):
                     )
                 )
             )
+        else:
+            try:
+                await ctx.send(response)
+            except discord.Forbidden:
+                await ctx.author.send(response)
 
     async def on_guild_post(self):
         self.logger.debug("Server count posted successfully")

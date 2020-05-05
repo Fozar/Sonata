@@ -3,8 +3,12 @@ from datetime import datetime, timedelta
 from typing import Union
 
 import discord
+from discord.ext import commands
+from discord.ext.commands import clean_content
 
 from sonata.bot import core
+from sonata.bot.core import checks
+from sonata.bot.utils.converters import ModlogCaseConverter
 from sonata.db.models import ModlogCase
 
 
@@ -14,14 +18,9 @@ class Modlog(core.Cog):
 
     @core.Cog.listener()
     async def on_modlog_case(self, case: ModlogCase):
-        guild_conf = await self.sonata.db.guilds.find_one(
-            {"id": case.guild_id}, {"modlog": True}
-        )
-        if not guild_conf or not guild_conf.get("modlog"):
+        channel = await self.get_modlog_channel(case.guild_id)
+        if not channel:
             return
-        channel = self.sonata.get_channel(
-            guild_conf["modlog"]
-        ) or await self.sonata.fetch_channel(guild_conf["modlog"])
         await self.sonata.db.modlog_cases.insert_one(case.dict())
         embed = await self.make_case_embed(case)
         await channel.send(embed=embed)
@@ -44,6 +43,21 @@ class Modlog(core.Cog):
     async def on_member_unban(self, guild: discord.Guild, user: discord.User):
         case = await self.fetch_modlog_case(guild, user, discord.AuditLogAction.unban)
         self.sonata.dispatch("modlog_case", case)
+
+    async def get_modlog_channel(self, guild_id: int):
+        guild_conf = await self.sonata.db.guilds.find_one(
+            {"id": guild_id}, {"modlog": True}
+        )
+        if not guild_conf or not guild_conf.get("modlog"):
+            return None
+        try:
+            channel = self.sonata.get_channel(
+                guild_conf["modlog"]
+            ) or await self.sonata.fetch_channel(guild_conf["modlog"])
+        except discord.NotFound:
+            return None
+        else:
+            return channel
 
     async def fetch_modlog_case(
         self, guild: discord.Guild, user: Union[discord.Member, discord.User], action
@@ -133,3 +147,26 @@ class Modlog(core.Cog):
             reason=reason,
         )
         self.sonata.dispatch("modlog_case", case)
+
+    @core.group(usage="<id>", invoke_without_command=True)
+    @commands.check(checks.is_mod())
+    async def case(self, ctx: core.Context, case: ModlogCaseConverter()):
+        embed = await self.make_case_embed(case)
+        await ctx.send(embed=embed)
+
+    @case.command(name="edit", usage="<id> <reason>")
+    async def case_edit(
+        self, ctx: core.Context, case: ModlogCaseConverter(), *, reason: clean_content()
+    ):
+        case.reason = reason
+        await ctx.db.modlog_cases.update_one(
+            {"guild_id": case.guild_id, "id": case.id},
+            {"$set": {"reason": case.reason}},
+        )
+        await ctx.message.add_reaction("✅")
+        channel = await self.get_modlog_channel(case.guild_id)
+        if not channel:
+            return
+        embed = await self.make_case_embed(case)
+        embed.description = _("Reason changed.")
+        await channel.send(embed=embed)

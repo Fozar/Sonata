@@ -105,8 +105,10 @@ class Sonata(commands.Bot):
         )
         await owner.send(f"Channels: ```{', '.join(map(str, guild.channels))}```")
 
-    async def on_command_error(self, ctx: Context, exception: Exception):
+    async def on_command_error(self, ctx: Context, exception):
         response = ""
+        if hasattr(exception, "original"):
+            exception = exception.original
         if isinstance(exception, commands.MissingPermissions):
             response = _("You do not have enough permissions to do it.").format(
                 ctx.author.mention
@@ -114,7 +116,7 @@ class Sonata(commands.Bot):
         elif isinstance(exception, commands.BotMissingPermissions):
             response = _("I do not have enough permissions to do it.")
         elif isinstance(exception, discord.errors.Forbidden):
-            response = _("I am forbidden to do it.")
+            response = _("I am missing permissions.")
         elif isinstance(
             exception, (commands.errors.BadArgument, commands.errors.BadUnionArgument)
         ):

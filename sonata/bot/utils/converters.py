@@ -237,6 +237,12 @@ class ModeratedMember(commands.MemberConverter):
             )
         if ctx.guild.me == member:
             raise commands.BadArgument(_('Member "{0}" is me.').format(str(member)))
+        if ctx.guild.owner == member:
+            raise commands.BadArgument(
+                _('Member "{0}" is the guild owner.').format(str(member))
+            )
+        if ctx.guild.owner == ctx.author:
+            return member
         if ctx.author.top_role <= member.top_role:
             raise commands.BadArgument(
                 _('Member "{0}" is above moderator in the role hierarchy.').format(
@@ -247,10 +253,8 @@ class ModeratedMember(commands.MemberConverter):
             raise commands.BadArgument(
                 _('Member "{0}" is above me in the role hierarchy.').format(str(member))
             )
-        if ctx.guild.owner == member:
-            raise commands.BadArgument(
-                _('Member "{0}" is the guild owner.').format(str(member))
-            )
+        if ctx.author.guild_permissions.administrator:
+            return member
         if member.guild_permissions.administrator:
             raise commands.BadArgument(
                 _('Member "{0}" is guild administrator.').format(str(member))

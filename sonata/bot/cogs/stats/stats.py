@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Optional
 
 import discord
 from dateutil.parser import parse
@@ -16,9 +17,13 @@ class Stats(
     def __init__(self, sonata: core.Sonata):
         super().__init__(sonata)
         self.recalc_started_at = None
+        self.service_guild: Optional[discord.Guild] = None
+        self.errors_channel: Optional[discord.TextChannel] = None
 
     @core.Cog.listener()
     async def on_ready(self):
+        self.service_guild = self.sonata.get_guild(313726240710197250)
+        self.errors_channel = self.service_guild.get_channel(707180649454370827)
         for command in self.sonata.walk_commands():
             guild_conf = self.sonata.db.commands.find(
                 {"name": command.qualified_name}, {"name": True}
@@ -56,7 +61,8 @@ class Stats(
             {"name": ctx.command.qualified_name}, {"$inc": {"invocation_counter": 1}}
         )
         await ctx.db.user_stats.update_one(
-            {"guild_id": ctx.guild.id, "user_id": ctx.author.id}, {"$inc": {"commands_invoked": 1}}
+            {"guild_id": ctx.guild.id, "user_id": ctx.author.id},
+            {"$inc": {"commands_invoked": 1}},
         )
         if ctx.guild:
             date = ctx.message.created_at.replace(
@@ -67,13 +73,29 @@ class Stats(
                 {"$inc": {"commands_invoked": 1}},
             )
 
-    # noinspection PyUnusedLocal
     @core.Cog.listener()
     async def on_command_error(self, ctx: core.Context, exception: Exception):
         if ctx.command:
             await ctx.db.commands.update_one(
                 {"name": ctx.command.qualified_name}, {"$inc": {"error_count": 1}}
             )
+
+            embed = discord.Embed(
+                colour=self.colour,
+                title=f"Ошибка в команде {ctx.command.qualified_name}",
+                timestamp=ctx.message.created_at,
+            )
+            embed.description = (
+                f"{ctx.message.content}\n\n" f"**- {exception}**```py\n{exception.args}```"
+            )
+            while hasattr(exception, "original"):
+                exception = exception.original
+                if hasattr(exception, "args"):
+                    embed.description += f"**- {exception}**```py\n{exception.args}```"
+            embed.add_field(name="Гильдия", value=ctx.guild.name)
+            embed.add_field(name="Автор", value=str(ctx.author))
+            embed.add_field(name="Канал", value=ctx.channel.name)
+            await self.errors_channel.send(embed=embed)
 
     @core.Cog.listener()
     async def on_guild_join(self, guild: discord.Guild):

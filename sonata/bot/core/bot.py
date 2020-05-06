@@ -1,3 +1,4 @@
+import concurrent.futures
 import inspect
 import traceback
 from datetime import datetime
@@ -36,6 +37,7 @@ class Sonata(commands.Bot):
         self.description = self.config["bot"].description
         self.default_prefix = self.config["bot"].default_prefix
         self.session = aiohttp.ClientSession(loop=self.loop)
+        self.pool = concurrent.futures.ThreadPoolExecutor()
         self.launch_time = None
         self.dblpy = (
             dbl.DBLClient(

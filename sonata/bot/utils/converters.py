@@ -1,6 +1,5 @@
 import ast
 import asyncio
-import concurrent.futures
 import operator as op
 import re
 from datetime import timedelta
@@ -144,21 +143,20 @@ class MathExpression(commands.Converter):
         argument = argument.strip(" `\n").replace(" ", "").replace("^", "**")
         eval_expr = partial(self.eval_expr, argument)
         with ctx.typing():
-            with concurrent.futures.ThreadPoolExecutor() as pool:
-                try:
-                    result = await asyncio.wait_for(
-                        ctx.bot.loop.run_in_executor(pool, eval_expr),
-                        timeout=self.timeout,
-                        loop=ctx.bot.loop,
-                    )
-                except asyncio.TimeoutError:
-                    raise commands.BadArgument(
-                        _("Timeout exceeded: {0}s").format(self.timeout)
-                    )
-                except OverflowError as e:
-                    raise commands.BadArgument(
-                        _("Range exceeded: {0} ** {1}").format(e.args[0], e.args[1])
-                    )
+            try:
+                result = await asyncio.wait_for(
+                    ctx.bot.loop.run_in_executor(ctx.pool, eval_expr),
+                    timeout=self.timeout,
+                    loop=ctx.bot.loop,
+                )
+            except asyncio.TimeoutError:
+                raise commands.BadArgument(
+                    _("Timeout exceeded: {0}s").format(self.timeout)
+                )
+            except OverflowError as e:
+                raise commands.BadArgument(
+                    _("Range exceeded: {0} ** {1}").format(e.args[0], e.args[1])
+                )
         return result
 
 

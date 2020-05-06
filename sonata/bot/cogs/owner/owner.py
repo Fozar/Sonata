@@ -1,5 +1,4 @@
 import asyncio
-import concurrent.futures
 import copy
 import inspect
 import os
@@ -42,8 +41,7 @@ class Owner(
             with subprocess.Popen(
                 command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
             ) as p:
-                with concurrent.futures.ThreadPoolExecutor() as pool:
-                    result = await self.sonata.loop.run_in_executor(pool, p.communicate)
+                result = await self.sonata.loop.run_in_executor(self.sonata.pool, p.communicate)
         try:
             return [output.decode() for output in result]
         except UnicodeDecodeError:
@@ -283,14 +281,13 @@ class Owner(
         bot_cpu_percent = partial(bot.cpu_percent, 1.0)
         mongo_cpu_percent = partial(mongo.cpu_percent, 1.0)
         async with ctx.typing():
-            with concurrent.futures.ThreadPoolExecutor() as pool:
-                bot_cpu, mongo_cpu = tuple(
-                    await asyncio.gather(
-                        ctx.bot.loop.run_in_executor(pool, bot_cpu_percent),
-                        ctx.bot.loop.run_in_executor(pool, mongo_cpu_percent),
-                        loop=ctx.bot.loop,
-                    )
+            bot_cpu, mongo_cpu = tuple(
+                await asyncio.gather(
+                    ctx.bot.loop.run_in_executor(ctx.pool, bot_cpu_percent),
+                    ctx.bot.loop.run_in_executor(ctx.pool, mongo_cpu_percent),
+                    loop=ctx.bot.loop,
                 )
+            )
         embed.add_field(
             name=_("Bot"),
             value=_(

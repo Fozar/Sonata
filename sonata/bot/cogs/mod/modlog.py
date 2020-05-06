@@ -31,19 +31,22 @@ class Modlog(core.Cog):
         self, guild: discord.Guild, user: Union[discord.Member, discord.User]
     ):
         case = await self.fetch_modlog_case(guild, user, discord.AuditLogAction.ban)
-        self.sonata.dispatch("modlog_case", case)
+        if case:
+            self.sonata.dispatch("modlog_case", case)
 
     @core.Cog.listener()
     async def on_member_remove(self, member: discord.Member):
         case = await self.fetch_modlog_case(
             member.guild, member, discord.AuditLogAction.kick
         )
-        self.sonata.dispatch("modlog_case", case)
+        if case:
+            self.sonata.dispatch("modlog_case", case)
 
     @core.Cog.listener()
     async def on_member_unban(self, guild: discord.Guild, user: discord.User):
         case = await self.fetch_modlog_case(guild, user, discord.AuditLogAction.unban)
-        self.sonata.dispatch("modlog_case", case)
+        if case:
+            self.sonata.dispatch("modlog_case", case)
 
     async def get_modlog_channel(self, guild_id: int):
         guild_conf = await self.sonata.db.guilds.find_one(
@@ -64,13 +67,13 @@ class Modlog(core.Cog):
         self, guild: discord.Guild, user: Union[discord.Member, discord.User], action
     ):
         if not guild.me.guild_permissions.view_audit_log:
-            return
+            return None
 
         guild_conf = await self.sonata.db.guilds.find_one(
             {"id": guild.id}, {"modlog": True}
         )
         if not guild_conf or not guild_conf.get("modlog", False):
-            return
+            return None
         now = datetime.utcnow()
         before = now + timedelta(minutes=1)
         after = now - timedelta(minutes=1)
@@ -79,7 +82,7 @@ class Modlog(core.Cog):
             lambda e: e.target.id == user.id and after < e.created_at < before
         )
         if not entry or entry.user.id == guild.me.id:
-            return
+            return None
 
         return ModlogCase(
             created_at=entry.created_at,

@@ -89,7 +89,19 @@ class Mod(Modlog, colour=discord.Colour(0xD0021B)):
             await ctx.send(_("Member unbanned: {0}").format(str(user)))
         await self.create_modlog_case(ctx, user, discord.AuditLogAction.unban, reason)
 
-    @core.group(aliases=["clear"])
+    async def purge_channel(self, ctx: core.Context, limit, before, reason, check=None):
+        if before is not None:
+            if before.channel != ctx.channel:
+                return await ctx.inform(
+                    _("`Before` message must be in the same channel.")
+                )
+            before = before.created_at
+        await ctx.channel.purge(limit=limit, before=before, check=check)
+        await self.create_modlog_case(
+            ctx, ctx.channel, discord.AuditLogAction.message_bulk_delete, reason
+        )
+
+    @core.group(aliases=["clear"], invoke_without_command=True)
     @commands.bot_has_permissions(manage_messages=True)
     @commands.check_any(commands.has_permissions(manage_messages=True), checks.is_mod())
     async def purge(
@@ -111,13 +123,18 @@ class Mod(Modlog, colour=discord.Colour(0xD0021B)):
         - purge 20 706903341934051489 spam
         - purge 100 <message url> raid"""
         )
-        if before is not None:
-            if before.channel != ctx.channel:
-                return await ctx.inform(
-                    _("`Before` message must be in the same channel.")
-                )
-            before = before.created_at
-        await ctx.channel.purge(limit=limit, before=before)
-        await self.create_modlog_case(
-            ctx, ctx.channel, discord.AuditLogAction.message_bulk_delete, reason
+        await self.purge_channel(ctx, limit, before, reason)
+
+    @purge.command(name="bot")
+    async def purge_bot(
+        self,
+        ctx: core.Context,
+        limit: int,
+        before: Optional[discord.Message] = None,
+        *,
+        reason: clean_content(),
+    ):
+        _("""Purges bot's messages in the channel""")
+        await self.purge_channel(
+            ctx, limit, before, reason, check=lambda m: m.author == ctx.guild.me
         )

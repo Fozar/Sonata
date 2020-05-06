@@ -3,6 +3,7 @@ import logging
 import os
 from logging import handlers
 
+import aiohttp_cors
 from aiohttp import web
 
 from sonata import bot, db
@@ -46,13 +47,21 @@ def create_app(debug: bool = False):
     app = web.Application()
     app["logger"] = logger
     app["debug"] = debug
+    cors = aiohttp_cors.setup(app, defaults={
+        "*": aiohttp_cors.ResourceOptions(
+            allow_credentials=True,
+            expose_headers="*",
+            allow_headers="*",
+        )
+    })
+    app["cors"] = cors
     logger.info("Append modules")
     app.on_startup.append(init_config)
     app.on_startup.append(init_db)
     app.on_startup.append(init_bot)
     app.on_startup.append(init_views)
     logger.info("Run server")
-    web.run_app(app, host="localhost", port=8080)
+    web.run_app(app, host="localhost", port=5000)
 
 
 if __name__ == "__main__":

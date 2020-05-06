@@ -1,7 +1,5 @@
-from aiohttp import web
-
-from .ping import Ping
+from .guild import Guild
 
 
 async def init_views(app):
-    app.add_routes([web.view("/", Ping)])
+    app["cors"].add(app.router.add_route("*", "/guilds", Guild))

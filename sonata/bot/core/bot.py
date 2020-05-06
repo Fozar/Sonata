@@ -89,9 +89,12 @@ class Sonata(commands.Bot):
         self.errors_channel = self.service_guild.get_channel(707180649454370827)
         self.reports_channel = self.service_guild.get_channel(707206460878356551)
 
-        await self.change_presence(status=discord.Status.dnd)
+        await self.change_presence(
+            status=discord.Status.dnd, activity=discord.Game("https://www.sonata.fun/")
+        )
         if not self.launch_time:
             self.launch_time = datetime.utcnow()
+
         self.logger.info("Sonata is ready")
 
     async def on_message(self, message: discord.Message):

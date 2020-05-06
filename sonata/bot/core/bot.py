@@ -155,10 +155,14 @@ class Sonata(commands.Bot):
             try:
                 await ctx.send(response)
             except discord.Forbidden:
-                await ctx.author.send(response)
+                await ctx.author.send(
+                    _("I can't send messages to `{0}` channel.").format(
+                        ctx.channel.name
+                    )
+                )
 
     async def on_guild_post(self):
-        self.logger.debug("Server count posted successfully")
+        self.logger.info("Server count posted successfully")
 
     # Methods
 

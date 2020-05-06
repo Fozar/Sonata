@@ -22,6 +22,7 @@ class Modlog(core.Cog):
         if not channel:
             return
         await self.sonata.db.modlog_cases.insert_one(case.dict())
+        await self.sonata.set_locale(channel.last_message)
         embed = await self.make_case_embed(case)
         await channel.send(embed=embed)
 

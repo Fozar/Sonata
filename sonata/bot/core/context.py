@@ -8,10 +8,6 @@ from sonata.bot.utils import i18n
 
 class Context(commands.Context):
     @property
-    def session(self):
-        return self.bot.session
-
-    @property
     def db(self):
         return self.bot.db
 
@@ -22,6 +18,14 @@ class Context(commands.Context):
     @locale.setter
     def locale(self, value):
         i18n.current_locale.set(value)
+
+    @property
+    def pool(self):
+        return self.bot.pool
+
+    @property
+    def session(self):
+        return self.bot.session
 
     async def send_help(self, *args):
         await super().send_help(self.command, *args)

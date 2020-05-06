@@ -92,7 +92,7 @@ class Fun(Games, description=_("""Entertainment"""), colour=discord.Colour(0xF5A
         await ctx.send(
             f"{ctx.author.mention}, {random.choice(sides)} "
             + str(self.sonata.emoji("coin"))
-        )  # TODO: Добавить второй режим, возможность угадывать сторону
+        )
 
     @core.command()
     async def choose(self, ctx: core.Context, *, options: str):

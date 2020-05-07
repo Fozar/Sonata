@@ -172,14 +172,17 @@ class Sonata(commands.Bot):
 
     # Methods
 
-    async def define_locale(self, obj: Union[discord.Message, Context]):
+    async def define_locale(
+        self, obj: Union[discord.Message, Context, discord.TextChannel]
+    ):
         if obj.guild:
+            channel = obj.channel if hasattr(obj, "channel") else obj
             guild = await self.db.guilds.find_one(
                 {"id": obj.guild.id},
                 {
                     "locale": True,
                     "premium": True,
-                    "channels": {"$elemMatch": {"id": obj.channel.id}},
+                    "channels": {"$elemMatch": {"id": channel.id}},
                 },
             )
             if guild["premium"] and "channels" in guild:

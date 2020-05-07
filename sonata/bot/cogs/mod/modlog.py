@@ -22,7 +22,7 @@ class Modlog(core.Cog):
         if not channel:
             return
         await self.sonata.db.modlog_cases.insert_one(case.dict())
-        await self.sonata.set_locale(channel.last_message)
+        await self.sonata.set_locale(channel)
         embed = await self.make_case_embed(case)
         await channel.send(embed=embed)
 
@@ -100,6 +100,8 @@ class Modlog(core.Cog):
             discord.AuditLogAction.ban: _("User banned"),
             discord.AuditLogAction.unban: _("User unbanned"),
             discord.AuditLogAction.message_bulk_delete: _("Messages purged"),
+            discord.AuditLogAction.overwrite_create: _("Member muted"),
+            discord.AuditLogAction.overwrite_delete: _("Member unmuted"),
         }
         action = discord.AuditLogAction.try_value(case.action)
         embed = discord.Embed(
@@ -134,11 +136,7 @@ class Modlog(core.Cog):
         return embed
 
     async def create_modlog_case(
-        self,
-        ctx: core.Context,
-        target: Union[discord.Member, discord.User],
-        action,
-        reason: str,
+        self, ctx: core.Context, target, action, reason: str,
     ):
         created_at = datetime.utcnow()
         case = ModlogCase(

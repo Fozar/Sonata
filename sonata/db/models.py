@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Optional, List
+from typing import Optional, List, Dict
 
 from pydantic import BaseModel, validator
 
@@ -102,3 +102,10 @@ class ModlogCase(CreatedAtMixin):
     user_id: int
     target_id: int
     reason: Optional[str]
+
+
+class ChannelPermissionsCache(CreatedAtMixin):
+    guild_id: int
+    channel_id: int
+    member_id: int
+    value: Dict[str, Optional[bool]]

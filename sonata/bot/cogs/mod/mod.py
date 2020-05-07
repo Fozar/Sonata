@@ -1,4 +1,5 @@
-from typing import Optional
+import asyncio
+from typing import Optional, Union, cast
 
 import discord
 from discord.ext import commands
@@ -8,6 +9,7 @@ from sonata.bot import core
 from sonata.bot.cogs.mod.modlog import Modlog
 from sonata.bot.core import checks
 from sonata.bot.utils.converters import ModeratedMember
+from sonata.db.models import ChannelPermissionsCache
 
 
 class Mod(Modlog, colour=discord.Colour(0xD0021B)):
@@ -137,4 +139,104 @@ class Mod(Modlog, colour=discord.Colour(0xD0021B)):
         _("""Purges bot's messages in the channel""")
         await self.purge_channel(
             ctx, limit, before, reason, check=lambda m: m.author == ctx.guild.me
+        )
+
+    async def mute_channel(
+        self,
+        channel: Union[
+            discord.TextChannel, discord.VoiceChannel, discord.CategoryChannel
+        ],
+        member: discord.Member,
+        reason: str,
+    ):
+        overwrites = channel.overwrites_for(member)
+        new_overs = {}
+        if not isinstance(channel, discord.TextChannel):
+            new_overs.update(speak=False)
+        if not isinstance(channel, discord.VoiceChannel):
+            new_overs.update(send_messages=False, add_reactions=False)
+        old_overs = {k: getattr(overwrites, k) for k in new_overs}
+        overwrites.update(**new_overs)
+        try:
+            await channel.set_permissions(member, overwrite=overwrites, reason=reason)
+        except discord.Forbidden:
+            return
+        cache = ChannelPermissionsCache(
+            guild_id=channel.guild.id,
+            channel_id=channel.id,
+            member_id=member.id,
+            value=old_overs,
+        ).dict()
+        await self.sonata.db.channel_perms_cache.insert_one(cache)
+
+    async def unmute_channel(
+        self,
+        channel: Union[
+            discord.TextChannel, discord.VoiceChannel, discord.CategoryChannel
+        ],
+        member: discord.Member,
+        reason: str,
+    ):
+        overwrites = channel.overwrites_for(member)
+        perms_cache = await self.sonata.db.channel_perms_cache.find_one_and_delete(
+            {
+                "guild_id": channel.guild.id,
+                "channel_id": channel.id,
+                "member_id": member.id,
+            },
+            {"value": True},
+        )
+
+        if perms_cache:
+            old_values = perms_cache["value"]
+        else:
+            old_values = {"send_messages": None, "add_reactions": None, "speak": None}
+
+        overwrites.update(**old_values)
+        try:
+            if overwrites.is_empty():
+                await channel.set_permissions(
+                    member, overwrite=cast(discord.PermissionOverwrite, None), reason=reason
+                )
+            else:
+                await channel.set_permissions(member, overwrite=overwrites, reason=reason)
+        except discord.Forbidden:
+            pass
+
+    @core.command()
+    @commands.bot_has_permissions(manage_roles=True)
+    @commands.check_any(commands.has_permissions(manage_roles=True), checks.is_mod())
+    async def mute(
+        self, ctx: core.Context, member: ModeratedMember(), *, reason: clean_content()
+    ):
+        with ctx.typing():
+            aws = []
+            for channel in ctx.guild.channels:
+                aws.append(self.mute_channel(channel, member, reason))
+            await asyncio.gather(*aws)
+        try:
+            await ctx.message.delete()
+        except discord.Forbidden:
+            await ctx.send(_("Member muted: {0}").format(str(member)))
+        await self.create_modlog_case(
+            ctx, member, discord.AuditLogAction.overwrite_create, reason
+        )
+
+    @core.command()
+    @commands.bot_has_permissions(manage_roles=True)
+    @commands.check_any(commands.has_permissions(manage_roles=True), checks.is_mod())
+    async def unmute(
+        self, ctx: core.Context, member: ModeratedMember(), *, reason: clean_content()
+    ):
+        with ctx.typing():
+            aws = []
+            for channel in ctx.guild.channels:
+                aws.append(self.unmute_channel(channel, member, reason))
+            await asyncio.gather(*aws)
+        try:
+            await ctx.message.delete()
+        except discord.Forbidden:
+            await ctx.send(_("Member unmuted: {0}").format(str(member)))
+        await self.create_modlog_case(
+            ctx, member, discord.AuditLogAction.overwrite_delete, reason
         )

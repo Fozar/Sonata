@@ -210,6 +210,6 @@ class General(
             title=_("Vote for the bot"),
             url=f"https://top.gg/bot/{ctx.bot.user.id}",
         )
-        widget = await ctx.bot.dblpy.get_widget_large()
+        widget = await ctx.bot.dblpy.generate_widget_large()
         embed.set_image(url=widget)
         await ctx.send(embed=embed)

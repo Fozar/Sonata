@@ -16,6 +16,80 @@ class Mod(Modlog, colour=discord.Colour(0xD0021B)):
     async def cog_check(self, ctx: core.Context):
         return ctx.guild
 
+    async def purge_channel(self, ctx: core.Context, limit, before, reason, check=None):
+        if before is not None:
+            if before.channel != ctx.channel:
+                return await ctx.inform(
+                    _("`Before` message must be in the same channel.")
+                )
+            before = before.created_at
+        await ctx.channel.purge(limit=limit, before=before, check=check)
+        await self.create_modlog_case(
+            ctx, ctx.channel, discord.AuditLogAction.message_bulk_delete, reason
+        )
+
+    async def mute_channel(
+        self,
+        channel: Union[
+            discord.TextChannel, discord.VoiceChannel, discord.CategoryChannel
+        ],
+        member: discord.Member,
+        reason: str,
+    ):
+        overwrites = channel.overwrites_for(member)
+        new_overs = {}
+        if not isinstance(channel, discord.TextChannel):
+            new_overs.update(speak=False)
+        if not isinstance(channel, discord.VoiceChannel):
+            new_overs.update(send_messages=False, add_reactions=False)
+        old_overs = {k: getattr(overwrites, k) for k in new_overs}
+        overwrites.update(**new_overs)
+        try:
+            await channel.set_permissions(member, overwrite=overwrites, reason=reason)
+        except discord.Forbidden:
+            return
+        cache = ChannelPermissionsCache(
+            guild_id=channel.guild.id,
+            channel_id=channel.id,
+            member_id=member.id,
+            value=old_overs,
+        ).dict()
+        await self.sonata.db.channel_perms_cache.insert_one(cache)
+
+    async def unmute_channel(
+        self,
+        channel: Union[
+            discord.TextChannel, discord.VoiceChannel, discord.CategoryChannel
+        ],
+        member: discord.Member,
+        reason: str,
+    ):
+        overwrites = channel.overwrites_for(member)
+        perms_cache = await self.sonata.db.channel_perms_cache.find_one_and_delete(
+            {
+                "guild_id": channel.guild.id,
+                "channel_id": channel.id,
+                "member_id": member.id,
+            },
+            {"value": True},
+        )
+
+        if perms_cache:
+            old_values = perms_cache["value"]
+        else:
+            old_values = {"send_messages": None, "add_reactions": None, "speak": None}
+
+        overwrites.update(**old_values)
+        try:
+            if overwrites.is_empty():
+                await channel.set_permissions(
+                    member, overwrite=cast(discord.PermissionOverwrite, None), reason=reason
+                )
+            else:
+                await channel.set_permissions(member, overwrite=overwrites, reason=reason)
+        except discord.Forbidden:
+            pass
+
     @core.command()
     @commands.bot_has_permissions(kick_members=True)
     @commands.check_any(commands.has_permissions(kick_members=True), checks.is_mod())
@@ -91,18 +165,6 @@ class Mod(Modlog, colour=discord.Colour(0xD0021B)):
             await ctx.send(_("Member unbanned: {0}").format(str(user)))
         await self.create_modlog_case(ctx, user, discord.AuditLogAction.unban, reason)
 
-    async def purge_channel(self, ctx: core.Context, limit, before, reason, check=None):
-        if before is not None:
-            if before.channel != ctx.channel:
-                return await ctx.inform(
-                    _("`Before` message must be in the same channel.")
-                )
-            before = before.created_at
-        await ctx.channel.purge(limit=limit, before=before, check=check)
-        await self.create_modlog_case(
-            ctx, ctx.channel, discord.AuditLogAction.message_bulk_delete, reason
-        )
-
     @core.group(aliases=["clear"], invoke_without_command=True)
     @commands.bot_has_permissions(manage_messages=True)
     @commands.check_any(commands.has_permissions(manage_messages=True), checks.is_mod())
@@ -140,68 +202,6 @@ class Mod(Modlog, colour=discord.Colour(0xD0021B)):
         await self.purge_channel(
             ctx, limit, before, reason, check=lambda m: m.author == ctx.guild.me
         )
-
-    async def mute_channel(
-        self,
-        channel: Union[
-            discord.TextChannel, discord.VoiceChannel, discord.CategoryChannel
-        ],
-        member: discord.Member,
-        reason: str,
-    ):
-        overwrites = channel.overwrites_for(member)
-        new_overs = {}
-        if not isinstance(channel, discord.TextChannel):
-            new_overs.update(speak=False)
-        if not isinstance(channel, discord.VoiceChannel):
-            new_overs.update(send_messages=False, add_reactions=False)
-        old_overs = {k: getattr(overwrites, k) for k in new_overs}
-        overwrites.update(**new_overs)
-        try:
-            await channel.set_permissions(member, overwrite=overwrites, reason=reason)
-        except discord.Forbidden:
-            return
-        cache = ChannelPermissionsCache(
-            guild_id=channel.guild.id,
-            channel_id=channel.id,
-            member_id=member.id,
-            value=old_overs,
-        ).dict()
-        await self.sonata.db.channel_perms_cache.insert_one(cache)
-
-    async def unmute_channel(
-        self,
-        channel: Union[
-            discord.TextChannel, discord.VoiceChannel, discord.CategoryChannel
-        ],
-        member: discord.Member,
-        reason: str,
-    ):
-        overwrites = channel.overwrites_for(member)
-        perms_cache = await self.sonata.db.channel_perms_cache.find_one_and_delete(
-            {
-                "guild_id": channel.guild.id,
-                "channel_id": channel.id,
-                "member_id": member.id,
-            },
-            {"value": True},
-        )
-
-        if perms_cache:
-            old_values = perms_cache["value"]
-        else:
-            old_values = {"send_messages": None, "add_reactions": None, "speak": None}
-
-        overwrites.update(**old_values)
-        try:
-            if overwrites.is_empty():
-                await channel.set_permissions(
-                    member, overwrite=cast(discord.PermissionOverwrite, None), reason=reason
-                )
-            else:
-                await channel.set_permissions(member, overwrite=overwrites, reason=reason)
-        except discord.Forbidden:
-            pass
 
     @core.command()
     @commands.bot_has_permissions(manage_roles=True)

@@ -118,7 +118,7 @@ class Mod(Modlog, colour=discord.Colour(0xD0021B)):
         self,
         ctx: core.Context,
         member: ModeratedMember(),
-        delete_days: Optional[int] = 0,
+        delete_days: Optional[delete_message_days] = 0,
         *,
         reason: clean_content(),
     ):

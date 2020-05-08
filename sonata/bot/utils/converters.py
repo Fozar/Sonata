@@ -17,6 +17,15 @@ from . import i18n
 from ...db.models import ModlogCase
 
 
+def delete_message_days(days: str) -> int:
+    days = int(days)
+    if not 0 <= days <= 7:
+        raise commands.BadArgument(
+            _("The minimum deleted days are 0 and the maximum is 7.")
+        )
+    return days
+
+
 def flag_to_locale(flag: str) -> str:
     locale = f.dflagize(flag)
     r = re.compile(r".{2}_" + locale.strip(":"))

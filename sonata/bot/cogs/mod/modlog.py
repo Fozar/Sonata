@@ -251,6 +251,7 @@ class Modlog(core.Cog):
     @core.group(usage="<id>", invoke_without_command=True)
     @commands.check(checks.is_mod())
     async def case(self, ctx: core.Context, case: ModlogCaseConverter()):
+        _("""Returns modlog case by specified ID""")
         embed = await self.make_case_embed(case)
         await ctx.send(embed=embed)
 
@@ -258,6 +259,7 @@ class Modlog(core.Cog):
     async def case_edit(
         self, ctx: core.Context, case: ModlogCaseConverter(), *, reason: clean_content()
     ):
+        _("""Edits modlog case reason by specified ID""")
         case.reason = reason
         await ctx.db.modlog_cases.update_one(
             {"guild_id": case.guild_id, "id": case.id},

@@ -204,6 +204,17 @@ class Mod(Modlog, colour=discord.Colour(0xD0021B)):
         *,
         reason: clean_content(),
     ):
+        _(
+            """Temporarily ban user in the guild
+
+        You can specify number of days worth of messages to delete from the user in the \
+        guild. The minimum is 0 and the maximum is 7. Defaults to 0.
+
+        Examples:
+        - ban temp @User 60 flood
+        - ban temp User#1234 1800 1 spam
+        - ban temp 239686604271124481 10 7 bad words"""
+        )
         await ctx.guild.ban(member, delete_message_days=delete_days, reason=reason)
         try:
             await ctx.message.delete()
@@ -284,6 +295,14 @@ class Mod(Modlog, colour=discord.Colour(0xD0021B)):
     async def mute(
         self, ctx: core.Context, member: ModeratedMember(), *, reason: clean_content()
     ):
+        _(
+            """Mute member in the guild
+
+        Examples:
+        - mute @User flood
+        - mute User#1234 1 spam
+        - mute 239686604271124481 7 bad words"""
+        )
         with ctx.typing():
             aws = [
                 self.mute_channel(channel, member, reason)
@@ -307,6 +326,14 @@ class Mod(Modlog, colour=discord.Colour(0xD0021B)):
         *,
         reason: clean_content(),
     ):
+        _(
+            """Temporarily mute member in the guild
+
+        Examples:
+        - mute temp @User 60 flood
+        - mute temp User#1234 1800 1 spam
+        - mute temp 239686604271124481 10 7 bad words"""
+        )
         with ctx.typing():
             aws = [
                 self.mute_channel(channel, member, reason)
@@ -331,6 +358,14 @@ class Mod(Modlog, colour=discord.Colour(0xD0021B)):
     async def unmute(
         self, ctx: core.Context, member: ModeratedMember(), *, reason: clean_content()
     ):
+        _(
+            """Unmute member in the guild
+
+        Examples:
+        - unmute @User apologized
+        - unmute User#1234 1 amnesty
+        - unmute 239686604271124481 7 expired"""
+        )
         with ctx.typing():
             aws = []
             for channel in ctx.guild.channels:

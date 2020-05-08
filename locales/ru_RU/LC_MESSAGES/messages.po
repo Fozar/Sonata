@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-05-07 03:49+0700\n"
-"PO-Revision-Date: 2020-05-07 03:54+0700\n"
+"POT-Creation-Date: 2020-05-08 21:27+0700\n"
+"PO-Revision-Date: 2020-05-08 21:33+0700\n"
 "Last-Translator: \n"
 "Language: ru_RU\n"
 "Language-Team: ru_RU <LL@li.org>\n"
@@ -282,15 +282,15 @@ msgstr "Сбрасывает настройки гильдии"
 msgid "Are you sure?"
 msgstr "Вы уверены?"
 
-#: sonata/bot/cogs/admin/admin.py:410
+#: sonata/bot/cogs/admin/admin.py:411
 msgid "Guild settings reset."
 msgstr "Настройки гильдии сброшены."
 
-#: sonata/bot/cogs/admin/admin.py:414
+#: sonata/bot/cogs/admin/admin.py:415
 msgid "Set privileged roles"
 msgstr "Устанавливает привилегированные роли"
 
-#: sonata/bot/cogs/admin/admin.py:422
+#: sonata/bot/cogs/admin/admin.py:423
 msgid ""
 "Admin roles\n"
 "        \n"
@@ -302,15 +302,15 @@ msgstr ""
 "        Участники которые имеют роль администратора могут пользоваться модулем "
 "наравне с участниками, которые имеют права администратора."
 
-#: sonata/bot/cogs/admin/admin.py:432
+#: sonata/bot/cogs/admin/admin.py:433
 msgid "Admin roles not set."
 msgstr "Роли администраторов не установлены."
 
-#: sonata/bot/cogs/admin/admin.py:444
+#: sonata/bot/cogs/admin/admin.py:445
 msgid "Admin roles: {0}."
 msgstr "Роли администраторов: {0}."
 
-#: sonata/bot/cogs/admin/admin.py:451
+#: sonata/bot/cogs/admin/admin.py:452
 msgid ""
 "Add roles to admin role list\n"
 "            \n"
@@ -330,16 +330,16 @@ msgstr ""
 "        - guild role admin add @MiniAdmin @Admin @BotManager\n"
 "        - guild role admin add 705363996747759657 Admin"
 
-#: sonata/bot/cogs/admin/admin.py:462 sonata/bot/cogs/admin/admin.py:484
-#: sonata/bot/cogs/admin/admin.py:531 sonata/bot/cogs/admin/admin.py:553
+#: sonata/bot/cogs/admin/admin.py:463 sonata/bot/cogs/admin/admin.py:485
+#: sonata/bot/cogs/admin/admin.py:532 sonata/bot/cogs/admin/admin.py:554
 msgid "You must specify at least one role."
 msgstr "Тебе нужно указать хотя бы одну роль."
 
-#: sonata/bot/cogs/admin/admin.py:467 sonata/bot/cogs/admin/admin.py:536
+#: sonata/bot/cogs/admin/admin.py:468 sonata/bot/cogs/admin/admin.py:537
 msgid "Roles successfully added."
 msgstr "Роли успешно добавлены."
 
-#: sonata/bot/cogs/admin/admin.py:473
+#: sonata/bot/cogs/admin/admin.py:474
 msgid ""
 "Removes roles from admin role list\n"
 "        \n"
@@ -359,11 +359,11 @@ msgstr ""
 "        - guild role admin remove @MiniAdmin @Admin @BotManager\n"
 "        - guild role admin remove 705363996747759657 Admin"
 
-#: sonata/bot/cogs/admin/admin.py:489 sonata/bot/cogs/admin/admin.py:558
+#: sonata/bot/cogs/admin/admin.py:490 sonata/bot/cogs/admin/admin.py:559
 msgid "Roles successfully removed."
 msgstr "Роли успешно удалены."
 
-#: sonata/bot/cogs/admin/admin.py:493
+#: sonata/bot/cogs/admin/admin.py:494
 msgid ""
 "Mod roles\n"
 "\n"
@@ -375,15 +375,15 @@ msgstr ""
 "        Участники, у которых есть хотя бы одна из ролей модераторов могут "
 "использовать модуль Mod без необходимости иметь соответствующие права."
 
-#: sonata/bot/cogs/admin/admin.py:501
+#: sonata/bot/cogs/admin/admin.py:502
 msgid "Mod roles not set."
 msgstr "Роли модераторов не установлены."
 
-#: sonata/bot/cogs/admin/admin.py:513
+#: sonata/bot/cogs/admin/admin.py:514
 msgid "Mod roles: {0}."
 msgstr "Роли модераторов: {0}."
 
-#: sonata/bot/cogs/admin/admin.py:520
+#: sonata/bot/cogs/admin/admin.py:521
 msgid ""
 "Add roles to mod role list\n"
 "\n"
@@ -403,7 +403,7 @@ msgstr ""
 "        - guild role mod add @MiniMod @Mod\n"
 "        - guild role mod add 705363996747759657 Mod"
 
-#: sonata/bot/cogs/admin/admin.py:542
+#: sonata/bot/cogs/admin/admin.py:543
 msgid ""
 "Removes roles from mod role list\n"
 "\n"
@@ -1027,7 +1027,15 @@ msgstr "Доступные языки: {0}."
 msgid "Locales updated"
 msgstr "Локали обновлены"
 
-#: sonata/bot/cogs/mod/mod.py:25
+#: sonata/bot/cogs/mod/mod.py:40
+msgid "Time expired"
+msgstr "Время истекло"
+
+#: sonata/bot/cogs/mod/mod.py:73
+msgid "`Before` message must be in the same channel."
+msgstr "Сообщение \"до\" должно быть в том же канале."
+
+#: sonata/bot/cogs/mod/mod.py:153
 msgid ""
 "Kick member from the guild\n"
 "        \n"
@@ -1043,11 +1051,11 @@ msgstr ""
 "        - kick Member#1234 спам\n"
 "        - kick 239686604271124481 ругательства"
 
-#: sonata/bot/cogs/mod/mod.py:37
+#: sonata/bot/cogs/mod/mod.py:165
 msgid "Member kicked: {0}"
 msgstr "Участник выгнан: {0}"
 
-#: sonata/bot/cogs/mod/mod.py:51
+#: sonata/bot/cogs/mod/mod.py:179
 msgid ""
 "Ban user in the guild\n"
 "        \n"
@@ -1056,8 +1064,8 @@ msgid ""
 "0.\n"
 "        \n"
 "        Examples:\n"
-"        - ban @Member flood\n"
-"        - ban Member#1234 1 spam\n"
+"        - ban @User flood\n"
+"        - ban User#1234 1 spam\n"
 "        - ban 239686604271124481 7 bad words"
 msgstr ""
 "Банит пользователя в гильдии\n"
@@ -1066,43 +1074,62 @@ msgstr ""
 "гильдии. Минимум 0 и максимум 7. По умолчанию 0.\n"
 "        \n"
 "        Примеры:\n"
-"        - ban @Member флуд\n"
-"        - ban Member#1234 1 спам\n"
+"        - ban @User флуд\n"
+"        - ban User#1234 1 спам\n"
 "        - ban 239686604271124481 7 ругательства"
 
-#: sonata/bot/cogs/mod/mod.py:64
-msgid "The minimum deleted days are 0 and the maximum is 7."
-msgstr "Минимальное количество удаленных дней - 0, а максимальное - 7."
+#: sonata/bot/cogs/mod/mod.py:194 sonata/bot/cogs/mod/mod.py:222
+msgid "User banned: {0}"
+msgstr "Пользователь забанен: {0}"
 
-#: sonata/bot/cogs/mod/mod.py:70
-msgid "Member banned: {0}"
-msgstr "Участник забанен: {0}."
-
-#: sonata/bot/cogs/mod/mod.py:79
+#: sonata/bot/cogs/mod/mod.py:207
 msgid ""
-"Unban user in the guild\n"
-"        \n"
+"Temporarily ban user in the guild\n"
+"\n"
+"        You can specify number of days worth of messages to delete from the "
+"user in the         guild. The minimum is 0 and the maximum is 7. Defaults to "
+"0.\n"
+"\n"
 "        Examples:\n"
-"        - unban @Member conflict resolved\n"
-"        - unban Member#1234 1 apologized\n"
-"        - unban 239686604271124481 7 amnesty"
+"        - ban temp @User 60 flood\n"
+"        - ban temp User#1234 1800 1 spam\n"
+"        - ban temp 239686604271124481 10 7 bad words"
 msgstr ""
-"Разбанивает пользователя в гильдии\n"
+"Временно банит пользователя в гильдии\n"
+"        \n"
+"        Вы можете указать количество дней для удаления сообщений пользователя в "
+"гильдии. Минимум 0 и максимум 7. По умолчанию 0.\n"
 "        \n"
 "        Примеры:\n"
-"        - unban @Member конфликт разрешен\n"
-"        - unban Member#1234 1 извинился\n"
-"        - unban 239686604271124481 7 амнистия"
+"        - ban @User флуд\n"
+"        - ban User#1234 1 спам\n"
+"        - ban 239686604271124481 7 ругательства"
 
-#: sonata/bot/cogs/mod/mod.py:91
-msgid "Member unbanned: {0}"
-msgstr "Участник разбанен: {0}"
+#: sonata/bot/cogs/mod/mod.py:235
+msgid ""
+"Unban user in the guild\n"
+"            \n"
+"        You must provide a user ID.\n"
+"        \n"
+"        Examples:\n"
+"        - unban 239686604271124481 amnesty"
+msgstr ""
+"Разбанивает пользователя в гильдии\n"
+"            \n"
+"        Тебе нужно указать ID пользователя.\n"
+"        \n"
+"        Примеры:\n"
+"        - unban 239686604271124481 амнистия"
 
-#: sonata/bot/cogs/mod/mod.py:98
-msgid "`Before` message must be in the same channel."
-msgstr "Сообщение \"до\" должно быть в том же канале."
+#: sonata/bot/cogs/mod/mod.py:246
+msgid "User not banned."
+msgstr "Пользователь не забанен."
 
-#: sonata/bot/cogs/mod/mod.py:117
+#: sonata/bot/cogs/mod/mod.py:251
+msgid "User unbanned: {0}"
+msgstr "Пользователь разбанен: {0}"
+
+#: sonata/bot/cogs/mod/mod.py:265
 msgid ""
 "Purges messages in the channel\n"
 "        \n"
@@ -1124,63 +1151,119 @@ msgstr ""
 "        - purge 20 706903341934051489 спам\n"
 "        - purge 100 <message url> рейд"
 
-#: sonata/bot/cogs/mod/mod.py:139
+#: sonata/bot/cogs/mod/mod.py:287
 msgid "Purges bot's messages in the channel"
 msgstr "Чистит сообщения бота в канале"
 
-#: sonata/bot/cogs/mod/mod.py:220
+#: sonata/bot/cogs/mod/mod.py:298
+msgid ""
+"Mute member in the guild\n"
+"\n"
+"        Examples:\n"
+"        - mute @User flood\n"
+"        - mute User#1234 1 spam\n"
+"        - mute 239686604271124481 7 bad words"
+msgstr ""
+"Мутит участника в гильдии\n"
+"\n"
+"        Примеры:\n"
+"        - mute @User флуд\n"
+"        - mute User#1234 1 спам\n"
+"        - mute 239686604271124481 7 ругательства"
+
+#: sonata/bot/cogs/mod/mod.py:315 sonata/bot/cogs/mod/mod.py:346
 msgid "Member muted: {0}"
 msgstr "Участник заглушен: {0}"
 
-#: sonata/bot/cogs/mod/mod.py:239
+#: sonata/bot/cogs/mod/mod.py:329
+msgid ""
+"Temporarily mute member in the guild\n"
+"\n"
+"        Examples:\n"
+"        - mute temp @User 60 flood\n"
+"        - mute temp User#1234 1800 1 spam\n"
+"        - mute temp 239686604271124481 10 7 bad words"
+msgstr ""
+"Временно мутит участника в гильдии\n"
+"\n"
+"        Примеры:\n"
+"        - mute @User флуд\n"
+"        - mute User#1234 1 спам\n"
+"        - mute 239686604271124481 7 ругательства"
+
+#: sonata/bot/cogs/mod/mod.py:361
+msgid ""
+"Unmute member in the guild\n"
+"\n"
+"        Examples:\n"
+"        - unmute @User apologized\n"
+"        - unmute User#1234 1 amnesty\n"
+"        - unmute 239686604271124481 7 expired"
+msgstr ""
+"Снимает мут участника гильдии\n"
+"\n"
+"        Примеры:\n"
+"        - unmute @User извинился\n"
+"        - unmute User#1234 1 амнистия\n"
+"        - unmute 239686604271124481 7 истекло"
+
+#: sonata/bot/cogs/mod/mod.py:377
 msgid "Member unmuted: {0}"
 msgstr "С участника снято заглушение: {0}"
 
-#: sonata/bot/cogs/mod/modlog.py:99
+#: sonata/bot/cogs/mod/modlog.py:15
 msgid "Member kicked"
 msgstr "Участник выгнан"
 
-#: sonata/bot/cogs/mod/modlog.py:100
+#: sonata/bot/cogs/mod/modlog.py:16
 msgid "User banned"
 msgstr "Пользователь забанен"
 
-#: sonata/bot/cogs/mod/modlog.py:101
+#: sonata/bot/cogs/mod/modlog.py:17
 msgid "User unbanned"
 msgstr "Пользователь разбанен"
 
-#: sonata/bot/cogs/mod/modlog.py:102
+#: sonata/bot/cogs/mod/modlog.py:18
 msgid "Messages purged"
 msgstr "Сообщения очищены"
 
-#: sonata/bot/cogs/mod/modlog.py:103
+#: sonata/bot/cogs/mod/modlog.py:19
 msgid "Member muted"
 msgstr "Участник заглушен"
 
-#: sonata/bot/cogs/mod/modlog.py:104
+#: sonata/bot/cogs/mod/modlog.py:20
 msgid "Member unmuted"
 msgstr "С участника снято заглушение"
 
-#: sonata/bot/cogs/mod/modlog.py:125
+#: sonata/bot/cogs/mod/modlog.py:149
 msgid "User"
 msgstr "Пользователь"
 
-#: sonata/bot/cogs/mod/modlog.py:125 sonata/bot/cogs/owner/owner.py:292
+#: sonata/bot/cogs/mod/modlog.py:149 sonata/bot/cogs/owner/owner.py:292
 msgid "Bot"
 msgstr "Бот"
 
-#: sonata/bot/cogs/mod/modlog.py:128
+#: sonata/bot/cogs/mod/modlog.py:152
 msgid "Channel"
 msgstr "Канал"
 
-#: sonata/bot/cogs/mod/modlog.py:132
+#: sonata/bot/cogs/mod/modlog.py:156
 msgid "Moderator"
 msgstr "Модератор"
 
-#: sonata/bot/cogs/mod/modlog.py:134
+#: sonata/bot/cogs/mod/modlog.py:158
 msgid "Reason"
 msgstr "Причина"
 
-#: sonata/bot/cogs/mod/modlog.py:173
+#: sonata/bot/cogs/mod/modlog.py:254
+msgid "Returns modlog case by specified ID"
+msgstr "Возвращает случай журнала модераторов по указанному ID"
+
+#: sonata/bot/cogs/mod/modlog.py:262
+msgid "Edits modlog case reason by specified ID"
+msgstr "Редактирует причину случая журнала модераторов по указанному ID"
+
+#: sonata/bot/cogs/mod/modlog.py:273
 msgid "Reason changed."
 msgstr "Причина изменена."
 
@@ -1721,19 +1804,19 @@ msgstr ""
 msgid "{0}, I did not find such a locality."
 msgstr "{0}, я не нашла такой населенный пункт."
 
-#: sonata/bot/core/bot.py:118
+#: sonata/bot/core/bot.py:119
 msgid "You do not have enough permissions to do it."
 msgstr "У тебя недостаточно прав для этого."
 
-#: sonata/bot/core/bot.py:122
+#: sonata/bot/core/bot.py:123
 msgid "I do not have enough permissions to do it."
 msgstr "У меня недостаточно прав для этого."
 
-#: sonata/bot/core/bot.py:124
+#: sonata/bot/core/bot.py:125
 msgid "I am missing permissions."
 msgstr "Мне не хватает прав."
 
-#: sonata/bot/core/bot.py:128
+#: sonata/bot/core/bot.py:129
 msgid ""
 "Arguments specified incorrectly:```diff\n"
 "- {0}```"
@@ -1741,23 +1824,23 @@ msgstr ""
 "Аргументы указаны неверно:```diff\n"
 "- {0}```"
 
-#: sonata/bot/core/bot.py:132
+#: sonata/bot/core/bot.py:133
 msgid "Required arguments not specified."
 msgstr "Обязательные аргументы не указаны."
 
-#: sonata/bot/core/bot.py:135
+#: sonata/bot/core/bot.py:136
 msgid "An error occurred while making an HTTP request."
 msgstr "Произошла ошибка при выполнении HTTP-запроса."
 
-#: sonata/bot/core/bot.py:137
+#: sonata/bot/core/bot.py:138
 msgid "This command is only for premium guilds."
 msgstr "Эта команда только для премиум гильдий."
 
-#: sonata/bot/core/bot.py:139
+#: sonata/bot/core/bot.py:140
 msgid "Command `{0}` is disabled."
 msgstr "Команда `{0}` отключена."
 
-#: sonata/bot/core/bot.py:164
+#: sonata/bot/core/bot.py:165
 msgid "I can't send messages to `{0}` channel."
 msgstr "Я не могу отправлять сообщения в канал `{0}`."
 
@@ -1820,87 +1903,91 @@ msgstr "__Использование:__"
 msgid "__Subcommands:__"
 msgstr "__Подкоманды:__"
 
-#: sonata/bot/utils/converters.py:32
+#: sonata/bot/utils/converters.py:24
+msgid "The minimum deleted days are 0 and the maximum is 7."
+msgstr "Минимальное количество удаленных дней - 0, а максимальное - 7."
+
+#: sonata/bot/utils/converters.py:41
 msgid "Locale not found"
 msgstr "Язык не найден"
 
-#: sonata/bot/utils/converters.py:91 sonata/bot/utils/converters.py:97
+#: sonata/bot/utils/converters.py:100 sonata/bot/utils/converters.py:106
 msgid "Could not find a channel by ID {0}."
 msgstr "Не удалось найти канал по ID {0}."
 
-#: sonata/bot/utils/converters.py:133 sonata/bot/utils/converters.py:140
+#: sonata/bot/utils/converters.py:142 sonata/bot/utils/converters.py:149
 msgid "Invalid expression"
 msgstr "Неверное выражение"
 
-#: sonata/bot/utils/converters.py:154
+#: sonata/bot/utils/converters.py:163
 msgid "Timeout exceeded: {0}s"
 msgstr "Превышено ограничение по времени: {0}с"
 
-#: sonata/bot/utils/converters.py:158
+#: sonata/bot/utils/converters.py:167
 msgid "Range exceeded: {0} ** {1}"
 msgstr "Превышен диапазон: {0} ** {1}"
 
-#: sonata/bot/utils/converters.py:168
+#: sonata/bot/utils/converters.py:177
 msgid "Member \"{0}\" is the author of the message."
 msgstr "Участник \"{0}\" автор сообщения."
 
-#: sonata/bot/utils/converters.py:171
+#: sonata/bot/utils/converters.py:180
 msgid "Member \"{0}\" is me."
 msgstr "Участник \"{0}\" это я."
 
-#: sonata/bot/utils/converters.py:174
+#: sonata/bot/utils/converters.py:183
 msgid "Member \"{0}\" is the guild owner."
 msgstr "Участник \"{0}\" владелец гильдии."
 
-#: sonata/bot/utils/converters.py:180
+#: sonata/bot/utils/converters.py:189
 msgid "Member \"{0}\" is above moderator in the role hierarchy."
 msgstr "Участник \"{0}\" выше модератора в иерархии ролей."
 
-#: sonata/bot/utils/converters.py:186
+#: sonata/bot/utils/converters.py:195
 msgid "Member \"{0}\" is above me in the role hierarchy."
 msgstr "Участник \"{0}\" выше меня в иерархии ролей."
 
-#: sonata/bot/utils/converters.py:192 sonata/bot/utils/converters.py:202
+#: sonata/bot/utils/converters.py:201 sonata/bot/utils/converters.py:211
 msgid "Member \"{0}\" is guild administrator."
 msgstr "Участник \"{0}\" администратор гильдии."
 
-#: sonata/bot/utils/converters.py:206
+#: sonata/bot/utils/converters.py:215
 msgid "Member \"{0}\" is guild moderator."
 msgstr "Участник \"{0}\" модератор гильдии."
 
-#: sonata/bot/utils/converters.py:215
+#: sonata/bot/utils/converters.py:224
 msgid "Invalid ID."
 msgstr "Неверный ID."
 
-#: sonata/bot/utils/converters.py:218
+#: sonata/bot/utils/converters.py:227
 msgid "Case not found."
 msgstr "Случай не найден."
 
-#: sonata/bot/utils/converters.py:247
+#: sonata/bot/utils/converters.py:256
 msgid "me"
 msgstr "мне"
 
-#: sonata/bot/utils/converters.py:253
+#: sonata/bot/utils/converters.py:262
 msgid "Could not recognize the date."
 msgstr "Не могу распознать дату."
 
-#: sonata/bot/utils/converters.py:260
+#: sonata/bot/utils/converters.py:269
 msgid "An error occurred converting the date."
 msgstr "Возникла ошибка конвертации даты."
 
-#: sonata/bot/utils/converters.py:262
+#: sonata/bot/utils/converters.py:271
 msgid "This time is in the past."
 msgstr "Это время в прошлом."
 
-#: sonata/bot/utils/converters.py:264
+#: sonata/bot/utils/converters.py:273
 msgid "This time is in the future."
 msgstr "Это время в будущем."
 
-#: sonata/bot/utils/converters.py:267
+#: sonata/bot/utils/converters.py:276
 msgid "Maximum timedelta: {0}"
 msgstr "Максимальная разница во времени: {0}"
 
-#: sonata/bot/utils/converters.py:277
+#: sonata/bot/utils/converters.py:286
 msgid "Missing argument before or after the time."
 msgstr "Отсутствует аргумент до или после времени."
 
@@ -2149,3 +2236,46 @@ msgstr ""
 #~ "        `Fun` Большой набор развлекательных команд. Все от 8ball до картинок "
 #~ "котиков. Также имеет продвинутую версию roll.\n"
 #~ "        `General` Основные команды и информация."
+
+#~ msgid ""
+#~ "Ban user in the guild\n"
+#~ "        \n"
+#~ "        You can specify number of days worth of messages to delete from the "
+#~ "user in the         guild. The minimum is 0 and the maximum is 7. Defaults "
+#~ "to 0.\n"
+#~ "        \n"
+#~ "        Examples:\n"
+#~ "        - ban @Member flood\n"
+#~ "        - ban Member#1234 1 spam\n"
+#~ "        - ban 239686604271124481 7 bad words"
+#~ msgstr ""
+#~ "Банит пользователя в гильдии\n"
+#~ "        \n"
+#~ "        Вы можете указать количество дней для удаления сообщений "
+#~ "пользователя в гильдии. Минимум 0 и максимум 7. По умолчанию 0.\n"
+#~ "        \n"
+#~ "        Примеры:\n"
+#~ "        - ban @Member флуд\n"
+#~ "        - ban Member#1234 1 спам\n"
+#~ "        - ban 239686604271124481 7 ругательства"
+
+#~ msgid "Member banned: {0}"
+#~ msgstr "Участник забанен: {0}."
+
+#~ msgid ""
+#~ "Unban user in the guild\n"
+#~ "        \n"
+#~ "        Examples:\n"
+#~ "        - unban @Member conflict resolved\n"
+#~ "        - unban Member#1234 1 apologized\n"
+#~ "        - unban 239686604271124481 7 amnesty"
+#~ msgstr ""
+#~ "Разбанивает пользователя в гильдии\n"
+#~ "        \n"
+#~ "        Примеры:\n"
+#~ "        - unban @Member конфликт разрешен\n"
+#~ "        - unban Member#1234 1 извинился\n"
+#~ "        - unban 239686604271124481 7 амнистия"
+
+#~ msgid "Member unbanned: {0}"
+#~ msgstr "Участник разбанен: {0}"

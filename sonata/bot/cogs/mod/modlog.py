@@ -11,20 +11,39 @@ from sonata.bot.core import checks
 from sonata.bot.utils.converters import ModlogCaseConverter
 from sonata.db.models import ModlogCase
 
+action_mapping = {
+    discord.AuditLogAction.kick: _("Member kicked"),
+    discord.AuditLogAction.ban: _("User banned"),
+    discord.AuditLogAction.unban: _("User unbanned"),
+    discord.AuditLogAction.message_bulk_delete: _("Messages purged"),
+    discord.AuditLogAction.overwrite_create: _("Member muted"),
+    discord.AuditLogAction.overwrite_delete: _("Member unmuted"),
+}
+
 
 class Modlog(core.Cog):
     def __init__(self, sonata: core.Sonata):
         self.sonata = sonata
+        self._have_data = asyncio.Event(loop=sonata.loop)
+        self._next_case = None
+        self._task = sonata.loop.create_task(self.dispatch_cases())
 
     @core.Cog.listener()
-    async def on_modlog_case(self, case: ModlogCase):
+    async def on_modlog_case_create(self, case: ModlogCase):
         channel = await self.get_modlog_channel(case.guild_id)
         if not channel:
             return
+
         await self.sonata.db.modlog_cases.insert_one(case.dict())
         await self.sonata.set_locale(channel)
         embed = await self.make_case_embed(case)
-        await channel.send(embed=embed)
+        try:
+            await channel.send(embed=embed)
+            return
+        except discord.Forbidden:
+            await self.sonata.db.guilds.update_one(
+                {"id": case.guild_id}, {"$set": {"modlog": None}}
+            )
 
     @core.Cog.listener()
     async def on_member_ban(
@@ -32,7 +51,7 @@ class Modlog(core.Cog):
     ):
         case = await self.fetch_modlog_case(guild, user, discord.AuditLogAction.ban)
         if case:
-            self.sonata.dispatch("modlog_case", case)
+            self.sonata.dispatch("modlog_case_create", case)
 
     @core.Cog.listener()
     async def on_member_remove(self, member: discord.Member):
@@ -40,13 +59,23 @@ class Modlog(core.Cog):
             member.guild, member, discord.AuditLogAction.kick
         )
         if case:
-            self.sonata.dispatch("modlog_case", case)
+            self.sonata.dispatch("modlog_case_create", case)
 
     @core.Cog.listener()
     async def on_member_unban(self, guild: discord.Guild, user: discord.User):
-        case = await self.fetch_modlog_case(guild, user, discord.AuditLogAction.unban)
+        action = discord.AuditLogAction.unban
+        await self.sonata.db.modlog_cases.update_many(
+            {
+                "guild_id": guild.id,
+                "target_id": user.id,
+                "action": action.value,
+                "expired": False,
+            },
+            {"$set": {"expired": True}},
+        )
+        case = await self.fetch_modlog_case(guild, user, action)
         if case:
-            self.sonata.dispatch("modlog_case", case)
+            self.sonata.dispatch("modlog_case_create", case)
 
     async def get_modlog_channel(self, guild_id: int):
         guild_conf = await self.sonata.db.guilds.find_one(
@@ -59,6 +88,9 @@ class Modlog(core.Cog):
                 guild_conf["modlog"]
             ) or await self.sonata.fetch_channel(guild_conf["modlog"])
         except discord.NotFound:
+            await self.sonata.db.guilds.update_one(
+                {"id": guild_id}, {"$set": {"modlog": None}}
+            )
             return None
         else:
             return channel
@@ -95,14 +127,6 @@ class Modlog(core.Cog):
         )
 
     async def make_case_embed(self, case: ModlogCase):
-        action_mapping = {
-            discord.AuditLogAction.kick: _("Member kicked"),
-            discord.AuditLogAction.ban: _("User banned"),
-            discord.AuditLogAction.unban: _("User unbanned"),
-            discord.AuditLogAction.message_bulk_delete: _("Messages purged"),
-            discord.AuditLogAction.overwrite_create: _("Member muted"),
-            discord.AuditLogAction.overwrite_delete: _("Member unmuted"),
-        }
         action = discord.AuditLogAction.try_value(case.action)
         embed = discord.Embed(
             colour=self.colour, title=action_mapping[action], timestamp=case.created_at,
@@ -136,7 +160,12 @@ class Modlog(core.Cog):
         return embed
 
     async def create_modlog_case(
-        self, ctx: core.Context, target, action, reason: str,
+        self,
+        ctx: core.Context,
+        target,
+        action,
+        reason: str,
+        expires_at: datetime = None,
     ):
         created_at = datetime.utcnow()
         case = ModlogCase(
@@ -148,7 +177,76 @@ class Modlog(core.Cog):
             target_id=target.id,
             reason=reason,
         )
-        self.sonata.dispatch("modlog_case", case)
+        self.sonata.dispatch("modlog_case_create", case)
+        if expires_at:
+            case.expires_at = expires_at
+            case.expired = False
+            delta = (case.expires_at - case.created_at).total_seconds()
+            if delta <= 60:
+                self.sonata.loop.create_task(self.short_case_optimisation(delta, case))
+                return
+
+            if delta <= (86400 * 40):
+                self._have_data.set()
+
+            if self._next_case and case.expires_at < self._next_case.expires_at:
+                self._task.cancel()
+                self._task = self.sonata.loop.create_task(self.dispatch_cases())
+
+    async def get_active_case(self, *, days=7):
+        cursor = self.sonata.db.modlog_cases.find(
+            {
+                "expired": False,
+                "expires_at": {"$lte": datetime.utcnow() + timedelta(days=days)},
+            },
+            sort=[("expires_at", 1)],
+        )
+        if await cursor.fetch_next:
+            case = cursor.next_object()
+            return ModlogCase(**case)
+        else:
+            return None
+
+    async def wait_for_active_cases(self, *, days=7):
+        case = await self.get_active_case(days=days)
+        if case is not None:
+            self._have_data.set()
+            return case
+
+        self._have_data.clear()
+        self._next_case = None
+        await self._have_data.wait()
+        return await self.get_active_case(days=days)
+
+    async def call_case(self, case: ModlogCase):
+        await self.sonata.db.modlog_cases.update_one(
+            {"id": case.id}, {"$set": {"expired": True}}
+        )
+        self.sonata.dispatch("modlog_case_expire", case)
+
+    async def dispatch_cases(self):
+        try:
+            while not self.sonata.is_closed():
+                case = self._next_case = await self.wait_for_active_cases(days=40)
+                now = datetime.utcnow()
+                if case.expires_at >= now:
+                    to_sleep = (case.expires_at - now).total_seconds()
+                    await asyncio.sleep(to_sleep)
+
+                await self.call_case(case)
+        except asyncio.CancelledError:
+            raise
+        except (OSError, discord.ConnectionClosed):
+            self._task.cancel()
+            self._task = self.sonata.loop.create_task(self.dispatch_cases())
+
+    async def short_case_optimisation(self, seconds, case):
+        await asyncio.sleep(seconds)
+        case.expired = True
+        await self.sonata.db.modlog_cases.update_one(
+            {"id": case.id}, {"$set": {"expired": True}}
+        )
+        self.sonata.dispatch("modlog_case_expire", case)
 
     @core.group(usage="<id>", invoke_without_command=True)
     @commands.check(checks.is_mod())

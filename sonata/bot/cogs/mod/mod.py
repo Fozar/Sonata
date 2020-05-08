@@ -1,4 +1,5 @@
 import asyncio
+from datetime import timedelta, datetime
 from typing import Optional, Union, cast
 
 import discord
@@ -8,11 +9,60 @@ from discord.ext.commands import clean_content
 from sonata.bot import core
 from sonata.bot.cogs.mod.modlog import Modlog
 from sonata.bot.core import checks
-from sonata.bot.utils.converters import ModeratedMember
-from sonata.db.models import ChannelPermissionsCache
+from sonata.bot.utils.converters import ModeratedMember, delete_message_days
+from sonata.db.models import ChannelPermissionsCache, ModlogCase
+
+action_opposites = {
+    discord.AuditLogAction.ban: discord.AuditLogAction.unban,
+    discord.AuditLogAction.overwrite_create: discord.AuditLogAction.overwrite_delete,
+}
 
 
 class Mod(Modlog, colour=discord.Colour(0xD0021B)):
+    @core.Cog.listener()
+    async def on_modlog_case_expire(self, case: ModlogCase):
+        action = discord.AuditLogAction.try_value(case.action)
+        opposite_action = action_opposites[action]
+        guild = self.sonata.get_guild(case.guild_id) or await self.sonata.fetch_guild(
+            case.guild_id
+        )
+        channel = await self.get_modlog_channel(case.guild_id)
+        if channel:
+            await self.sonata.set_locale(channel)
+        now = datetime.utcnow()
+        new_case = ModlogCase(
+            created_at=now,
+            guild_id=case.guild_id,
+            id=discord.utils.time_snowflake(now),
+            action=opposite_action.value,
+            user_id=case.user_id,
+            target_id=case.target_id,
+            reason=_("Time expired"),
+        )
+        if opposite_action == discord.AuditLogAction.unban:
+            bans = await guild.bans()
+            user = discord.utils.get(bans, user__id=new_case.target_id)
+            if user:
+                await guild.unban(user.user, reason=new_case.reason)
+            else:
+                return
+        elif opposite_action == discord.AuditLogAction.overwrite_delete:
+            member = guild.get_member(new_case.target_id) or guild.fetch_member(
+                new_case.target_id
+            )
+            aws = []
+            for ch in guild.channels:
+                aws.append(self.unmute_channel(ch, member, reason=new_case.reason))
+            await asyncio.gather(*aws)
+        embed = await self.make_case_embed(new_case)
+        try:
+            await channel.send(embed=embed)
+            return
+        except discord.Forbidden:
+            await self.sonata.db.guilds.update_one(
+                {"id": case.guild_id}, {"$set": {"modlog": None}}
+            )
+
     async def cog_check(self, ctx: core.Context):
         return ctx.guild
 
@@ -83,10 +133,14 @@ class Mod(Modlog, colour=discord.Colour(0xD0021B)):
         try:
             if overwrites.is_empty():
                 await channel.set_permissions(
-                    member, overwrite=cast(discord.PermissionOverwrite, None), reason=reason
+                    member,
+                    overwrite=cast(discord.PermissionOverwrite, None),
+                    reason=reason,
                 )
             else:
-                await channel.set_permissions(member, overwrite=overwrites, reason=reason)
+                await channel.set_permissions(
+                    member, overwrite=overwrites, reason=reason
+                )
         except discord.Forbidden:
             pass
 
@@ -111,7 +165,7 @@ class Mod(Modlog, colour=discord.Colour(0xD0021B)):
             await ctx.send(_("Member kicked: {0}").format(str(member)))
         await self.create_modlog_case(ctx, member, discord.AuditLogAction.kick, reason)
 
-    @core.command()
+    @core.group(invoke_without_command=True)
     @commands.bot_has_permissions(ban_members=True)
     @commands.check_any(commands.has_permissions(ban_members=True), checks.is_mod())
     async def ban(
@@ -129,40 +183,61 @@ class Mod(Modlog, colour=discord.Colour(0xD0021B)):
         guild. The minimum is 0 and the maximum is 7. Defaults to 0.
         
         Examples:
-        - ban @Member flood
-        - ban Member#1234 1 spam
+        - ban @User flood
+        - ban User#1234 1 spam
         - ban 239686604271124481 7 bad words"""
         )
-        if not 0 <= delete_days <= 7:
-            return await ctx.inform(
-                _("The minimum deleted days are 0 and the maximum is 7.")
-            )
         await ctx.guild.ban(member, delete_message_days=delete_days, reason=reason)
         try:
             await ctx.message.delete()
         except discord.Forbidden:
-            await ctx.send(_("Member banned: {0}").format(str(member)))
+            await ctx.send(_("User banned: {0}").format(str(member)))
         await self.create_modlog_case(ctx, member, discord.AuditLogAction.ban, reason)
+
+    @ban.command(name="temp")
+    async def ban_temp(
+        self,
+        ctx: core.Context,
+        member: ModeratedMember(),
+        delta_seconds: int,
+        delete_days: Optional[delete_message_days] = 0,
+        *,
+        reason: clean_content(),
+    ):
+        await ctx.guild.ban(member, delete_message_days=delete_days, reason=reason)
+        try:
+            await ctx.message.delete()
+        except discord.Forbidden:
+            await ctx.send(_("User banned: {0}").format(str(member)))
+        await self.create_modlog_case(
+            ctx,
+            member,
+            discord.AuditLogAction.ban,
+            reason,
+            expires_at=ctx.message.created_at + timedelta(seconds=delta_seconds),
+        )
 
     @core.command()
     @commands.bot_has_permissions(ban_members=True)
     @commands.check_any(commands.has_permissions(ban_members=True), checks.is_mod())
-    async def unban(
-        self, ctx: core.Context, user: discord.User, *, reason: clean_content()
-    ):
+    async def unban(self, ctx: core.Context, user: int, *, reason: clean_content()):
         _(
             """Unban user in the guild
+            
+        You must provide a user ID.
         
         Examples:
-        - unban @Member conflict resolved
-        - unban Member#1234 1 apologized
-        - unban 239686604271124481 7 amnesty"""
+        - unban 239686604271124481 amnesty"""
         )
-        await ctx.guild.unban(user, reason=reason)
+        bans = await ctx.guild.bans()
+        user = discord.utils.get(bans, user__id=user)
+        if not user:
+            return await ctx.send(_("User not banned."))
+        await ctx.guild.unban(user.user, reason=reason)
         try:
             await ctx.message.delete()
         except discord.Forbidden:
-            await ctx.send(_("Member unbanned: {0}").format(str(user)))
+            await ctx.send(_("User unbanned: {0}").format(str(user)))
         await self.create_modlog_case(ctx, user, discord.AuditLogAction.unban, reason)
 
     @core.group(aliases=["clear"], invoke_without_command=True)
@@ -203,16 +278,17 @@ class Mod(Modlog, colour=discord.Colour(0xD0021B)):
             ctx, limit, before, reason, check=lambda m: m.author == ctx.guild.me
         )
 
-    @core.command()
+    @core.group(invoke_without_command=True)
     @commands.bot_has_permissions(manage_roles=True)
     @commands.check_any(commands.has_permissions(manage_roles=True), checks.is_mod())
     async def mute(
         self, ctx: core.Context, member: ModeratedMember(), *, reason: clean_content()
     ):
         with ctx.typing():
-            aws = []
-            for channel in ctx.guild.channels:
-                aws.append(self.mute_channel(channel, member, reason))
+            aws = [
+                self.mute_channel(channel, member, reason)
+                for channel in ctx.guild.channels
+            ]
             await asyncio.gather(*aws)
         try:
             await ctx.message.delete()
@@ -220,6 +296,33 @@ class Mod(Modlog, colour=discord.Colour(0xD0021B)):
             await ctx.send(_("Member muted: {0}").format(str(member)))
         await self.create_modlog_case(
             ctx, member, discord.AuditLogAction.overwrite_create, reason
+        )
+
+    @mute.command(name="temp")
+    async def mute_temp(
+        self,
+        ctx: core.Context,
+        member: ModeratedMember(),
+        delta_seconds: int,
+        *,
+        reason: clean_content(),
+    ):
+        with ctx.typing():
+            aws = [
+                self.mute_channel(channel, member, reason)
+                for channel in ctx.guild.channels
+            ]
+            await asyncio.gather(*aws)
+        try:
+            await ctx.message.delete()
+        except discord.Forbidden:
+            await ctx.send(_("Member muted: {0}").format(str(member)))
+        await self.create_modlog_case(
+            ctx,
+            member,
+            discord.AuditLogAction.overwrite_create,
+            reason,
+            expires_at=ctx.message.created_at + timedelta(seconds=delta_seconds),
         )
 
     @core.command()
@@ -237,6 +340,14 @@ class Mod(Modlog, colour=discord.Colour(0xD0021B)):
             await ctx.message.delete()
         except discord.Forbidden:
             await ctx.send(_("Member unmuted: {0}").format(str(member)))
-        await self.create_modlog_case(
-            ctx, member, discord.AuditLogAction.overwrite_delete, reason
+        action = discord.AuditLogAction.overwrite_delete
+        await self.sonata.db.modlog_cases.update_many(
+            {
+                "guild_id": ctx.guild.id,
+                "target_id": member.id,
+                "action": action.value,
+                "expired": False,
+            },
+            {"$set": {"expired": True}},
         )
+        await self.create_modlog_case(ctx, member, action, reason)

@@ -103,6 +103,8 @@ class ModlogCase(CreatedAtMixin):
     user_id: int
     target_id: int
     reason: Optional[str]
+    expires_at: Optional[datetime]
+    expired: Optional[bool]
 
 
 class ChannelPermissionsCache(CreatedAtMixin):

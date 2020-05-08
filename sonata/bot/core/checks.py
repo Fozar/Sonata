@@ -29,17 +29,15 @@ def is_mod():
         guild = await ctx.db.guilds.find_one(
             {"id": ctx.guild.id}, {"mod_roles": True, "admin_roles": True}
         )
-        if (
-            guild
-            and guild.get("admin_roles")
-            and discord.utils.find(
-                lambda role: role.id
-                in set(guild["mod_roles"]) | set(guild["admin_roles"]),
-                ctx.author.roles,
-            )
-            is not None
-        ):
-            return True
+        if guild:
+            if guild.get("admin_roles") and discord.utils.find(
+                lambda role: role.id in guild["admin_roles"], ctx.author.roles,
+            ):
+                return True
+            if guild.get("mod_roles") and discord.utils.find(
+                lambda role: role.id in guild["mod_roles"], ctx.author.roles,
+            ):
+                return True
         if await ctx.bot.is_owner(ctx.author):
             return True
         return False

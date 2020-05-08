@@ -105,7 +105,7 @@ class Stats(
             {"id": guild.id}, {"$set": {"name": guild.name, "left": None}}
         )
         if not guild_conf:
-            guild_conf = Guild(id=guild.id, name=guild.name)
+            guild_conf = Guild(id=guild.id, name=guild.name, owner_id=guild.owner_id)
             await self.sonata.db.guilds.insert_one(guild_conf.dict())
         for member in guild.members:
             await self.on_member_join(member)

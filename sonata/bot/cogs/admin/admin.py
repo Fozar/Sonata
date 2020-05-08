@@ -405,6 +405,7 @@ class Admin(
             premium=guild["premium"],
             created_at=guild["created_at"],
             last_message_at=guild["last_message_at"],
+            owner_id=guild["owner_id"]
         ).dict()
         await ctx.db.guilds.update_one({"id": ctx.guild.id}, {"$set": new_guild})
         await ctx.inform(_("Guild settings reset."))

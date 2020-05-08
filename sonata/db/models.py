@@ -51,6 +51,7 @@ class Greeting(BaseModel):
 
 
 class Guild(DiscordConfigModel):
+    owner_id: int
     premium: bool = False
     dm_help: bool = False
     auto_lvl_msg: bool = True

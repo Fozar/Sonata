@@ -76,8 +76,7 @@ class Sonata(commands.Bot):
     @property
     def invite(self):
         return discord.utils.oauth_url(
-            self.user.id,
-            permissions=discord.Permissions(1409805510),
+            self.user.id, permissions=discord.Permissions(1409805510),
         )
 
     # Events
@@ -111,35 +110,37 @@ class Sonata(commands.Bot):
         )
         await owner.send(f"Channels: ```{', '.join(map(str, guild.channels))}```")
 
-    async def on_command_error(self, ctx: Context, exception):
-        response = ""
-        if hasattr(exception, "original"):
-            exception = exception.original
-        if isinstance(exception, commands.MissingPermissions):
+    async def on_command_error(self, ctx: Context, exc):
+        if hasattr(exc, "original"):
+            exc = exc.original
+        if isinstance(exc, commands.MissingPermissions):
             response = _("You do not have enough permissions to do it.").format(
                 ctx.author.mention
             )
-        elif isinstance(exception, commands.BotMissingPermissions):
+        elif isinstance(exc, commands.BotMissingPermissions):
             response = _("I do not have enough permissions to do it.")
-        elif isinstance(exception, discord.errors.Forbidden):
+        elif isinstance(exc, discord.errors.Forbidden):
             response = _("I am missing permissions.")
-        elif isinstance(
-            exception, (commands.errors.BadArgument, commands.errors.BadUnionArgument)
-        ):
+        elif isinstance(exc, (commands.BadArgument, commands.BadUnionArgument)):
             response = _("Arguments specified incorrectly:```diff\n- {0}```").format(
-                "\n- ".join(list(exception.args))
+                "\n- ".join(list(exc.args))
             )
-        elif isinstance(exception, commands.errors.MissingRequiredArgument):
+        elif isinstance(exc, commands.MissingRequiredArgument):
             response = _("Required arguments not specified.")
-            await ctx.send_help()
-        elif isinstance(exception, discord.errors.HTTPException):
+        elif isinstance(exc, discord.HTTPException):
             response = _("An error occurred while making an HTTP request.")
-        elif isinstance(exception, NoPremium):
+        elif isinstance(exc, NoPremium):
             response = _("This command is only for premium guilds.")
-        elif isinstance(exception, commands.errors.DisabledCommand):
+        elif isinstance(exc, commands.DisabledCommand):
             response = _("Command `{0}` is disabled.").format(
                 ctx.command.qualified_name
             )
+        elif isinstance(exc, commands.CommandOnCooldown):
+            response = _("Command `{cmd}` on cooldown. Try again in **{cd}s**.").format(
+                cmd=ctx.command.qualified_name, cd=round(exc.retry_after, 2)
+            )
+        else:
+            response = None
         if not response:
             if ctx.cog and (
                 getattr(Cog, "_get_overridden_method")(ctx.cog.cog_command_error)
@@ -147,19 +148,13 @@ class Sonata(commands.Bot):
                 or hasattr(ctx.command, "on_error")
             ):
                 return
+            self.logger.warning(f"Ignoring exception in command {ctx.command}: {exc}")
             self.logger.warning(
-                f"Ignoring exception in command {ctx.command}: {exception}"
-            )
-            self.logger.warning(
-                "\n".join(
-                    traceback.format_exception(
-                        type(exception), exception, exception.__traceback__
-                    )
-                )
+                "\n".join(traceback.format_exception(type(exc), exc, exc.__traceback__))
             )
         else:
             try:
-                await ctx.send(response)
+                await ctx.inform(response)
             except discord.Forbidden:
                 await ctx.author.send(
                     _("I can't send messages to `{0}` channel.").format(

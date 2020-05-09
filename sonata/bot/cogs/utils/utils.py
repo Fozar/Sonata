@@ -6,6 +6,7 @@ from typing import Optional
 import discord
 from babel.dates import format_datetime
 from dateutil import parser
+from discord.ext import commands
 
 from sonata.bot import core
 from sonata.bot.utils.converters import MathExpression, to_lower, locale_to_lang
@@ -168,6 +169,7 @@ class Utils(core.Cog, colour=discord.Colour(0x7ED321)):
         await message.add_reaction(self.sonata.emoji("monkaSoap"))
 
     @core.command(aliases=["w"])
+    @commands.cooldown(1, 1)
     async def weather(self, ctx: core.Context, locality: str):
         _(
             """Finds out the weather

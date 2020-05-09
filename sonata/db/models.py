@@ -54,7 +54,7 @@ class Guild(DiscordConfigModel):
     owner_id: int
     premium: bool = False
     dm_help: bool = False
-    auto_lvl_msg: bool = True
+    auto_lvl_msg: bool = False
     greeting: Optional[Greeting] = None
     last_message_at: datetime = None
     admin_roles: List[int] = []

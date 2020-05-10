@@ -119,10 +119,11 @@ class General(
         main_info = {_("Name"): str(member)}
 
         status_map = {
-            discord.Status.online: _("Online"),
-            discord.Status.offline: _("Offline"),
-            discord.Status.idle: _("Idle"),
-            discord.Status.do_not_disturb: _("Do Not Disturb"),
+            discord.Status.online: f"{ctx.bot.emoji('online')} " + _("Online"),
+            discord.Status.offline: f"{ctx.bot.emoji('invisible')} " + _("Offline"),
+            discord.Status.idle: f"{ctx.bot.emoji('idle')} " + _("Idle"),
+            discord.Status.do_not_disturb: f"{ctx.bot.emoji('dnd')} "
+            + _("Do Not Disturb"),
         }
         main_info[_("Status")] = status_map.get(member.status)
         if member.activity:
@@ -195,9 +196,13 @@ class General(
             timestamp=ctx.message.created_at,
         )
         if ctx.guild:
-            embed.add_field(name="Гильдия", value=f"{ctx.guild.name} (ID: {ctx.guild.id})")
+            embed.add_field(
+                name="Гильдия", value=f"{ctx.guild.name} (ID: {ctx.guild.id})"
+            )
             embed.add_field(name="Владелец", value=str(ctx.guild.owner))
-        embed.add_field(name="Канал", value=f"{ctx.channel.name} (ID: {ctx.channel.id})")
+        embed.add_field(
+            name="Канал", value=f"{ctx.channel.name} (ID: {ctx.channel.id})"
+        )
         embed.add_field(name="Автор", value=str(ctx.author))
         await ctx.bot.reports_channel.send(embed=embed)
         await ctx.message.add_reaction("✅")

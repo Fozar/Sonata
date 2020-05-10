@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-05-08 21:27+0700\n"
-"PO-Revision-Date: 2020-05-08 21:33+0700\n"
+"POT-Creation-Date: 2020-05-09 17:13+0700\n"
+"PO-Revision-Date: 2020-05-09 17:14+0700\n"
 "Last-Translator: \n"
 "Language: ru_RU\n"
 "Language-Team: ru_RU <LL@li.org>\n"
@@ -1652,47 +1652,47 @@ msgstr "Таблица лидеров гильдии"
 msgid "Sonata statistics"
 msgstr "Статистика Сонаты"
 
-#: sonata/bot/cogs/utils/utils.py:42
+#: sonata/bot/cogs/utils/utils.py:43
 msgid "Temperature"
 msgstr "Температура"
 
-#: sonata/bot/cogs/utils/utils.py:47
+#: sonata/bot/cogs/utils/utils.py:48
 msgid "Feels like"
 msgstr "Ощущается как"
 
-#: sonata/bot/cogs/utils/utils.py:52
+#: sonata/bot/cogs/utils/utils.py:53
 msgid "Humidity"
 msgstr "Влажность"
 
-#: sonata/bot/cogs/utils/utils.py:55
+#: sonata/bot/cogs/utils/utils.py:56
 msgid "Pressure"
 msgstr "Давление"
 
-#: sonata/bot/cogs/utils/utils.py:56
+#: sonata/bot/cogs/utils/utils.py:57
 msgid "{0} mbar"
 msgstr "{0} мбар"
 
-#: sonata/bot/cogs/utils/utils.py:61
+#: sonata/bot/cogs/utils/utils.py:62
 msgid "Wind speed"
 msgstr "Скорость ветра"
 
-#: sonata/bot/cogs/utils/utils.py:62
+#: sonata/bot/cogs/utils/utils.py:63
 msgid "{0} m/s"
 msgstr "{0} м/с"
 
-#: sonata/bot/cogs/utils/utils.py:66
+#: sonata/bot/cogs/utils/utils.py:67
 msgid "Local time"
 msgstr "Местное время"
 
-#: sonata/bot/cogs/utils/utils.py:74
+#: sonata/bot/cogs/utils/utils.py:75
 msgid "Displays a member’s avatar in full size"
 msgstr "Показывает аватар участника в полном размере"
 
-#: sonata/bot/cogs/utils/utils.py:78
+#: sonata/bot/cogs/utils/utils.py:79
 msgid "{0} avatar"
 msgstr "Аватар {0}"
 
-#: sonata/bot/cogs/utils/utils.py:85
+#: sonata/bot/cogs/utils/utils.py:86
 msgid ""
 "Calculates an expression\n"
 "        \n"
@@ -1746,51 +1746,51 @@ msgstr ""
 "        \n"
 "        "
 
-#: sonata/bot/cogs/utils/utils.py:112
+#: sonata/bot/cogs/utils/utils.py:113
 msgid "Result: {0}"
 msgstr "Результат: {0}"
 
-#: sonata/bot/cogs/utils/utils.py:116
+#: sonata/bot/cogs/utils/utils.py:117
 msgid "Shows COVID-19 pandemic statistics"
 msgstr "Показывает статистику пандемии COVID-19"
 
-#: sonata/bot/cogs/utils/utils.py:127
+#: sonata/bot/cogs/utils/utils.py:128
 msgid "world"
 msgstr "мир"
 
-#: sonata/bot/cogs/utils/utils.py:132
+#: sonata/bot/cogs/utils/utils.py:133
 msgid "Country not found."
 msgstr "Страна не найдена."
 
-#: sonata/bot/cogs/utils/utils.py:155
+#: sonata/bot/cogs/utils/utils.py:156
 msgid " - World"
 msgstr " - Мир"
 
-#: sonata/bot/cogs/utils/utils.py:160
+#: sonata/bot/cogs/utils/utils.py:161
 msgid "Confirmed cases"
 msgstr "Подтвержденные случаи"
 
-#: sonata/bot/cogs/utils/utils.py:161
+#: sonata/bot/cogs/utils/utils.py:162
 msgid "Active cases"
 msgstr "Активные случаи"
 
-#: sonata/bot/cogs/utils/utils.py:162
+#: sonata/bot/cogs/utils/utils.py:163
 msgid "Closed cases"
 msgstr "Закрытые случаи"
 
-#: sonata/bot/cogs/utils/utils.py:163
+#: sonata/bot/cogs/utils/utils.py:164
 msgid "Recovered"
 msgstr "Выздоровления"
 
-#: sonata/bot/cogs/utils/utils.py:164
+#: sonata/bot/cogs/utils/utils.py:165
 msgid "Deaths"
 msgstr "Смерти"
 
-#: sonata/bot/cogs/utils/utils.py:165
+#: sonata/bot/cogs/utils/utils.py:166
 msgid "Deaths/Closed cases"
 msgstr "Смерти/Закрытые случаи"
 
-#: sonata/bot/cogs/utils/utils.py:172
+#: sonata/bot/cogs/utils/utils.py:174
 msgid ""
 "Finds out the weather\n"
 "\n"
@@ -1800,23 +1800,23 @@ msgstr ""
 "\n"
 "        Название населенного пункта может быть указано на любом языке."
 
-#: sonata/bot/cogs/utils/utils.py:187
+#: sonata/bot/cogs/utils/utils.py:189
 msgid "{0}, I did not find such a locality."
 msgstr "{0}, я не нашла такой населенный пункт."
 
-#: sonata/bot/core/bot.py:119
+#: sonata/bot/core/bot.py:117
 msgid "You do not have enough permissions to do it."
 msgstr "У тебя недостаточно прав для этого."
 
-#: sonata/bot/core/bot.py:123
+#: sonata/bot/core/bot.py:121
 msgid "I do not have enough permissions to do it."
 msgstr "У меня недостаточно прав для этого."
 
-#: sonata/bot/core/bot.py:125
+#: sonata/bot/core/bot.py:123
 msgid "I am missing permissions."
 msgstr "Мне не хватает прав."
 
-#: sonata/bot/core/bot.py:129
+#: sonata/bot/core/bot.py:125
 msgid ""
 "Arguments specified incorrectly:```diff\n"
 "- {0}```"
@@ -1824,23 +1824,27 @@ msgstr ""
 "Аргументы указаны неверно:```diff\n"
 "- {0}```"
 
-#: sonata/bot/core/bot.py:133
+#: sonata/bot/core/bot.py:129
 msgid "Required arguments not specified."
 msgstr "Обязательные аргументы не указаны."
 
-#: sonata/bot/core/bot.py:136
+#: sonata/bot/core/bot.py:131
 msgid "An error occurred while making an HTTP request."
 msgstr "Произошла ошибка при выполнении HTTP-запроса."
 
-#: sonata/bot/core/bot.py:138
+#: sonata/bot/core/bot.py:133
 msgid "This command is only for premium guilds."
 msgstr "Эта команда только для премиум гильдий."
 
-#: sonata/bot/core/bot.py:140
+#: sonata/bot/core/bot.py:135
 msgid "Command `{0}` is disabled."
 msgstr "Команда `{0}` отключена."
 
-#: sonata/bot/core/bot.py:165
+#: sonata/bot/core/bot.py:139
+msgid "Command `{cmd}` on cooldown. Try again in **{cd}s**."
+msgstr "Команда `{cmd}` на восстановлении. Попробуй снова через **{cd}с**."
+
+#: sonata/bot/core/bot.py:160
 msgid "I can't send messages to `{0}` channel."
 msgstr "Я не могу отправлять сообщения в канал `{0}`."
 

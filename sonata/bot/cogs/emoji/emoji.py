@@ -21,7 +21,7 @@ class Emoji(core.Cog, colour=discord.Color(0xF5A623)):
 
     @core.Cog.listener()
     async def on_message(self, message: discord.Message):
-        if not self.sonata.should_reply(message) or not message.guild:
+        if not await self.sonata.should_reply(message) or not message.guild:
             return
 
         if (

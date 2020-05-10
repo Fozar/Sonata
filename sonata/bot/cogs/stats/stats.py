@@ -37,7 +37,7 @@ class Stats(
 
     @core.Cog.listener()
     async def on_message(self, message: discord.Message):
-        if not self.sonata.should_reply(message):
+        if not await self.sonata.should_reply(message):
             return
 
         if (

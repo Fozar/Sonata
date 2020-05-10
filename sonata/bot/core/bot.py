@@ -98,7 +98,7 @@ class Sonata(commands.Bot):
         self.logger.info("Sonata is ready")
 
     async def on_message(self, message: discord.Message):
-        if not self.should_reply(message):
+        if not await self.should_reply(message):
             return
 
         await self.process_commands(message)
@@ -235,9 +235,18 @@ class Sonata(commands.Bot):
     async def set_locale(self, msg: discord.Message):
         self.locale = await self.define_locale(msg)
 
-    def should_reply(self, message):
+    async def should_reply(self, message):
         """Returns whether the bot should reply to a given message"""
-        return not message.author.bot and self.is_ready() and self.launch_time
+        if message.author.bot or not self.is_ready():
+            return False
+
+        ids = [message.author.id, message.channel.id]
+        if message.guild:
+            ids.append(message.guild.id)
+        cursor = self.db.blacklist.find({"id": {"$in": list(set(ids))}})
+        if await cursor.fetch_next:
+            return False
+        return True
 
     async def start(self, *args, **kwargs):
         await super().start(self.config["bot"].discord_token, *args, **kwargs)

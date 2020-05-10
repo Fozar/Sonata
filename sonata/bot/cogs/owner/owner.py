@@ -41,11 +41,33 @@ class Owner(
             with subprocess.Popen(
                 command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
             ) as p:
-                result = await self.sonata.loop.run_in_executor(self.sonata.pool, p.communicate)
+                result = await self.sonata.loop.run_in_executor(
+                    self.sonata.pool, p.communicate
+                )
         try:
             return [output.decode() for output in result]
         except UnicodeDecodeError:
             return [output.decode("CP866") for output in result]
+
+    @core.group()
+    async def blacklist(self, ctx: core.Context):
+        if ctx.invoked_subcommand is not None:
+            return
+        await ctx.send_help()
+
+    @blacklist.command(name="add")
+    async def blacklist_add(
+        self, ctx: core.Context, id: int, *, reason: Optional[str] = None
+    ):
+        await ctx.db.blacklist.update_one(
+            {"id": id}, {"$setOnInsert": {"reason": reason}}, upsert=True
+        )
+        await ctx.inform(f"ID {id} добавлен в черный список.")
+
+    @blacklist.command(name="remove")
+    async def blacklist_remove(self, ctx: core.Context, id: int):
+        await ctx.db.blacklist.delete_many({"id": id})
+        await ctx.inform(f"ID {id} удален из черного списка.")
 
     @core.command()
     async def sudo(

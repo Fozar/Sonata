@@ -8,7 +8,7 @@ from sonata.bot.utils.converters import TagName
 from sonata.db.models import Tag, TagAlias
 
 
-class Tags(core.Cog):
+class Tags(core.Cog, colour=discord.Colour.dark_teal()):
     def __init__(self, sonata: core.Sonata):
         self.sonata = sonata
 
@@ -24,7 +24,7 @@ class Tags(core.Cog):
                 "guild_id": guild.id,
                 "$or": [{"name": name}, {"aliases": {"$elemMatch": {"alias": name}}}],
             },
-            {"name": True},
+            {"_id": False, "name": True},
         )
         return await cursor.fetch_next
 

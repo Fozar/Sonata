@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-05-09 17:13+0700\n"
-"PO-Revision-Date: 2020-05-09 17:14+0700\n"
+"POT-Creation-Date: 2020-05-11 22:47+0700\n"
+"PO-Revision-Date: 2020-05-11 22:58+0700\n"
 "Last-Translator: \n"
 "Language: ru_RU\n"
 "Language-Team: ru_RU <LL@li.org>\n"
@@ -811,15 +811,15 @@ msgstr "Попытка не пытка. Попробуй еще раз."
 msgid "General commands"
 msgstr "Основные команды"
 
-#: sonata/bot/cogs/general/general.py:22
+#: sonata/bot/cogs/general/general.py:28
 msgid "Fills in \"About\" field in the profile info"
 msgstr "Заполняет поле \"о себе\" в профиле"
 
-#: sonata/bot/cogs/general/general.py:29
+#: sonata/bot/cogs/general/general.py:35
 msgid "The field is not filled."
 msgstr "Поле не заполнено."
 
-#: sonata/bot/cogs/general/general.py:31
+#: sonata/bot/cogs/general/general.py:37
 msgid ""
 "This command allows you to fill in the `About` field, which will be displayed "
 "in the user profile. Current value:\n"
@@ -829,59 +829,59 @@ msgstr ""
 "профиле пользователя. Текущее значение:\n"
 "`{0}`"
 
-#: sonata/bot/cogs/general/general.py:38
+#: sonata/bot/cogs/general/general.py:44
 msgid "The field length cannot be less than 20 characters."
 msgstr "Длина поля не может быть меньше 20 символов."
 
-#: sonata/bot/cogs/general/general.py:41
+#: sonata/bot/cogs/general/general.py:47
 msgid "The field length cannot be greater than 2000 characters."
 msgstr "Длина поля не может быть больше 2000 символов."
 
-#: sonata/bot/cogs/general/general.py:47
+#: sonata/bot/cogs/general/general.py:53
 msgid "The `About` field is set."
 msgstr "Поле `о себе` установлено."
 
-#: sonata/bot/cogs/general/general.py:51
+#: sonata/bot/cogs/general/general.py:57
 msgid "Clears \"About\" field in profile info."
 msgstr "Очищает поле \"о себе\" в профиле"
 
-#: sonata/bot/cogs/general/general.py:53
+#: sonata/bot/cogs/general/general.py:59
 msgid "The `About` field is cleared."
 msgstr "Поле `о себе` очищено."
 
-#: sonata/bot/cogs/general/general.py:57
+#: sonata/bot/cogs/general/general.py:63
 msgid "Returns an invitation link"
 msgstr "Возвращает ссылку-приглашение"
 
-#: sonata/bot/cogs/general/general.py:59
+#: sonata/bot/cogs/general/general.py:65
 msgid "You can invite me at this link"
 msgstr "Ты можешь пригласить меня по этой ссылке"
 
-#: sonata/bot/cogs/general/general.py:67
+#: sonata/bot/cogs/general/general.py:73
 msgid "Shows information about me"
 msgstr "Показывает информацию обо мне"
 
-#: sonata/bot/cogs/general/general.py:69
+#: sonata/bot/cogs/general/general.py:75
 msgid "Sonata Info"
 msgstr "Информация о Сонате"
 
-#: sonata/bot/cogs/general/general.py:76 sonata/bot/cogs/general/general.py:119
+#: sonata/bot/cogs/general/general.py:82 sonata/bot/cogs/general/general.py:125
 msgid "Name"
 msgstr "Имя"
 
-#: sonata/bot/cogs/general/general.py:77
+#: sonata/bot/cogs/general/general.py:83
 msgid "API wrapper"
 msgstr "API оболочка"
 
-#: sonata/bot/cogs/general/general.py:80
+#: sonata/bot/cogs/general/general.py:86
 msgid "Developer"
 msgstr "Разработчик"
 
-#: sonata/bot/cogs/general/general.py:85 sonata/bot/cogs/general/general.py:127
+#: sonata/bot/cogs/general/general.py:91 sonata/bot/cogs/general/general.py:134
 msgid "Status"
 msgstr "Статус"
 
-#: sonata/bot/cogs/general/general.py:85
+#: sonata/bot/cogs/general/general.py:91
 msgid ""
 "**Last restart**: {launch_time}\n"
 "**Online**: {online}\n"
@@ -891,15 +891,15 @@ msgstr ""
 "**Онлайн**: {online}\n"
 "**Обслуживается**: {guilds} гильдий и {members} участников."
 
-#: sonata/bot/cogs/general/general.py:97
+#: sonata/bot/cogs/general/general.py:103
 msgid "Language support"
 msgstr "Поддержка языков"
 
-#: sonata/bot/cogs/general/general.py:98
+#: sonata/bot/cogs/general/general.py:104
 msgid "Useful links"
 msgstr "Полезные ссылки"
 
-#: sonata/bot/cogs/general/general.py:98
+#: sonata/bot/cogs/general/general.py:104
 msgid ""
 "[Invite the bot to your server]({invite})\n"
 "[Vote for the bot]({vote})"
@@ -907,79 +907,79 @@ msgstr ""
 "[Пригласить бота на свой сервер]({invite})\n"
 "[Проголосовать за бота]({vote})"
 
-#: sonata/bot/cogs/general/general.py:115
+#: sonata/bot/cogs/general/general.py:121
 msgid "{0} Info"
 msgstr "Информация о {0}"
 
-#: sonata/bot/cogs/general/general.py:122
+#: sonata/bot/cogs/general/general.py:128
 msgid "Online"
 msgstr "В сети"
 
-#: sonata/bot/cogs/general/general.py:123
+#: sonata/bot/cogs/general/general.py:129
 msgid "Offline"
 msgstr "Не в сети"
 
-#: sonata/bot/cogs/general/general.py:124
+#: sonata/bot/cogs/general/general.py:130
 msgid "Idle"
 msgstr "Не активен"
 
-#: sonata/bot/cogs/general/general.py:125
+#: sonata/bot/cogs/general/general.py:132
 msgid "Do Not Disturb"
 msgstr "Не беспокоить"
 
-#: sonata/bot/cogs/general/general.py:130
+#: sonata/bot/cogs/general/general.py:137
 msgid "Playing"
 msgstr "Играет в"
 
-#: sonata/bot/cogs/general/general.py:132
+#: sonata/bot/cogs/general/general.py:139
 msgid "Streaming"
 msgstr "Стримит"
 
-#: sonata/bot/cogs/general/general.py:134
+#: sonata/bot/cogs/general/general.py:141
 msgid "Listening"
 msgstr "Слушает"
 
-#: sonata/bot/cogs/general/general.py:136 sonata/bot/cogs/general/general.py:139
+#: sonata/bot/cogs/general/general.py:143 sonata/bot/cogs/general/general.py:146
 msgid "Activity"
 msgstr "Активность"
 
-#: sonata/bot/cogs/general/general.py:141
+#: sonata/bot/cogs/general/general.py:148
 msgid "Joined the guild"
 msgstr "Дата присоединения к гильдии"
 
-#: sonata/bot/cogs/general/general.py:144
+#: sonata/bot/cogs/general/general.py:151
 msgid "Registration date"
 msgstr "Дата регистрации"
 
-#: sonata/bot/cogs/general/general.py:148
+#: sonata/bot/cogs/general/general.py:155
 msgid "Summary"
 msgstr "Общая информация"
 
-#: sonata/bot/cogs/general/general.py:167
+#: sonata/bot/cogs/general/general.py:174
 msgid "Statistics has been running since"
 msgstr "Статистика ведется с"
 
-#: sonata/bot/cogs/general/general.py:170
+#: sonata/bot/cogs/general/general.py:177
 msgid "Total messages"
 msgstr "Всего сообщений"
 
-#: sonata/bot/cogs/general/general.py:171
+#: sonata/bot/cogs/general/general.py:178
 msgid "Commands invoked"
 msgstr "Использовано команд"
 
-#: sonata/bot/cogs/general/general.py:172 sonata/bot/cogs/stats/leveling.py:127
+#: sonata/bot/cogs/general/general.py:179 sonata/bot/cogs/stats/leveling.py:127
 msgid "Level"
 msgstr "Уровень"
 
-#: sonata/bot/cogs/general/general.py:173 sonata/bot/cogs/stats/leveling.py:129
+#: sonata/bot/cogs/general/general.py:180 sonata/bot/cogs/stats/leveling.py:129
 msgid "Experience"
 msgstr "Опыт"
 
-#: sonata/bot/cogs/general/general.py:178
+#: sonata/bot/cogs/general/general.py:185
 msgid "Guild rank"
 msgstr "Ранг (гильдия)"
 
-#: sonata/bot/cogs/general/general.py:183
+#: sonata/bot/cogs/general/general.py:190
 msgid ""
 "\n"
 "`Statistics counts only messages visible to the bot`"
@@ -987,15 +987,15 @@ msgstr ""
 "\n"
 "`Статистика учитывает только сообщения, видимые для бота`"
 
-#: sonata/bot/cogs/general/general.py:184
+#: sonata/bot/cogs/general/general.py:191
 msgid "Statistics"
 msgstr "Статистика"
 
-#: sonata/bot/cogs/general/general.py:190
+#: sonata/bot/cogs/general/general.py:197
 msgid "Sends a bug report to the bot owner"
 msgstr "Отправляет отчет об ошибке владельцу бота"
 
-#: sonata/bot/cogs/general/general.py:210
+#: sonata/bot/cogs/general/general.py:221
 msgid "Vote for the bot"
 msgstr "Проголосовать за бота"
 
@@ -1239,7 +1239,7 @@ msgstr "С участника снято заглушение"
 msgid "User"
 msgstr "Пользователь"
 
-#: sonata/bot/cogs/mod/modlog.py:149 sonata/bot/cogs/owner/owner.py:292
+#: sonata/bot/cogs/mod/modlog.py:149 sonata/bot/cogs/owner/owner.py:314
 msgid "Bot"
 msgstr "Бот"
 
@@ -1271,31 +1271,31 @@ msgstr "Причина изменена."
 msgid "Commands of bot owner"
 msgstr "Команды владельца бота"
 
-#: sonata/bot/cogs/owner/owner.py:59
+#: sonata/bot/cogs/owner/owner.py:81
 msgid "Executes a command on behalf of a specific member in a specific channel."
 msgstr "Выполняет команду от имени определенного участника."
 
-#: sonata/bot/cogs/owner/owner.py:72
+#: sonata/bot/cogs/owner/owner.py:94
 msgid "Repeats the command the specified number of times"
 msgstr "Повторяет команду указанное количество раз"
 
-#: sonata/bot/cogs/owner/owner.py:84
+#: sonata/bot/cogs/owner/owner.py:106
 msgid "I did not find the cog: **{0}**!"
 msgstr "Я не нашла модуль: **{0}**!"
 
-#: sonata/bot/cogs/owner/owner.py:87
+#: sonata/bot/cogs/owner/owner.py:109
 msgid "The cog is already loaded: **{0}**!"
 msgstr "Модуль уже подключен: **{0}**!"
 
-#: sonata/bot/cogs/owner/owner.py:90
+#: sonata/bot/cogs/owner/owner.py:112
 msgid "I did not load the cog: **{0}**!"
 msgstr "Я не подключала модуль: **{0}**!"
 
-#: sonata/bot/cogs/owner/owner.py:93
+#: sonata/bot/cogs/owner/owner.py:115
 msgid "There is no setup function in the **{0}** extension."
 msgstr "В расширении модуля **{0}** отсутсвует функция запуска."
 
-#: sonata/bot/cogs/owner/owner.py:99
+#: sonata/bot/cogs/owner/owner.py:121
 msgid ""
 "An error occurred in the **{0.name}** cog or its setup function:\n"
 "{0.original}"
@@ -1303,15 +1303,15 @@ msgstr ""
 "В модуле **{0.name}** или его функции запуска произошла ошибка:\n"
 "{0.original}"
 
-#: sonata/bot/cogs/owner/owner.py:113
+#: sonata/bot/cogs/owner/owner.py:135
 msgid "Lists loaded cogs"
 msgstr "Выводит список подключенных модулей"
 
-#: sonata/bot/cogs/owner/owner.py:119
+#: sonata/bot/cogs/owner/owner.py:141
 msgid "No loaded cogs!"
 msgstr "Нет подключенных модулей!"
 
-#: sonata/bot/cogs/owner/owner.py:124
+#: sonata/bot/cogs/owner/owner.py:146
 msgid ""
 "Loaded cogs:\n"
 "{0}\n"
@@ -1319,39 +1319,39 @@ msgstr ""
 "Подключенные модули:\n"
 "{0}\n"
 
-#: sonata/bot/cogs/owner/owner.py:130
+#: sonata/bot/cogs/owner/owner.py:152
 msgid "Loads cog"
 msgstr "Подключает модуль"
 
-#: sonata/bot/cogs/owner/owner.py:133
+#: sonata/bot/cogs/owner/owner.py:155
 msgid "I loaded the cog: **{}**."
 msgstr "Подключила модуль: **{}**"
 
-#: sonata/bot/cogs/owner/owner.py:138
+#: sonata/bot/cogs/owner/owner.py:160
 msgid "Disables cog"
 msgstr "Отключает модуль"
 
-#: sonata/bot/cogs/owner/owner.py:140
+#: sonata/bot/cogs/owner/owner.py:162
 msgid "This cog cannot be disabled"
 msgstr "Этот модуль не может быть отключен"
 
-#: sonata/bot/cogs/owner/owner.py:144
+#: sonata/bot/cogs/owner/owner.py:166
 msgid "I disabled the cog: **{0}**."
 msgstr "Отключила модуль: **{0}**."
 
-#: sonata/bot/cogs/owner/owner.py:148
+#: sonata/bot/cogs/owner/owner.py:170
 msgid "Reloads cog"
 msgstr "Переподключает модуль"
 
-#: sonata/bot/cogs/owner/owner.py:151
+#: sonata/bot/cogs/owner/owner.py:173
 msgid "I reloaded the cog: **{0}**."
 msgstr "Пеподключила модуль: **{0}**."
 
-#: sonata/bot/cogs/owner/owner.py:156
+#: sonata/bot/cogs/owner/owner.py:178
 msgid "Displays uptime"
 msgstr "Показывает время работы"
 
-#: sonata/bot/cogs/owner/owner.py:161
+#: sonata/bot/cogs/owner/owner.py:183
 msgid ""
 "Evaluates input\n"
 "        Input is interpreted as newline separated statements.        If the "
@@ -1397,7 +1397,7 @@ msgstr ""
 "        ```\n"
 "        "
 
-#: sonata/bot/cogs/owner/owner.py:203
+#: sonata/bot/cogs/owner/owner.py:225
 msgid ""
 "Displays full source code for a specific command\n"
 "        \n"
@@ -1412,23 +1412,23 @@ msgstr ""
 "например, `tag.create` для подкоманды create команды tag или пробелами.\n"
 "        "
 
-#: sonata/bot/cogs/owner/owner.py:223
+#: sonata/bot/cogs/owner/owner.py:245
 msgid "Could not find command."
 msgstr "Не удалось найти команду."
 
-#: sonata/bot/cogs/owner/owner.py:245
+#: sonata/bot/cogs/owner/owner.py:267
 msgid "Displays system info"
 msgstr "Отображает системную информацию"
 
-#: sonata/bot/cogs/owner/owner.py:246
+#: sonata/bot/cogs/owner/owner.py:268
 msgid "System Info"
 msgstr "Системная информация"
 
-#: sonata/bot/cogs/owner/owner.py:248
+#: sonata/bot/cogs/owner/owner.py:270
 msgid "Platform"
 msgstr "Платформа"
 
-#: sonata/bot/cogs/owner/owner.py:249
+#: sonata/bot/cogs/owner/owner.py:271
 msgid ""
 "**System**: {system}\n"
 "**Release**: {release}\n"
@@ -1438,11 +1438,11 @@ msgstr ""
 "**Релиз**: {release}\n"
 "**Время работы**: {uptime}"
 
-#: sonata/bot/cogs/owner/owner.py:261
+#: sonata/bot/cogs/owner/owner.py:283
 msgid "CPU"
 msgstr "CPU"
 
-#: sonata/bot/cogs/owner/owner.py:262
+#: sonata/bot/cogs/owner/owner.py:284
 msgid ""
 "**Cores**: {count}\n"
 "**Usage**: {usage}%"
@@ -1450,11 +1450,11 @@ msgstr ""
 "**Ядра**: {count}\n"
 "**Использовано**: {usage}%"
 
-#: sonata/bot/cogs/owner/owner.py:268
+#: sonata/bot/cogs/owner/owner.py:290
 msgid "RAM"
 msgstr "RAM"
 
-#: sonata/bot/cogs/owner/owner.py:269
+#: sonata/bot/cogs/owner/owner.py:291
 msgid ""
 "**Total**: {total}GB\n"
 "**Available**: {available}GB\n"
@@ -1464,7 +1464,7 @@ msgstr ""
 "**Доступно**: {available}GB\n"
 "**Использовано**: {usage}%"
 
-#: sonata/bot/cogs/owner/owner.py:293 sonata/bot/cogs/owner/owner.py:311
+#: sonata/bot/cogs/owner/owner.py:315 sonata/bot/cogs/owner/owner.py:333
 msgid ""
 "**Uptime**: {uptime}\n"
 "**PID**: {pid}\n"
@@ -1476,11 +1476,11 @@ msgstr ""
 "**Использовано памяти**: {mem}MB ({mem_percent}%)\n"
 "**Использовано CPU**: {cpu}%"
 
-#: sonata/bot/cogs/owner/owner.py:310
+#: sonata/bot/cogs/owner/owner.py:332
 msgid "Database"
 msgstr "База данных"
 
-#: sonata/bot/cogs/owner/owner.py:329
+#: sonata/bot/cogs/owner/owner.py:351
 msgid "Runs a shell command"
 msgstr "Запускает команду оболочки"
 
@@ -1652,6 +1652,89 @@ msgstr "Таблица лидеров гильдии"
 msgid "Sonata statistics"
 msgstr "Статистика Сонаты"
 
+#: sonata/bot/cogs/tags/tags.py:110
+msgid "Returns the text with the specified tag"
+msgstr "Возвращает текст с указанным тегом"
+
+#: sonata/bot/cogs/tags/tags.py:123
+msgid "**Did you mean**:\n"
+msgstr "**Возможно, вы имели в виду**:\n"
+
+#: sonata/bot/cogs/tags/tags.py:132 sonata/bot/cogs/tags/tags.py:169
+#: sonata/bot/cogs/tags/tags.py:192 sonata/bot/cogs/tags/tags.py:226
+msgid "Tag `{0}` not found."
+msgstr "Тег `{0}` не найден."
+
+#: sonata/bot/cogs/tags/tags.py:138
+msgid ""
+"Creates new tag\n"
+"\n"
+"        This tag will belong to you and will be available only in this guild."
+msgstr ""
+"Создает новый тег\n"
+"\n"
+"        Этот тег будет принадлежать вам и будет доступен только в этой гильдии."
+
+#: sonata/bot/cogs/tags/tags.py:144 sonata/bot/cogs/tags/tags.py:166
+msgid "Tag `{0}` already exists."
+msgstr "Тег `{0}` уже существует."
+
+#: sonata/bot/cogs/tags/tags.py:155
+msgid "Tag `{0}` successfully created."
+msgstr "Тег `{0}` успешно создан."
+
+#: sonata/bot/cogs/tags/tags.py:159
+msgid ""
+"Creates new tag alias\n"
+"        \n"
+"        This alias will belong to you and will be available only in this "
+"guild.\n"
+"        Removing the original tag will also remove the alias."
+msgstr ""
+"Создает новый псевдоним тега\n"
+"        \n"
+"        Этот псевдоним будет принадлежать вам и будет доступен только в этой "
+"гильдии.\n"
+"        При удалении оригинального тега будет удален и псевдоним."
+
+#: sonata/bot/cogs/tags/tags.py:182
+msgid "Tag alias `{alias}` that points to `{tag}` successfully created."
+msgstr "Псевдоним `{alias}`, который указывает на тег `{tag}` успешно создан."
+
+#: sonata/bot/cogs/tags/tags.py:189
+msgid "Deletes your tag or alias"
+msgstr "Удаляет твой тег или псевдоним"
+
+#: sonata/bot/cogs/tags/tags.py:204
+msgid "Tag alias `{0}` successfully deleted."
+msgstr "Псевдоним `{0}` успешно удален."
+
+#: sonata/bot/cogs/tags/tags.py:207
+msgid "You are not the owner of this tag alias."
+msgstr "Ты не владелец этого псевдонима."
+
+#: sonata/bot/cogs/tags/tags.py:211
+msgid "Tag `{0}` successfully deleted."
+msgstr "Тег `{0}` успешно удален."
+
+#: sonata/bot/cogs/tags/tags.py:213 sonata/bot/cogs/tags/tags.py:231
+msgid "You are not the owner of this tag."
+msgstr "Ты не владелец этого тега."
+
+#: sonata/bot/cogs/tags/tags.py:219
+msgid ""
+"Edits content of your tag\n"
+"        \n"
+"        Be careful, the command completely replaces the content of the tag."
+msgstr ""
+"Редактирует содержимое твоего тега\n"
+"        \n"
+"        Будь внимательнее, команда полностью перезаписывает содержимое тега."
+
+#: sonata/bot/cogs/tags/tags.py:236
+msgid "Tag content changed."
+msgstr ""
+
 #: sonata/bot/cogs/utils/utils.py:43
 msgid "Temperature"
 msgstr "Температура"
@@ -1804,19 +1887,19 @@ msgstr ""
 msgid "{0}, I did not find such a locality."
 msgstr "{0}, я не нашла такой населенный пункт."
 
-#: sonata/bot/core/bot.py:117
+#: sonata/bot/core/bot.py:114
 msgid "You do not have enough permissions to do it."
 msgstr "У тебя недостаточно прав для этого."
 
-#: sonata/bot/core/bot.py:121
+#: sonata/bot/core/bot.py:118
 msgid "I do not have enough permissions to do it."
 msgstr "У меня недостаточно прав для этого."
 
-#: sonata/bot/core/bot.py:123
+#: sonata/bot/core/bot.py:120
 msgid "I am missing permissions."
 msgstr "Мне не хватает прав."
 
-#: sonata/bot/core/bot.py:125
+#: sonata/bot/core/bot.py:122
 msgid ""
 "Arguments specified incorrectly:```diff\n"
 "- {0}```"
@@ -1824,27 +1907,27 @@ msgstr ""
 "Аргументы указаны неверно:```diff\n"
 "- {0}```"
 
-#: sonata/bot/core/bot.py:129
+#: sonata/bot/core/bot.py:126
 msgid "Required arguments not specified."
 msgstr "Обязательные аргументы не указаны."
 
-#: sonata/bot/core/bot.py:131
+#: sonata/bot/core/bot.py:128
 msgid "An error occurred while making an HTTP request."
 msgstr "Произошла ошибка при выполнении HTTP-запроса."
 
-#: sonata/bot/core/bot.py:133
+#: sonata/bot/core/bot.py:130
 msgid "This command is only for premium guilds."
 msgstr "Эта команда только для премиум гильдий."
 
-#: sonata/bot/core/bot.py:135
+#: sonata/bot/core/bot.py:132
 msgid "Command `{0}` is disabled."
 msgstr "Команда `{0}` отключена."
 
-#: sonata/bot/core/bot.py:139
+#: sonata/bot/core/bot.py:136
 msgid "Command `{cmd}` on cooldown. Try again in **{cd}s**."
 msgstr "Команда `{cmd}` на восстановлении. Попробуй снова через **{cd}с**."
 
-#: sonata/bot/core/bot.py:160
+#: sonata/bot/core/bot.py:157
 msgid "I can't send messages to `{0}` channel."
 msgstr "Я не могу отправлять сообщения в канал `{0}`."
 
@@ -1883,27 +1966,27 @@ msgstr "Запрошено {0}"
 msgid "No command called `{0}` found."
 msgstr "Команда `{0}` не найдена."
 
-#: sonata/bot/core/help.py:172
+#: sonata/bot/core/help.py:173
 msgid "Command list"
 msgstr "Список команд"
 
-#: sonata/bot/core/help.py:182
+#: sonata/bot/core/help.py:183
 msgid "Cog {0}"
 msgstr "Модуль {0}"
 
-#: sonata/bot/core/help.py:184
+#: sonata/bot/core/help.py:185
 msgid "__Commands:__"
 msgstr "__Команды:__"
 
-#: sonata/bot/core/help.py:192 sonata/bot/core/help.py:203
+#: sonata/bot/core/help.py:193 sonata/bot/core/help.py:204
 msgid "Command {0}"
 msgstr "Команда {0}"
 
-#: sonata/bot/core/help.py:195 sonata/bot/core/help.py:205
+#: sonata/bot/core/help.py:196 sonata/bot/core/help.py:206
 msgid "__Usage:__"
 msgstr "__Использование:__"
 
-#: sonata/bot/core/help.py:196
+#: sonata/bot/core/help.py:197
 msgid "__Subcommands:__"
 msgstr "__Подкоманды:__"
 
@@ -1963,35 +2046,47 @@ msgstr "Участник \"{0}\" модератор гильдии."
 msgid "Invalid ID."
 msgstr "Неверный ID."
 
-#: sonata/bot/utils/converters.py:227
+#: sonata/bot/utils/converters.py:229
 msgid "Case not found."
 msgstr "Случай не найден."
 
-#: sonata/bot/utils/converters.py:256
+#: sonata/bot/utils/converters.py:244
+msgid "Missing tag name."
+msgstr "Отсутствует имя тега."
+
+#: sonata/bot/utils/converters.py:247
+msgid "Tag name is a maximum of 100 characters."
+msgstr "Имя тега может содержать не более 100 символов."
+
+#: sonata/bot/utils/converters.py:253
+msgid "This tag name starts with a reserved word."
+msgstr "Это имя тега начинается с зарезервированного слова."
+
+#: sonata/bot/utils/converters.py:282
 msgid "me"
 msgstr "мне"
 
-#: sonata/bot/utils/converters.py:262
+#: sonata/bot/utils/converters.py:288
 msgid "Could not recognize the date."
 msgstr "Не могу распознать дату."
 
-#: sonata/bot/utils/converters.py:269
+#: sonata/bot/utils/converters.py:295
 msgid "An error occurred converting the date."
 msgstr "Возникла ошибка конвертации даты."
 
-#: sonata/bot/utils/converters.py:271
+#: sonata/bot/utils/converters.py:297
 msgid "This time is in the past."
 msgstr "Это время в прошлом."
 
-#: sonata/bot/utils/converters.py:273
+#: sonata/bot/utils/converters.py:299
 msgid "This time is in the future."
 msgstr "Это время в будущем."
 
-#: sonata/bot/utils/converters.py:276
+#: sonata/bot/utils/converters.py:302
 msgid "Maximum timedelta: {0}"
 msgstr "Максимальная разница во времени: {0}"
 
-#: sonata/bot/utils/converters.py:286
+#: sonata/bot/utils/converters.py:312
 msgid "Missing argument before or after the time."
 msgstr "Отсутствует аргумент до или после времени."
 

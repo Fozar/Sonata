@@ -222,7 +222,9 @@ class ModlogCaseConverter(commands.IDConverter):
         match = self._get_id_match(argument)
         if match is None:
             raise commands.BadArgument(_("Invalid ID."))
-        case = await ctx.db.modlog_cases.find_one({"guild_id": ctx.guild.id, "id": int(argument)})
+        case = await ctx.db.modlog_cases.find_one(
+            {"guild_id": ctx.guild.id, "id": int(argument)}
+        )
         if not case:
             raise commands.BadArgument(_("Case not found."))
 

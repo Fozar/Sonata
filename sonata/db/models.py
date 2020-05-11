@@ -112,3 +112,19 @@ class ChannelPermissionsCache(CreatedAtMixin):
     channel_id: int
     member_id: int
     value: Dict[str, Optional[bool]]
+
+
+class TagBase(CreatedAtMixin):
+    owner_id: int
+    uses: int = 0
+
+
+class TagAlias(TagBase):
+    alias: str
+
+
+class Tag(TagBase):
+    name: str
+    aliases: List[TagAlias] = []
+    content: str
+    guild_id: int

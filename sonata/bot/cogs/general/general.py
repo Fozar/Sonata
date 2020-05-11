@@ -14,6 +14,12 @@ class General(
 ):
     def __init__(self, sonata: Sonata):
         self.sonata = sonata
+        self._original_help_command = sonata.help_command
+        sonata.help_command = core.HelpCommand()
+        sonata.help_command.cog = self
+
+    def cog_unload(self):
+        self.sonata.help_command = self._original_help_command
 
     @core.group(invoke_without_command=True)
     async def about(

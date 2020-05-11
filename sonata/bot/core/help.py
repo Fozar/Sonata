@@ -168,6 +168,7 @@ class HelpCommand(commands.HelpCommand):
             command_names = [command.qualified_name for command in filtered]
             command_list = f"`{'` `'.join(command_names)}`"
             fields[cog.qualified_name if cog else self.no_category] = command_list
+        fields = dict(sorted(fields.items()))
 
         embed = self.make_embed(title=_("Command list"), fields=fields)
         await self.get_destination().send(embed=embed)

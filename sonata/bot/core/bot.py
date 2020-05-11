@@ -15,7 +15,6 @@ from sonata.bot.utils import i18n
 from .cog import Cog
 from .context import Context
 from .errors import NoPremium
-from .help import HelpCommand
 
 
 class Sonata(commands.Bot):
@@ -30,7 +29,6 @@ class Sonata(commands.Bot):
             owner_id=self.config["bot"].owner_id,
             command_prefix=determine_prefix,
             status=discord.Status.idle,
-            help_command=HelpCommand(),
             *args,
             **kwargs,
         )
@@ -82,7 +80,6 @@ class Sonata(commands.Bot):
     # Events
 
     async def on_ready(self):
-        self.help_command.cog = self.get_cog("General")
         self.service_guild = self.get_guild(
             313726240710197250
         ) or await self.fetch_guild(313726240710197250)

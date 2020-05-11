@@ -6,7 +6,7 @@ class CogMeta(commands.CogMeta):
     def __new__(mcs, *args, **kwargs):
         name, bases, attrs = args
         attrs["__cog_description__"] = kwargs.pop("description", None)
-        attrs["__cog_colour__"] = kwargs.pop("colour", None)
+        attrs["__cog_colour__"] = kwargs.pop("colour", kwargs.pop("color", None))
         mcs.instance = super().__new__(mcs, name, bases, attrs, **kwargs)
         return mcs.instance
 

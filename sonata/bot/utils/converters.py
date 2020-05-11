@@ -229,6 +229,30 @@ class ModlogCaseConverter(commands.IDConverter):
         return ModlogCase(**case)
 
 
+class TagName(commands.clean_content):
+    def __init__(self, *, lower: bool = False):
+        self.lower = lower
+        super().__init__()
+
+    async def convert(self, ctx: core.Context, argument):
+        converted = await super().convert(ctx, argument)
+        lower = converted.lower().strip()
+
+        if not lower:
+            raise commands.BadArgument(_("Missing tag name."))
+
+        if len(lower) > 100:
+            raise commands.BadArgument(_("Tag name is a maximum of 100 characters."))
+
+        first_word, __, __ = lower.partition(" ")
+
+        root = ctx.bot.get_command("tag")
+        if first_word in root.all_commands:
+            raise commands.BadArgument(_("This tag name starts with a reserved word."))
+
+        return converted if not self.lower else lower
+
+
 class UserFriendlyTime(commands.Converter):
     def __init__(
         self,

@@ -128,3 +128,4 @@ class Tag(TagBase):
     aliases: List[TagAlias] = []
     content: str
     guild_id: int
+    language: str = "en"

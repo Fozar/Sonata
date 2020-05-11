@@ -61,6 +61,7 @@ class Tags(core.Cog):
             name=name,
             content=content,
             guild_id=ctx.guild.id,
+            language=ctx.locale[:2],
         ).dict()
         await ctx.db.tags.insert_one(tag)
         await ctx.inform(_("Tag `{0}` successfully created.").format(name))

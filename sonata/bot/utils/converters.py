@@ -230,7 +230,7 @@ class ModlogCaseConverter(commands.IDConverter):
 
 
 class TagName(commands.clean_content):
-    def __init__(self, *, lower: bool = False):
+    def __init__(self, *, lower: bool = True):
         self.lower = lower
         super().__init__()
 

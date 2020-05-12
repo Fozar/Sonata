@@ -40,7 +40,7 @@ def update_translations():
     LOCALES = frozenset(
         map(
             os.path.basename,
-            filter(os.path.isdir, glob(os.path.join(BASE_DIR, locales_dir, "*"))),
+            filter(os.path.isdir, glob(os.path.join(BASE_DIR, locales_dir, "??_??"))),
         )
     )
 

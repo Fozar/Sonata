@@ -107,6 +107,7 @@ class Tags(core.Cog, colour=discord.Colour.dark_teal()):
     @commands.guild_only()
     async def tag(self, ctx: core.Context, *, name: TagName() = None):
         _("""Returns the text with the specified tag""")
+        name = name.strip('" ')
         if not name:
             return await ctx.send_help()
         tag = await self.get_tag(name, ctx.guild, {"content": True}, inc_uses=True)
@@ -138,7 +139,9 @@ class Tags(core.Cog, colour=discord.Colour.dark_teal()):
         _(
             """Creates new tag
 
-        This tag will belong to you and will be available only in this guild."""
+        This tag will belong to you and will be available only in this guild.
+        You must enclose the name in double quotation marks if it consists of more than \
+        one word."""
         )
         if await self.is_tag_exists(name, ctx.guild):
             return await ctx.inform(_("Tag `{0}` already exists.").format(name))
@@ -160,8 +163,11 @@ class Tags(core.Cog, colour=discord.Colour.dark_teal()):
             """Creates new tag alias
         
         This alias will belong to you and will be available only in this guild.
-        Removing the original tag will also remove the alias."""
+        Removing the original tag will also remove the alias.
+        You must enclose the name in double quotation marks if it consists of more than \
+        one word."""
         )
+        alias = alias.strip('" ')
         if await self.is_tag_exists(alias, ctx.guild):
             return await ctx.inform(_("Tag `{0}` already exists.").format(alias))
 
@@ -187,6 +193,7 @@ class Tags(core.Cog, colour=discord.Colour.dark_teal()):
     @tag.command(name="delete", aliases=["remove"])
     async def tag_delete(self, ctx: core.Context, *, name: TagName()):
         _("""Deletes your tag or alias""")
+        name = name.strip('" ')
         is_alias = await self.is_alias_exists(name, ctx.guild)
         if not await self.is_tag_exists(name, ctx.guild) and not is_alias:
             return await ctx.inform(_("Tag `{0}` not found.").format(name))
@@ -215,12 +222,18 @@ class Tags(core.Cog, colour=discord.Colour.dark_teal()):
 
     @tag.command(name="edit")
     async def tag_edit(
-        self, ctx: core.Context, name: TagName(), new_content: commands.clean_content()
+        self,
+        ctx: core.Context,
+        name: TagName(),
+        *,
+        new_content: commands.clean_content(),
     ):
         _(
             """Edits content of your tag
         
-        Be careful, the command completely replaces the content of the tag."""
+        Be careful, the command completely replaces the content of the tag.
+        You must enclose the name in double quotation marks if it consists of more than \
+        one word."""
         )
         tag = await self.get_tag(name, ctx.guild, {"name": True})
         if not tag:

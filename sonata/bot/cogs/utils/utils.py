@@ -10,7 +10,7 @@ from discord.ext import commands
 
 from sonata.bot import core
 from sonata.bot.utils.converters import MathExpression, to_lower, locale_to_lang
-from sonata.bot.utils.paginator import EmbedPaginator
+from sonata.bot.utils.paginator import CloseMenu
 
 WEATHER_URL = "http://api.openweathermap.org/data/2.5/weather"
 OW_ICON_URL = "https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/icons/logo_60x60.png"
@@ -82,7 +82,9 @@ class Utils(core.Cog, colour=discord.Colour(0x7ED321)):
         await ctx.send(embed=embed)
 
     @core.command(aliases=["calc"])
-    async def calculate(self, ctx: core.Context, *, expression: MathExpression() = None):
+    async def calculate(
+        self, ctx: core.Context, *, expression: MathExpression() = None
+    ):
         _(
             """Calculates an expression
         

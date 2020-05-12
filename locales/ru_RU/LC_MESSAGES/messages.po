@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-05-11 22:47+0700\n"
-"PO-Revision-Date: 2020-05-11 22:58+0700\n"
+"POT-Creation-Date: 2020-05-12 01:35+0700\n"
+"PO-Revision-Date: 2020-05-12 01:39+0700\n"
 "Last-Translator: \n"
 "Language: ru_RU\n"
 "Language-Team: ru_RU <LL@li.org>\n"
@@ -1652,88 +1652,101 @@ msgstr "Таблица лидеров гильдии"
 msgid "Sonata statistics"
 msgstr "Статистика Сонаты"
 
-#: sonata/bot/cogs/tags/tags.py:110
+#: sonata/bot/cogs/tags/tags.py:109
 msgid "Returns the text with the specified tag"
 msgstr "Возвращает текст с указанным тегом"
 
-#: sonata/bot/cogs/tags/tags.py:123
-msgid "**Did you mean**:\n"
-msgstr "**Возможно, вы имели в виду**:\n"
-
-#: sonata/bot/cogs/tags/tags.py:132 sonata/bot/cogs/tags/tags.py:169
-#: sonata/bot/cogs/tags/tags.py:192 sonata/bot/cogs/tags/tags.py:226
+#: sonata/bot/cogs/tags/tags.py:123 sonata/bot/cogs/tags/tags.py:175
+#: sonata/bot/cogs/tags/tags.py:199 sonata/bot/cogs/tags/tags.py:240
 msgid "Tag `{0}` not found."
 msgstr "Тег `{0}` не найден."
 
-#: sonata/bot/cogs/tags/tags.py:138
+#: sonata/bot/cogs/tags/tags.py:126
+msgid "**Did you mean**:\n"
+msgstr "**Возможно, вы имели в виду**:\n"
+
+#: sonata/bot/cogs/tags/tags.py:139
 msgid ""
 "Creates new tag\n"
 "\n"
-"        This tag will belong to you and will be available only in this guild."
+"        This tag will belong to you and will be available only in this guild.\n"
+"        You must enclose the name in double quotation marks if it consists of "
+"more than         one word."
 msgstr ""
 "Создает новый тег\n"
 "\n"
-"        Этот тег будет принадлежать вам и будет доступен только в этой гильдии."
+"        Этот тег будет принадлежать тебе и будет доступен только в этой "
+"гильдии.\n"
+"        Тебе необходимо заключить имя в двойные кавычки, если оно состоит "
+"больше, чем из одного слова."
 
-#: sonata/bot/cogs/tags/tags.py:144 sonata/bot/cogs/tags/tags.py:166
+#: sonata/bot/cogs/tags/tags.py:147 sonata/bot/cogs/tags/tags.py:172
 msgid "Tag `{0}` already exists."
 msgstr "Тег `{0}` уже существует."
 
-#: sonata/bot/cogs/tags/tags.py:155
+#: sonata/bot/cogs/tags/tags.py:158
 msgid "Tag `{0}` successfully created."
 msgstr "Тег `{0}` успешно создан."
 
-#: sonata/bot/cogs/tags/tags.py:159
+#: sonata/bot/cogs/tags/tags.py:162
 msgid ""
 "Creates new tag alias\n"
 "        \n"
 "        This alias will belong to you and will be available only in this "
 "guild.\n"
-"        Removing the original tag will also remove the alias."
+"        Removing the original tag will also remove the alias.\n"
+"        You must enclose the name in double quotation marks if it consists of "
+"more than         one word."
 msgstr ""
 "Создает новый псевдоним тега\n"
 "        \n"
-"        Этот псевдоним будет принадлежать вам и будет доступен только в этой "
+"        Этот псевдоним будет принадлежать тебе и будет доступен только в этой "
 "гильдии.\n"
-"        При удалении оригинального тега будет удален и псевдоним."
+"        Удаление оригинального тега также удалит псевдоним.\n"
+"        Тебе необходимо заключить имя в двойные кавычки, если оно состоит "
+"больше, чем из одного слова."
 
-#: sonata/bot/cogs/tags/tags.py:182
+#: sonata/bot/cogs/tags/tags.py:188
 msgid "Tag alias `{alias}` that points to `{tag}` successfully created."
 msgstr "Псевдоним `{alias}`, который указывает на тег `{tag}` успешно создан."
 
-#: sonata/bot/cogs/tags/tags.py:189
+#: sonata/bot/cogs/tags/tags.py:195
 msgid "Deletes your tag or alias"
 msgstr "Удаляет твой тег или псевдоним"
 
-#: sonata/bot/cogs/tags/tags.py:204
+#: sonata/bot/cogs/tags/tags.py:212
 msgid "Tag alias `{0}` successfully deleted."
 msgstr "Псевдоним `{0}` успешно удален."
 
-#: sonata/bot/cogs/tags/tags.py:207
+#: sonata/bot/cogs/tags/tags.py:215
 msgid "You are not the owner of this tag alias."
 msgstr "Ты не владелец этого псевдонима."
 
-#: sonata/bot/cogs/tags/tags.py:211
+#: sonata/bot/cogs/tags/tags.py:219
 msgid "Tag `{0}` successfully deleted."
 msgstr "Тег `{0}` успешно удален."
 
-#: sonata/bot/cogs/tags/tags.py:213 sonata/bot/cogs/tags/tags.py:231
+#: sonata/bot/cogs/tags/tags.py:221 sonata/bot/cogs/tags/tags.py:245
 msgid "You are not the owner of this tag."
 msgstr "Ты не владелец этого тега."
 
-#: sonata/bot/cogs/tags/tags.py:219
+#: sonata/bot/cogs/tags/tags.py:231
 msgid ""
 "Edits content of your tag\n"
 "        \n"
-"        Be careful, the command completely replaces the content of the tag."
+"        Be careful, the command completely replaces the content of the tag.\n"
+"        You must enclose the name in double quotation marks if it consists of "
+"more than         one word."
 msgstr ""
-"Редактирует содержимое твоего тега\n"
+"Редактирует содержание твоего тега\n"
 "        \n"
-"        Будь внимательнее, команда полностью перезаписывает содержимое тега."
+"        Будь внимательнее, команда полностью перезаписывает содержание тега\n"
+"        Тебе необходимо заключить имя в двойные кавычки, если оно состоит "
+"больше, чем из одного слова."
 
-#: sonata/bot/cogs/tags/tags.py:236
+#: sonata/bot/cogs/tags/tags.py:250
 msgid "Tag content changed."
-msgstr ""
+msgstr "Содержание тега изменено."
 
 #: sonata/bot/cogs/utils/utils.py:43
 msgid "Temperature"
@@ -2378,3 +2391,35 @@ msgstr ""
 
 #~ msgid "Member unbanned: {0}"
 #~ msgstr "Участник разбанен: {0}"
+
+#~ msgid ""
+#~ "Creates new tag\n"
+#~ "\n"
+#~ "        This tag will belong to you and will be available only in this guild."
+#~ msgstr ""
+#~ "Создает новый тег\n"
+#~ "\n"
+#~ "        Этот тег будет принадлежать вам и будет доступен только в этой "
+#~ "гильдии."
+
+#~ msgid ""
+#~ "Creates new tag alias\n"
+#~ "        \n"
+#~ "        This alias will belong to you and will be available only in this "
+#~ "guild.\n"
+#~ "        Removing the original tag will also remove the alias."
+#~ msgstr ""
+#~ "Создает новый псевдоним тега\n"
+#~ "        \n"
+#~ "        Этот псевдоним будет принадлежать вам и будет доступен только в этой "
+#~ "гильдии.\n"
+#~ "        При удалении оригинального тега будет удален и псевдоним."
+
+#~ msgid ""
+#~ "Edits content of your tag\n"
+#~ "        \n"
+#~ "        Be careful, the command completely replaces the content of the tag."
+#~ msgstr ""
+#~ "Редактирует содержимое твоего тега\n"
+#~ "        \n"
+#~ "        Будь внимательнее, команда полностью перезаписывает содержимое тега."

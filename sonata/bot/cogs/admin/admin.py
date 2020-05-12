@@ -394,7 +394,7 @@ class Admin(
     @guild.command(name="reset")
     async def guild_reset(self, ctx: core.Context):
         _("""Resets guild settings""")
-        msg, resp = await ctx.confirm(_("Are you sure?"), timeout=30.0)
+        msg, resp = await ctx.confirm(_("Are you sure?"))
         if not resp:
             return
 

@@ -190,6 +190,5 @@ class Utils(core.Cog, colour=discord.Colour(0x7ED321)):
                 )
             js = await resp.json()
         embed = self.make_weather_embed(js)
-        paginator = EmbedPaginator(controls={"❌": EmbedPaginator.close_pages})
-        paginator.add_page(embed)
-        await paginator.send_pages(ctx)
+        menu = CloseMenu(embed=embed)
+        await menu.prompt(ctx)

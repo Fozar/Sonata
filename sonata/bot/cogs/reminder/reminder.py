@@ -1,17 +1,35 @@
 import asyncio
 from datetime import datetime, timedelta
-from typing import Union
+from typing import Union, Any
 
 import discord
 import pytz
 from babel.dates import format_datetime
-from discord.ext import commands
+from discord.ext import commands, menus
 
 from sonata.bot import core, Sonata
 from sonata.bot.utils.converters import UserFriendlyTime
-from sonata.bot.utils.misc import chunks
-from sonata.bot.utils.paginator import EmbedPaginator
 from sonata.db import models
+
+
+class ReminderListSource(menus.ListPageSource):
+    def __init__(self, entries, colour: discord.Colour, locale: str, *, per_page):
+        super().__init__(entries, per_page=per_page)
+        self.colour = colour
+        self.locale = locale
+
+    async def format_page(self, menu: menus.MenuPages, entries: Any):
+        embed = discord.Embed(title=_("Reminder list"), colour=self.colour)
+        for reminder in entries:
+            value = f"**ID**: {reminder['id']}\n**Remind**: {reminder['reminder']}"
+            embed.add_field(
+                name=format_datetime(
+                    reminder["expires_at"], format="long", locale=self.locale
+                ),
+                value=value,
+                inline=False,
+            )
+        return embed
 
 
 class Reminder(core.Cog, colour=discord.Colour(0x50E3C2)):
@@ -210,26 +228,13 @@ class Reminder(core.Cog, colour=discord.Colour(0x50E3C2)):
         ).sort([("expires_at", 1)])
         reminders = await cursor.to_list(length=None)
         if not reminders:
-            await ctx.inform(_("No active reminders."))
-        pages = []
-        for reminders in chunks(reminders, 10):
-            embed = discord.Embed(title=_("Reminder list"), colour=self.colour)
-            for reminder in reminders:
-                value = f"**ID**: {reminder['id']}\n**Remind**: {reminder['reminder']}"
-                embed.add_field(
-                    name=format_datetime(
-                        reminder["expires_at"], format="long", locale=ctx.locale
-                    ),
-                    value=value,
-                    inline=False,
-                )
-            pages.append(embed)
-        if len(pages) > 1:
-            paginator = EmbedPaginator()
-            paginator.add_pages(pages)
-            return await paginator.send_pages(ctx)
+            return await ctx.inform(_("No active reminders."))
 
-        await ctx.send(embed=pages[0])
+        pages = menus.MenuPages(
+            source=ReminderListSource(reminders, self.colour, ctx.locale, per_page=10),
+            clear_reactions_after=True,
+        )
+        await pages.start(ctx)
 
     @remind.command(name="remove", aliases=["delete"], usage="<id>", ignore_extra=False)
     async def remind_remove(self, ctx: core.Context, _id: int):

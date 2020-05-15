@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-05-12 01:35+0700\n"
-"PO-Revision-Date: 2020-05-12 01:39+0700\n"
+"POT-Creation-Date: 2020-05-15 16:21+0700\n"
+"PO-Revision-Date: 2020-05-15 16:22+0700\n"
 "Last-Translator: \n"
 "Language: ru_RU\n"
 "Language-Team: ru_RU <LL@li.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.8.0\n"
-"X-Generator: Poedit 2.3\n"
+"X-Generator: Poedit 2.3.1\n"
 
 #: sonata/bot/cogs/admin/admin.py:13
 msgid "Commands of guild admins"
@@ -1484,11 +1484,15 @@ msgstr "База данных"
 msgid "Runs a shell command"
 msgstr "Запускает команду оболочки"
 
-#: sonata/bot/cogs/reminder/reminder.py:58
+#: sonata/bot/cogs/reminder/reminder.py:22
+msgid "Reminder list"
+msgstr "Список напоминаний"
+
+#: sonata/bot/cogs/reminder/reminder.py:76
 msgid "Reminder"
 msgstr "Напоминание"
 
-#: sonata/bot/cogs/reminder/reminder.py:59
+#: sonata/bot/cogs/reminder/reminder.py:77
 msgid ""
 "**Remind you**: {remind}\n"
 "**Date**: {date}"
@@ -1496,7 +1500,7 @@ msgstr ""
 "**Напоминаю**: {remind}\n"
 "**Дата**: {date}"
 
-#: sonata/bot/cogs/reminder/reminder.py:162
+#: sonata/bot/cogs/reminder/reminder.py:180
 msgid ""
 "Reminds of something after a certain amount of time\n"
 "        \n"
@@ -1528,7 +1532,7 @@ msgstr ""
 "        \n"
 "        Разница во времени не может быть больше 5 лет."
 
-#: sonata/bot/cogs/reminder/reminder.py:180
+#: sonata/bot/cogs/reminder/reminder.py:198
 msgid ""
 "**Remind**: {remind}\n"
 "**Date**: {date}"
@@ -1536,51 +1540,47 @@ msgstr ""
 "**Напомнить**: {remind}\n"
 "**Дата**: {date}"
 
-#: sonata/bot/cogs/reminder/reminder.py:185
+#: sonata/bot/cogs/reminder/reminder.py:203
 msgid "Create a reminder?"
 msgstr "Создать напоминание?"
 
-#: sonata/bot/cogs/reminder/reminder.py:189
+#: sonata/bot/cogs/reminder/reminder.py:207
 msgid "Reminder creation canceled"
 msgstr "Создание напоминания отменено"
 
-#: sonata/bot/cogs/reminder/reminder.py:196
+#: sonata/bot/cogs/reminder/reminder.py:214
 msgid "Reminder created"
 msgstr "Напоминание создано"
 
-#: sonata/bot/cogs/reminder/reminder.py:206
+#: sonata/bot/cogs/reminder/reminder.py:224
 msgid "Makes a list of active reminders."
 msgstr "Составляет список активных напоминаний."
 
-#: sonata/bot/cogs/reminder/reminder.py:213
+#: sonata/bot/cogs/reminder/reminder.py:231
 msgid "No active reminders."
 msgstr "Нет активных напоминаний"
 
-#: sonata/bot/cogs/reminder/reminder.py:216
-msgid "Reminder list"
-msgstr "Список напоминаний"
-
-#: sonata/bot/cogs/reminder/reminder.py:236
+#: sonata/bot/cogs/reminder/reminder.py:241
 msgid "Deletes a reminder by ID"
 msgstr "Удаляет напоминание по ID"
 
-#: sonata/bot/cogs/reminder/reminder.py:241
+#: sonata/bot/cogs/reminder/reminder.py:246
 msgid "Reminder not found."
 msgstr "Напоминание не найдено."
 
-#: sonata/bot/cogs/reminder/reminder.py:243
+#: sonata/bot/cogs/reminder/reminder.py:248
 msgid "Reminder deleted."
 msgstr "Напоминание удалено."
 
-#: sonata/bot/cogs/reminder/reminder.py:247
+#: sonata/bot/cogs/reminder/reminder.py:252
 msgid "Deletes all reminders"
 msgstr "Удаляет все напоминания"
 
-#: sonata/bot/cogs/reminder/reminder.py:252
+#: sonata/bot/cogs/reminder/reminder.py:257
 msgid "You have no active reminders."
 msgstr "У тебя нет активных напоминаний."
 
-#: sonata/bot/cogs/reminder/reminder.py:254
+#: sonata/bot/cogs/reminder/reminder.py:259
 msgid "Reminders deleted."
 msgstr "Напоминания удалены."
 
@@ -1652,20 +1652,25 @@ msgstr "Таблица лидеров гильдии"
 msgid "Sonata statistics"
 msgstr "Статистика Сонаты"
 
-#: sonata/bot/cogs/tags/tags.py:109
+#: sonata/bot/cogs/tags/tags.py:35
+msgid "Searching results"
+msgstr "Результаты поиска"
+
+#: sonata/bot/cogs/tags/tags.py:172
 msgid "Returns the text with the specified tag"
 msgstr "Возвращает текст с указанным тегом"
 
-#: sonata/bot/cogs/tags/tags.py:123 sonata/bot/cogs/tags/tags.py:175
-#: sonata/bot/cogs/tags/tags.py:199 sonata/bot/cogs/tags/tags.py:240
+#: sonata/bot/cogs/tags/tags.py:186 sonata/bot/cogs/tags/tags.py:238
+#: sonata/bot/cogs/tags/tags.py:275 sonata/bot/cogs/tags/tags.py:316
+#: sonata/bot/cogs/tags/tags.py:355
 msgid "Tag `{0}` not found."
 msgstr "Тег `{0}` не найден."
 
-#: sonata/bot/cogs/tags/tags.py:126
+#: sonata/bot/cogs/tags/tags.py:189
 msgid "**Did you mean**:\n"
 msgstr "**Возможно, вы имели в виду**:\n"
 
-#: sonata/bot/cogs/tags/tags.py:139
+#: sonata/bot/cogs/tags/tags.py:202
 msgid ""
 "Creates new tag\n"
 "\n"
@@ -1680,15 +1685,15 @@ msgstr ""
 "        Тебе необходимо заключить имя в двойные кавычки, если оно состоит "
 "больше, чем из одного слова."
 
-#: sonata/bot/cogs/tags/tags.py:147 sonata/bot/cogs/tags/tags.py:172
+#: sonata/bot/cogs/tags/tags.py:210 sonata/bot/cogs/tags/tags.py:235
 msgid "Tag `{0}` already exists."
 msgstr "Тег `{0}` уже существует."
 
-#: sonata/bot/cogs/tags/tags.py:158
+#: sonata/bot/cogs/tags/tags.py:221
 msgid "Tag `{0}` successfully created."
 msgstr "Тег `{0}` успешно создан."
 
-#: sonata/bot/cogs/tags/tags.py:162
+#: sonata/bot/cogs/tags/tags.py:225
 msgid ""
 "Creates new tag alias\n"
 "        \n"
@@ -1706,31 +1711,39 @@ msgstr ""
 "        Тебе необходимо заключить имя в двойные кавычки, если оно состоит "
 "больше, чем из одного слова."
 
-#: sonata/bot/cogs/tags/tags.py:188
+#: sonata/bot/cogs/tags/tags.py:251
 msgid "Tag alias `{alias}` that points to `{tag}` successfully created."
 msgstr "Псевдоним `{alias}`, который указывает на тег `{tag}` успешно создан."
 
-#: sonata/bot/cogs/tags/tags.py:195
+#: sonata/bot/cogs/tags/tags.py:258
+msgid "Lists all tags"
+msgstr "Выводит список всех тегов."
+
+#: sonata/bot/cogs/tags/tags.py:262 sonata/bot/cogs/tags/tags.py:342
+msgid "Tag list"
+msgstr "Список тегов"
+
+#: sonata/bot/cogs/tags/tags.py:272
 msgid "Deletes your tag or alias"
 msgstr "Удаляет твой тег или псевдоним"
 
-#: sonata/bot/cogs/tags/tags.py:212
+#: sonata/bot/cogs/tags/tags.py:288
 msgid "Tag alias `{0}` successfully deleted."
 msgstr "Псевдоним `{0}` успешно удален."
 
-#: sonata/bot/cogs/tags/tags.py:215
+#: sonata/bot/cogs/tags/tags.py:291
 msgid "You are not the owner of this tag alias."
 msgstr "Ты не владелец этого псевдонима."
 
-#: sonata/bot/cogs/tags/tags.py:219
+#: sonata/bot/cogs/tags/tags.py:295
 msgid "Tag `{0}` successfully deleted."
 msgstr "Тег `{0}` успешно удален."
 
-#: sonata/bot/cogs/tags/tags.py:221 sonata/bot/cogs/tags/tags.py:245
+#: sonata/bot/cogs/tags/tags.py:297 sonata/bot/cogs/tags/tags.py:321
 msgid "You are not the owner of this tag."
 msgstr "Ты не владелец этого тега."
 
-#: sonata/bot/cogs/tags/tags.py:231
+#: sonata/bot/cogs/tags/tags.py:307
 msgid ""
 "Edits content of your tag\n"
 "        \n"
@@ -1744,9 +1757,31 @@ msgstr ""
 "        Тебе необходимо заключить имя в двойные кавычки, если оно состоит "
 "больше, чем из одного слова."
 
-#: sonata/bot/cogs/tags/tags.py:250
+#: sonata/bot/cogs/tags/tags.py:326
 msgid "Tag content changed."
 msgstr "Содержание тега изменено."
+
+#: sonata/bot/cogs/tags/tags.py:330
+msgid ""
+"Lists the tags of the specified member\n"
+"        \n"
+"        If the member is not specified, lists author tags."
+msgstr ""
+"Выводит список тегов указанного участника\n"
+"        \n"
+"        Если участник не указан, выводит список тегов автора."
+
+#: sonata/bot/cogs/tags/tags.py:352
+msgid "Returns the raw content with the specified tag"
+msgstr "Возвращает необработанный текст с указанным тегом"
+
+#: sonata/bot/cogs/tags/tags.py:361
+msgid "Searches for tags"
+msgstr "Выполняет поиск по тегам"
+
+#: sonata/bot/cogs/tags/tags.py:382
+msgid "An alias for tag all command"
+msgstr "Псевдоним для команды tag all"
 
 #: sonata/bot/cogs/utils/utils.py:43
 msgid "Temperature"
@@ -1788,7 +1823,7 @@ msgstr "Показывает аватар участника в полном р�
 msgid "{0} avatar"
 msgstr "Аватар {0}"
 
-#: sonata/bot/cogs/utils/utils.py:86
+#: sonata/bot/cogs/utils/utils.py:88
 msgid ""
 "Calculates an expression\n"
 "        \n"
@@ -1842,51 +1877,51 @@ msgstr ""
 "        \n"
 "        "
 
-#: sonata/bot/cogs/utils/utils.py:113
+#: sonata/bot/cogs/utils/utils.py:115
 msgid "Result: {0}"
 msgstr "Результат: {0}"
 
-#: sonata/bot/cogs/utils/utils.py:117
+#: sonata/bot/cogs/utils/utils.py:119
 msgid "Shows COVID-19 pandemic statistics"
 msgstr "Показывает статистику пандемии COVID-19"
 
-#: sonata/bot/cogs/utils/utils.py:128
+#: sonata/bot/cogs/utils/utils.py:130
 msgid "world"
 msgstr "мир"
 
-#: sonata/bot/cogs/utils/utils.py:133
+#: sonata/bot/cogs/utils/utils.py:135
 msgid "Country not found."
 msgstr "Страна не найдена."
 
-#: sonata/bot/cogs/utils/utils.py:156
+#: sonata/bot/cogs/utils/utils.py:158
 msgid " - World"
 msgstr " - Мир"
 
-#: sonata/bot/cogs/utils/utils.py:161
+#: sonata/bot/cogs/utils/utils.py:163
 msgid "Confirmed cases"
 msgstr "Подтвержденные случаи"
 
-#: sonata/bot/cogs/utils/utils.py:162
+#: sonata/bot/cogs/utils/utils.py:164
 msgid "Active cases"
 msgstr "Активные случаи"
 
-#: sonata/bot/cogs/utils/utils.py:163
+#: sonata/bot/cogs/utils/utils.py:165
 msgid "Closed cases"
 msgstr "Закрытые случаи"
 
-#: sonata/bot/cogs/utils/utils.py:164
+#: sonata/bot/cogs/utils/utils.py:166
 msgid "Recovered"
 msgstr "Выздоровления"
 
-#: sonata/bot/cogs/utils/utils.py:165
+#: sonata/bot/cogs/utils/utils.py:167
 msgid "Deaths"
 msgstr "Смерти"
 
-#: sonata/bot/cogs/utils/utils.py:166
+#: sonata/bot/cogs/utils/utils.py:168
 msgid "Deaths/Closed cases"
 msgstr "Смерти/Закрытые случаи"
 
-#: sonata/bot/cogs/utils/utils.py:174
+#: sonata/bot/cogs/utils/utils.py:176
 msgid ""
 "Finds out the weather\n"
 "\n"
@@ -1896,7 +1931,7 @@ msgstr ""
 "\n"
 "        Название населенного пункта может быть указано на любом языке."
 
-#: sonata/bot/cogs/utils/utils.py:189
+#: sonata/bot/cogs/utils/utils.py:191
 msgid "{0}, I did not find such a locality."
 msgstr "{0}, я не нашла такой населенный пункт."
 

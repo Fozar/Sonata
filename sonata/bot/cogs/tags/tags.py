@@ -177,23 +177,19 @@ class Tags(core.Cog, colour=discord.Colour.dark_teal()):
         if tag:
             return await ctx.send(tag["content"])
 
-        results = []
-        async for result in self.search_tags(
-            name, ctx.guild, ctx.locale, {"name": True}
-        ):
-            results.append(result)
-        if not results:
-            return await ctx.inform(_("Tag `{0}` not found.").format(name))
-
-        await ctx.inform(
-            _("**Did you mean**:\n")
-            + "\n".join(
-                [
-                    f"**{number}.** " + res["name"]
-                    for number, res in zip(range(1, len(results) + 1), results)
-                ]
-            )
+        pages = menus.MenuPages(
+            source=TagSource(
+                self.search_tags(name, ctx.guild, ctx.locale, {"name": True}),
+                _("Did you mean:"),
+                ctx.colour,
+                per_page=20,
+            ),
+            clear_reactions_after=True,
         )
+        try:
+            await pages.start(ctx)
+        except IndexError:
+            await ctx.inform(_("Tag `{0}` not found.").format(name))
 
     @tag.command(name="add", aliases=["create"])
     async def tag_add(

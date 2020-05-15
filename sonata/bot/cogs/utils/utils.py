@@ -134,9 +134,9 @@ class Utils(core.Cog, colour=discord.Colour(0x7ED321)):
             if row is None:
                 return await ctx.inform(_("Country not found."))
             confirmed, deaths, recovered, last_update = (
-                int(row.get("Confirmed")),
-                int(row.get("Deaths")),
-                int(row.get("Recovered")),
+                int(float(row.get("Confirmed"))),
+                int(float(row.get("Deaths"))),
+                int(float(row.get("Recovered"))),
                 parser.parse(row.get("Last_Update")),
             )
             embed.title += f" - {row.get('Country_Region')}"
@@ -146,15 +146,15 @@ class Utils(core.Cog, colour=discord.Colour(0x7ED321)):
             for row in data:
                 for key, value in row.items():
                     if key == "Confirmed":
-                        confirmed += int(value)
+                        confirmed += int(float(value))
                     elif key == "Deaths":
-                        deaths += int(value)
+                        deaths += int(float(value))
                     elif key == "Last_Update":
                         value = parser.parse(value)
                         if last_update is None or value > last_update:
                             last_update = value
                     elif key == "Recovered":
-                        recovered += int(value)
+                        recovered += int(float(value))
             embed.title += _(" - World")
         closed = deaths + recovered
         active = confirmed - closed

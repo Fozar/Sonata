@@ -170,7 +170,6 @@ class Tags(core.Cog, colour=discord.Colour.dark_teal()):
     @commands.guild_only()
     async def tag(self, ctx: core.Context, *, name: TagName() = None):
         _("""Returns the text with the specified tag""")
-        name = name.strip('" ')
         if not name:
             return await ctx.send_help()
         tag = await self.get_tag(name, ctx.guild, {"content": True}, inc_uses=True)
@@ -226,7 +225,6 @@ class Tags(core.Cog, colour=discord.Colour.dark_teal()):
         You must enclose the name in double quotation marks if it consists of more than \
         one word."""
         )
-        alias = alias.strip('" ')
         if await self.is_tag_exists(alias, ctx.guild):
             return await ctx.inform(_("Tag `{0}` already exists.").format(alias))
 

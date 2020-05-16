@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-05-15 16:21+0700\n"
-"PO-Revision-Date: 2020-05-15 16:22+0700\n"
+"POT-Creation-Date: 2020-05-16 17:26+0700\n"
+"PO-Revision-Date: 2020-05-16 17:33+0700\n"
 "Last-Translator: \n"
 "Language: ru_RU\n"
 "Language-Team: ru_RU <LL@li.org>\n"
@@ -1239,7 +1239,7 @@ msgstr "С участника снято заглушение"
 msgid "User"
 msgstr "Пользователь"
 
-#: sonata/bot/cogs/mod/modlog.py:149 sonata/bot/cogs/owner/owner.py:314
+#: sonata/bot/cogs/mod/modlog.py:149 sonata/bot/cogs/owner/owner.py:329
 msgid "Bot"
 msgstr "Бот"
 
@@ -1303,15 +1303,15 @@ msgstr ""
 "В модуле **{0.name}** или его функции запуска произошла ошибка:\n"
 "{0.original}"
 
-#: sonata/bot/cogs/owner/owner.py:135
+#: sonata/bot/cogs/owner/owner.py:150
 msgid "Lists loaded cogs"
 msgstr "Выводит список подключенных модулей"
 
-#: sonata/bot/cogs/owner/owner.py:141
+#: sonata/bot/cogs/owner/owner.py:156
 msgid "No loaded cogs!"
 msgstr "Нет подключенных модулей!"
 
-#: sonata/bot/cogs/owner/owner.py:146
+#: sonata/bot/cogs/owner/owner.py:161
 msgid ""
 "Loaded cogs:\n"
 "{0}\n"
@@ -1319,39 +1319,39 @@ msgstr ""
 "Подключенные модули:\n"
 "{0}\n"
 
-#: sonata/bot/cogs/owner/owner.py:152
+#: sonata/bot/cogs/owner/owner.py:167
 msgid "Loads cog"
 msgstr "Подключает модуль"
 
-#: sonata/bot/cogs/owner/owner.py:155
+#: sonata/bot/cogs/owner/owner.py:170
 msgid "I loaded the cog: **{}**."
 msgstr "Подключила модуль: **{}**"
 
-#: sonata/bot/cogs/owner/owner.py:160
+#: sonata/bot/cogs/owner/owner.py:175
 msgid "Disables cog"
 msgstr "Отключает модуль"
 
-#: sonata/bot/cogs/owner/owner.py:162
+#: sonata/bot/cogs/owner/owner.py:177
 msgid "This cog cannot be disabled"
 msgstr "Этот модуль не может быть отключен"
 
-#: sonata/bot/cogs/owner/owner.py:166
+#: sonata/bot/cogs/owner/owner.py:181
 msgid "I disabled the cog: **{0}**."
 msgstr "Отключила модуль: **{0}**."
 
-#: sonata/bot/cogs/owner/owner.py:170
+#: sonata/bot/cogs/owner/owner.py:185
 msgid "Reloads cog"
 msgstr "Переподключает модуль"
 
-#: sonata/bot/cogs/owner/owner.py:173
+#: sonata/bot/cogs/owner/owner.py:188
 msgid "I reloaded the cog: **{0}**."
 msgstr "Пеподключила модуль: **{0}**."
 
-#: sonata/bot/cogs/owner/owner.py:178
+#: sonata/bot/cogs/owner/owner.py:193
 msgid "Displays uptime"
 msgstr "Показывает время работы"
 
-#: sonata/bot/cogs/owner/owner.py:183
+#: sonata/bot/cogs/owner/owner.py:198
 msgid ""
 "Evaluates input\n"
 "        Input is interpreted as newline separated statements.        If the "
@@ -1397,7 +1397,7 @@ msgstr ""
 "        ```\n"
 "        "
 
-#: sonata/bot/cogs/owner/owner.py:225
+#: sonata/bot/cogs/owner/owner.py:240
 msgid ""
 "Displays full source code for a specific command\n"
 "        \n"
@@ -1412,23 +1412,23 @@ msgstr ""
 "например, `tag.create` для подкоманды create команды tag или пробелами.\n"
 "        "
 
-#: sonata/bot/cogs/owner/owner.py:245
+#: sonata/bot/cogs/owner/owner.py:260
 msgid "Could not find command."
 msgstr "Не удалось найти команду."
 
-#: sonata/bot/cogs/owner/owner.py:267
+#: sonata/bot/cogs/owner/owner.py:282
 msgid "Displays system info"
 msgstr "Отображает системную информацию"
 
-#: sonata/bot/cogs/owner/owner.py:268
+#: sonata/bot/cogs/owner/owner.py:283
 msgid "System Info"
 msgstr "Системная информация"
 
-#: sonata/bot/cogs/owner/owner.py:270
+#: sonata/bot/cogs/owner/owner.py:285
 msgid "Platform"
 msgstr "Платформа"
 
-#: sonata/bot/cogs/owner/owner.py:271
+#: sonata/bot/cogs/owner/owner.py:286
 msgid ""
 "**System**: {system}\n"
 "**Release**: {release}\n"
@@ -1438,11 +1438,11 @@ msgstr ""
 "**Релиз**: {release}\n"
 "**Время работы**: {uptime}"
 
-#: sonata/bot/cogs/owner/owner.py:283
+#: sonata/bot/cogs/owner/owner.py:298
 msgid "CPU"
 msgstr "CPU"
 
-#: sonata/bot/cogs/owner/owner.py:284
+#: sonata/bot/cogs/owner/owner.py:299
 msgid ""
 "**Cores**: {count}\n"
 "**Usage**: {usage}%"
@@ -1450,11 +1450,11 @@ msgstr ""
 "**Ядра**: {count}\n"
 "**Использовано**: {usage}%"
 
-#: sonata/bot/cogs/owner/owner.py:290
+#: sonata/bot/cogs/owner/owner.py:305
 msgid "RAM"
 msgstr "RAM"
 
-#: sonata/bot/cogs/owner/owner.py:291
+#: sonata/bot/cogs/owner/owner.py:306
 msgid ""
 "**Total**: {total}GB\n"
 "**Available**: {available}GB\n"
@@ -1464,7 +1464,7 @@ msgstr ""
 "**Доступно**: {available}GB\n"
 "**Использовано**: {usage}%"
 
-#: sonata/bot/cogs/owner/owner.py:315 sonata/bot/cogs/owner/owner.py:333
+#: sonata/bot/cogs/owner/owner.py:330 sonata/bot/cogs/owner/owner.py:348
 msgid ""
 "**Uptime**: {uptime}\n"
 "**PID**: {pid}\n"
@@ -1476,11 +1476,11 @@ msgstr ""
 "**Использовано памяти**: {mem}MB ({mem_percent}%)\n"
 "**Использовано CPU**: {cpu}%"
 
-#: sonata/bot/cogs/owner/owner.py:332
+#: sonata/bot/cogs/owner/owner.py:347
 msgid "Database"
 msgstr "База данных"
 
-#: sonata/bot/cogs/owner/owner.py:351
+#: sonata/bot/cogs/owner/owner.py:366
 msgid "Runs a shell command"
 msgstr "Запускает команду оболочки"
 
@@ -1652,25 +1652,34 @@ msgstr "Таблица лидеров гильдии"
 msgid "Sonata statistics"
 msgstr "Статистика Сонаты"
 
-#: sonata/bot/cogs/tags/tags.py:35
+#: sonata/bot/cogs/tags/tags.py:36
 msgid "Searching results"
 msgstr "Результаты поиска"
 
-#: sonata/bot/cogs/tags/tags.py:172
-msgid "Returns the text with the specified tag"
-msgstr "Возвращает текст с указанным тегом"
+#: sonata/bot/cogs/tags/tags.py:173
+msgid ""
+"Returns the text with the specified tag\n"
+"        \n"
+"        If a tag with the specified name is not found, a search will be "
+"performed by         the names, aliases and contents of the tags."
+msgstr ""
+"Возвращает текст с указанным тегом\n"
+"        \n"
+"        Если тег с указанным именем не найден, будет выполнен поиск по именам, "
+"псевдонимам и содержимому тегов."
 
-#: sonata/bot/cogs/tags/tags.py:186 sonata/bot/cogs/tags/tags.py:238
-#: sonata/bot/cogs/tags/tags.py:275 sonata/bot/cogs/tags/tags.py:316
-#: sonata/bot/cogs/tags/tags.py:355
+#: sonata/bot/cogs/tags/tags.py:188
+msgid "Did you mean:"
+msgstr "Возможно, вы имели в виду:"
+
+#: sonata/bot/cogs/tags/tags.py:197 sonata/bot/cogs/tags/tags.py:238
+#: sonata/bot/cogs/tags/tags.py:279 sonata/bot/cogs/tags/tags.py:320
+#: sonata/bot/cogs/tags/tags.py:337 sonata/bot/cogs/tags/tags.py:394
+#: sonata/bot/cogs/tags/tags.py:413
 msgid "Tag `{0}` not found."
 msgstr "Тег `{0}` не найден."
 
-#: sonata/bot/cogs/tags/tags.py:189
-msgid "**Did you mean**:\n"
-msgstr "**Возможно, вы имели в виду**:\n"
-
-#: sonata/bot/cogs/tags/tags.py:202
+#: sonata/bot/cogs/tags/tags.py:203
 msgid ""
 "Creates new tag\n"
 "\n"
@@ -1685,15 +1694,15 @@ msgstr ""
 "        Тебе необходимо заключить имя в двойные кавычки, если оно состоит "
 "больше, чем из одного слова."
 
-#: sonata/bot/cogs/tags/tags.py:210 sonata/bot/cogs/tags/tags.py:235
+#: sonata/bot/cogs/tags/tags.py:211 sonata/bot/cogs/tags/tags.py:235
 msgid "Tag `{0}` already exists."
 msgstr "Тег `{0}` уже существует."
 
-#: sonata/bot/cogs/tags/tags.py:221
+#: sonata/bot/cogs/tags/tags.py:222
 msgid "Tag `{0}` successfully created."
 msgstr "Тег `{0}` успешно создан."
 
-#: sonata/bot/cogs/tags/tags.py:225
+#: sonata/bot/cogs/tags/tags.py:226
 msgid ""
 "Creates new tag alias\n"
 "        \n"
@@ -1716,34 +1725,41 @@ msgid "Tag alias `{alias}` that points to `{tag}` successfully created."
 msgstr "Псевдоним `{alias}`, который указывает на тег `{tag}` успешно создан."
 
 #: sonata/bot/cogs/tags/tags.py:258
-msgid "Lists all tags"
-msgstr "Выводит список всех тегов."
+msgid ""
+"Lists all tags\n"
+"        \n"
+"        Tags are sorted alphabetically."
+msgstr ""
+"Выводит список всех тегов.\n"
+"        \n"
+"        Теги сортируются в алфавитном порядке."
 
-#: sonata/bot/cogs/tags/tags.py:262 sonata/bot/cogs/tags/tags.py:342
+#: sonata/bot/cogs/tags/tags.py:266 sonata/bot/cogs/tags/tags.py:374
 msgid "Tag list"
 msgstr "Список тегов"
 
-#: sonata/bot/cogs/tags/tags.py:272
+#: sonata/bot/cogs/tags/tags.py:276
 msgid "Deletes your tag or alias"
 msgstr "Удаляет твой тег или псевдоним"
 
-#: sonata/bot/cogs/tags/tags.py:288
+#: sonata/bot/cogs/tags/tags.py:292
 msgid "Tag alias `{0}` successfully deleted."
 msgstr "Псевдоним `{0}` успешно удален."
 
-#: sonata/bot/cogs/tags/tags.py:291
+#: sonata/bot/cogs/tags/tags.py:295
 msgid "You are not the owner of this tag alias."
 msgstr "Ты не владелец этого псевдонима."
 
-#: sonata/bot/cogs/tags/tags.py:295
+#: sonata/bot/cogs/tags/tags.py:299
 msgid "Tag `{0}` successfully deleted."
 msgstr "Тег `{0}` успешно удален."
 
-#: sonata/bot/cogs/tags/tags.py:297 sonata/bot/cogs/tags/tags.py:321
+#: sonata/bot/cogs/tags/tags.py:301 sonata/bot/cogs/tags/tags.py:325
+#: sonata/bot/cogs/tags/tags.py:397
 msgid "You are not the owner of this tag."
 msgstr "Ты не владелец этого тега."
 
-#: sonata/bot/cogs/tags/tags.py:307
+#: sonata/bot/cogs/tags/tags.py:311
 msgid ""
 "Edits content of your tag\n"
 "        \n"
@@ -1757,29 +1773,80 @@ msgstr ""
 "        Тебе необходимо заключить имя в двойные кавычки, если оно состоит "
 "больше, чем из одного слова."
 
-#: sonata/bot/cogs/tags/tags.py:326
+#: sonata/bot/cogs/tags/tags.py:330
 msgid "Tag content changed."
 msgstr "Содержание тега изменено."
 
-#: sonata/bot/cogs/tags/tags.py:330
+#: sonata/bot/cogs/tags/tags.py:334
+msgid "Displays tag information"
+msgstr "Отображает информацию о теге"
+
+#: sonata/bot/cogs/tags/tags.py:342
+msgid "Aliases"
+msgstr "Псевдонимы"
+
+#: sonata/bot/cogs/tags/tags.py:346
+msgid "Created at"
+msgstr "Тег создан"
+
+#: sonata/bot/cogs/tags/tags.py:349
+msgid "Uses"
+msgstr "Использований"
+
+#: sonata/bot/cogs/tags/tags.py:356
+msgid "Owner not found"
+msgstr "Владелец не найден"
+
+#: sonata/bot/cogs/tags/tags.py:361
 msgid ""
 "Lists the tags of the specified member\n"
 "        \n"
-"        If the member is not specified, lists author tags."
+"        If the member is not specified, lists author tags. Tags are "
+"sorted         alphabetically."
 msgstr ""
 "Выводит список тегов указанного участника\n"
 "        \n"
-"        Если участник не указан, выводит список тегов автора."
+"        Если участник не указан, выводит список тегов автора. Теги сортируются "
+"в алфавитном порядке."
 
-#: sonata/bot/cogs/tags/tags.py:352
-msgid "Returns the raw content with the specified tag"
-msgstr "Возвращает необработанный текст с указанным тегом"
+#: sonata/bot/cogs/tags/tags.py:386
+msgid ""
+"Passes your tag to another member\n"
+"        \n"
+"        Example:\n"
+"        - tag pass @Member example tag"
+msgstr ""
+"Передает тег другому участнику\n"
+"        \n"
+"        Пример:\n"
+"        - tag pass @Участник пример тега"
 
-#: sonata/bot/cogs/tags/tags.py:361
-msgid "Searches for tags"
-msgstr "Выполняет поиск по тегам"
+#: sonata/bot/cogs/tags/tags.py:402
+msgid "Tag owner changed."
+msgstr "Владелец тега изменен."
 
-#: sonata/bot/cogs/tags/tags.py:382
+#: sonata/bot/cogs/tags/tags.py:406
+msgid ""
+"Returns the raw content with the specified tag\n"
+"        \n"
+"        The command can be useful when editing tags to preserve formatting."
+msgstr ""
+"Возвращает необработанное содержимое тега\n"
+"        \n"
+"        Команда может быть полезна при редактировании тегов, чтобы сохранить "
+"форматирование."
+
+#: sonata/bot/cogs/tags/tags.py:419
+msgid ""
+"Searches for tags\n"
+"        \n"
+"        The search is performed by name, alias, and tag content."
+msgstr ""
+"Выполняет поиск по тегам\n"
+"        \n"
+"        Поиск выполняется по имени, псевдониму и содержимому тега."
+
+#: sonata/bot/cogs/tags/tags.py:444
 msgid "An alias for tag all command"
 msgstr "Псевдоним для команды tag all"
 
@@ -2458,3 +2525,27 @@ msgstr ""
 #~ "Редактирует содержимое твоего тега\n"
 #~ "        \n"
 #~ "        Будь внимательнее, команда полностью перезаписывает содержимое тега."
+
+#~ msgid "Returns the text with the specified tag"
+#~ msgstr "Возвращает текст с указанным тегом"
+
+#~ msgid "**Did you mean**:\n"
+#~ msgstr "**Возможно, вы имели в виду**:\n"
+
+#~ msgid "Lists all tags"
+#~ msgstr "Выводит список всех тегов."
+
+#~ msgid ""
+#~ "Lists the tags of the specified member\n"
+#~ "        \n"
+#~ "        If the member is not specified, lists author tags."
+#~ msgstr ""
+#~ "Выводит список тегов указанного участника\n"
+#~ "        \n"
+#~ "        Если участник не указан, выводит список тегов автора."
+
+#~ msgid "Returns the raw content with the specified tag"
+#~ msgstr "Возвращает необработанный текст с указанным тегом"
+
+#~ msgid "Searches for tags"
+#~ msgstr "Выполняет поиск по тегам"

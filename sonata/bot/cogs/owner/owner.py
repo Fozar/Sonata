@@ -23,7 +23,7 @@ class Owner(
     core.Cog,
     description=_("""Commands of bot owner"""),
     colour=discord.Colour(0xB91BA4),
-):  # TODO: Add blacklist
+):
     def __init__(self, sonata: core.Sonata):
         self.sonata = sonata
         self._last_result = None
@@ -135,7 +135,7 @@ class Owner(
         discords = time.monotonic()
         url = "https://discord.com/"
         async with ctx.session.get(url) as resp:
-            if resp.status is 200:
+            if resp.status == 200:
                 _discord = round((time.monotonic() - discords) * 1000)
             else:
                 _discord = "Failed"
@@ -143,7 +143,6 @@ class Owner(
             f"Typing: `{typing}ms`\nLatency: `{latency}ms`\nDiscord: `{_discord}ms`",
             title="Pong!",
         )
-        await ctx.send(f"Pong! {round(self.sonata.latency * 1000)}ms")
 
     @core.group()
     async def cogs(self, ctx: core.Context):

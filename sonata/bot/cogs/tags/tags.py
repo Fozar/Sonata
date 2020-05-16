@@ -169,7 +169,12 @@ class Tags(core.Cog, colour=discord.Colour.dark_teal()):
     @core.group(invoke_without_command=True)
     @commands.guild_only()
     async def tag(self, ctx: core.Context, *, name: TagName() = None):
-        _("""Returns the text with the specified tag""")
+        _(
+            """Returns the text with the specified tag
+        
+        If a tag with the specified name is not found, a search will be performed by \
+        the names, aliases and contents of the tags."""
+        )
         if not name:
             return await ctx.send_help()
         tag = await self.get_tag(name, ctx.guild, {"content": True}, inc_uses=True)
@@ -249,7 +254,11 @@ class Tags(core.Cog, colour=discord.Colour.dark_teal()):
 
     @tag.command(name="all", ignore_extra=False)
     async def tag_all(self, ctx: core.Context):
-        _("""Lists all tags""")
+        _(
+            """Lists all tags
+        
+        Tags are sorted alphabetically."""
+        )
         pages = menus.MenuPages(
             source=TagSource(
                 self.get_all_tags(ctx.guild, projection={"name": True}, limit=0),
@@ -324,7 +333,8 @@ class Tags(core.Cog, colour=discord.Colour.dark_teal()):
         _(
             """Lists the tags of the specified member
         
-        If the member is not specified, lists author tags."""
+        If the member is not specified, lists author tags. Tags are sorted \
+        alphabetically."""
         )
         if member is None:
             member = ctx.author
@@ -343,8 +353,12 @@ class Tags(core.Cog, colour=discord.Colour.dark_teal()):
 
     @tag.command(name="raw")
     async def tag_raw(self, ctx: core.Context, *, name: TagName()):
-        _("""Returns the raw content with the specified tag""")
-        tag = await self.get_tag(name, ctx.guild, {"content": True})
+        _(
+            """Returns the raw content with the specified tag
+        
+        The command can be useful when editing tags to preserve formatting."""
+        )
+        tag = await self.get_tag(name, ctx.guild, {"content": True}, inc_uses=True)
         if not tag:
             return await ctx.inform(_("Tag `{0}` not found.").format(name))
 
@@ -352,7 +366,11 @@ class Tags(core.Cog, colour=discord.Colour.dark_teal()):
 
     @tag.command(name="search")
     async def tag_search(self, ctx: core.Context, *, query: str):
-        _("""Searches for tags""")
+        _(
+            """Searches for tags
+        
+        The search is performed by name, alias, and tag content."""
+        )
         pages = menus.MenuPages(
             source=SearchSource(
                 self.search_tags(

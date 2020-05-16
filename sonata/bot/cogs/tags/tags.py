@@ -1,6 +1,7 @@
 from typing import Union, Any
 
 import discord
+from babel.dates import format_datetime
 from discord.ext import commands, menus
 
 from sonata.bot import core
@@ -328,6 +329,33 @@ class Tags(core.Cog, colour=discord.Colour.dark_teal()):
         )
         await ctx.inform(_("Tag content changed."))
 
+    @tag.command(name="info")
+    async def tag_info(self, ctx: core.Context, name: TagName()):
+        _("""Displays tag information""")
+        tag = await self.get_tag(name, ctx.guild, {"content": False})
+        if not tag:
+            return await ctx.inform(_("Tag `{0}` not found.").format(name))
+
+        embed = discord.Embed(colour=self.colour, title=tag["name"])
+        if tag["aliases"]:
+            embed.add_field(
+                name=_("Aliases"),
+                value="\n".join([alias["alias"] for alias in tag["aliases"]]),
+            )
+        embed.add_field(
+            name=_("Created at"),
+            value=format_datetime(tag["created_at"], locale=ctx.locale),
+        )
+        embed.add_field(name=_("Uses"), value=str(tag["uses"]))
+        try:
+            member = ctx.guild.get_member(
+                tag["owner_id"]
+            ) or await ctx.guild.fetch_member(tag["owner_id"])
+            embed.set_author(name=str(member), icon_url=member.avatar_url)
+        except discord.HTTPException:
+            embed.set_author(name=_("Owner not found"))
+        await ctx.send(embed=embed)
+
     @tag.command(name="list")
     async def tag_list(self, ctx: core.Context, member: discord.Member = None):
         _(
@@ -350,6 +378,28 @@ class Tags(core.Cog, colour=discord.Colour.dark_teal()):
             clear_reactions_after=True,
         )
         await pages.start(ctx)
+
+    @tag.command(name="pass", aliases=["transfer"])
+    async def tag_pass(
+        self, ctx: core.Context, member: discord.Member, *, name: TagName()
+    ):
+        _(
+            """Passes your tag to another member
+        
+        Example:
+        - tag pass @Member example tag"""
+        )
+        tag = await self.get_tag(name, ctx.guild, {"name": True})
+        if not tag:
+            return await ctx.inform(_("Tag `{0}` not found.").format(name))
+
+        if not await self.is_tag_owner(tag["name"], ctx.guild, ctx.author):
+            return await ctx.inform(_("You are not the owner of this tag."))
+
+        await ctx.db.tags.update_one(
+            {"name": tag["name"]}, {"$set": {"owner_id": member.id}}
+        )
+        await ctx.inform(_("Tag owner changed."))
 
     @tag.command(name="raw")
     async def tag_raw(self, ctx: core.Context, *, name: TagName()):

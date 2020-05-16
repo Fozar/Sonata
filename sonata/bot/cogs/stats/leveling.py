@@ -73,7 +73,7 @@ class Leveling(core.Cog):
             await message.channel.send(embed=embed)
 
     async def update_user_exp(self, message, exp, lvl):
-        exp = random.randint(5, 15) * int(1 + lvl / 100) + exp
+        exp = random.randint(5, 15) * int(1 + lvl / 17) + exp
         update = {
             "$set": {"last_exp_at": message.created_at, "exp": exp},
         }

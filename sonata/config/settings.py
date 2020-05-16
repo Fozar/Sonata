@@ -39,7 +39,9 @@ class BotConfig:
     core_cogs: FrozenSet[str] = frozenset(
         {"Locale", "Owner", "General", "Admin", "Stats"}
     )
-    other_cogs: FrozenSet[str] = frozenset({"Fun", "Reminder", "Utils", "Emoji", "Mod", "Tags"})
+    other_cogs: FrozenSet[str] = frozenset(
+        {"Fun", "Reminder", "Utils", "Emoji", "Mod", "Tags", "Streams"}
+    )
 
     @property
     def cogs(self):

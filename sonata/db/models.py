@@ -129,3 +129,13 @@ class Tag(TagBase):
     content: str
     guild_id: int
     language: str = "en"
+
+
+class TwitchSubscription(CreatedAtMixin):
+    guild_id: int
+    id: str
+    login: str
+    topic: str
+    callback: str
+    expires_at: datetime
+    verified: bool = False

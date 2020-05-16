@@ -244,10 +244,23 @@ class Sonata(commands.Bot):
         if await cursor.fetch_next:
             return False
         if message.guild:
-            cursor = self.db.guilds.find(
-                {"id": message.guild.id, "blacklist": {"$in": ids}}
+            bl_cursor = self.db.guilds.find(
+                {
+                    "id": message.guild.id,
+                    "blacklist_enabled": True,
+                    "blacklist": {"$in": ids},
+                }
             )
-            if await cursor.fetch_next:
+            wl_cursor = self.db.guilds.find(
+                {
+                    "id": message.guild.id,
+                    "whitelist_enabled": True,
+                    "whitelist": {"$nin": ids},
+                }
+            )
+            if not message.author.guild_permissions.manage_messages and (
+                await bl_cursor.fetch_next or await wl_cursor.fetch_next
+            ):
                 return False
         return True
 

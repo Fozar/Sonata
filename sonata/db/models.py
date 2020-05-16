@@ -52,6 +52,8 @@ class Greeting(BaseModel):
 
 class Guild(DiscordConfigModel):
     owner_id: int
+    blacklist_enabled: bool = False
+    whitelist_enabled: bool = False
     premium: bool = False
     dm_help: bool = False
     auto_lvl_msg: bool = False
@@ -65,6 +67,7 @@ class Guild(DiscordConfigModel):
     disabled_commands: List[str] = []
     channels: List[Channel] = []
     blacklist: List[int] = []
+    whitelist: List[int] = []
     left: Optional[datetime] = None
 
 

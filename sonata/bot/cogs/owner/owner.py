@@ -128,6 +128,21 @@ class Owner(
     @core.command()
     async def ping(self, ctx: core.Context):
         """Pong!"""
+        typings = time.monotonic()
+        await ctx.trigger_typing()
+        typing = round((time.monotonic() - typings) * 1000)
+        latency = round(ctx.bot.latency * 1000)
+        discords = time.monotonic()
+        url = "https://discord.com/"
+        async with ctx.session.get(url) as resp:
+            if resp.status is 200:
+                _discord = round((time.monotonic() - discords) * 1000)
+            else:
+                _discord = "Failed"
+        await ctx.inform(
+            f"Typing: `{typing}ms`\nLatency: `{latency}ms`\nDiscord: `{_discord}ms`",
+            title="Pong!",
+        )
         await ctx.send(f"Pong! {round(self.sonata.latency * 1000)}ms")
 
     @core.group()

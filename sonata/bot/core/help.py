@@ -197,7 +197,7 @@ class HelpCommand(commands.HelpCommand):
                 _("__Subcommands:__"): subcommands,
             },
         )
-        await self.get_destination().send(embed=embed)
+        await self.context.channel.send(embed=embed)
 
     async def send_command_help(self, command: Command):
         embed = self.make_embed(
@@ -205,7 +205,7 @@ class HelpCommand(commands.HelpCommand):
             command.help,
             {_("__Usage:__"): f"`{self.get_command_signature(command)}`"},
         )
-        await self.get_destination().send(embed=embed)
+        await self.context.channel.send(embed=embed)
 
     async def prepare_help_command(self, ctx, command=None):
         if ctx.guild:

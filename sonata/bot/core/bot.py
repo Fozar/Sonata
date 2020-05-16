@@ -237,12 +237,18 @@ class Sonata(commands.Bot):
         if message.author.bot or not self.is_ready():
             return False
 
-        ids = [message.author.id, message.channel.id]
+        ids = list({message.author.id, message.channel.id})
         if message.guild:
             ids.append(message.guild.id)
-        cursor = self.db.blacklist.find({"id": {"$in": list(set(ids))}})
+        cursor = self.db.blacklist.find({"id": {"$in": ids}})
         if await cursor.fetch_next:
             return False
+        if message.guild:
+            cursor = self.db.guilds.find(
+                {"id": message.guild.id, "blacklist": {"$in": ids}}
+            )
+            if await cursor.fetch_next:
+                return False
         return True
 
     async def start(self, *args, **kwargs):

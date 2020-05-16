@@ -1,10 +1,17 @@
+from typing import Union
+
 import discord
 from babel import Locale
 from discord.ext import commands
 from discord.ext.commands import clean_content
 
 from sonata.bot import core
-from sonata.bot.utils.converters import to_lower, locale_to_flag, validate_locale
+from sonata.bot.utils.converters import (
+    to_lower,
+    locale_to_flag,
+    validate_locale,
+    ModeratedMember,
+)
 from sonata.db.models import Channel, Guild, Greeting
 
 
@@ -164,6 +171,67 @@ class Admin(
             await ctx.inform(
                 _("Auto-message when leveling up is disabled for all members.")
             )
+
+    @guild.group(name="blacklist", aliases=["bl"], invoke_without_command=True)
+    async def guild_blacklist(self, ctx: core.Context):
+        _(
+            """Guild blacklist
+
+        The bot will not respond to commands of ignored members and in ignored \
+        channels"""
+        )
+        guild = await ctx.db.guilds.find_one({"id": ctx.guild.id}, {"blacklist": True})
+        members = []
+        channels = []
+        if not guild or not guild.get("blacklist"):
+            return await ctx.inform(_("Blacklist is empty."))
+        for target in guild["blacklist"]:
+            channel = ctx.guild.get_channel(target)
+            if channel:
+                channels.append(channel)
+                continue
+            try:
+                member = ctx.guild.get_member(target) or await ctx.guild.fetch_member(
+                    target
+                )
+            except discord.HTTPException:
+                pass
+            else:
+                members.append(member)
+        if not members and not channels:
+            return await ctx.inform(_("Blacklist is empty."))
+        embed = discord.Embed(colour=self.colour, title=_("Blacklist"))
+        if channels:
+            embed.add_field(
+                name=_("Channels"), value=", ".join([ch.mention for ch in channels])
+            )
+        if members:
+            embed.add_field(name=_("Members"), value=", ".join(map(str, members)))
+        await ctx.send(embed=embed)
+
+    @guild_blacklist.command(name="add")
+    async def guild_blacklist_add(
+        self, ctx: core.Context, target: Union[discord.TextChannel, ModeratedMember]
+    ):
+        _("""Adds channel or member to blacklist""")
+        if target == ctx.author:
+            return await ctx.inform(_("You cannot add yourself to the blacklist."))
+        if target == ctx.guild.me:
+            return await ctx.inform(_("You cannot add me to the blacklist."))
+        await ctx.db.guilds.update_one(
+            {"id": ctx.guild.id}, {"$addToSet": {"blacklist": target.id}}
+        )
+        await ctx.inform(_("Target successfully added to blacklist."))
+
+    @guild_blacklist.command(name="remove")
+    async def guild_blacklist_remove(
+        self, ctx: core.Context, target: Union[discord.TextChannel, ModeratedMember]
+    ):
+        _("""Removes channel or member from blacklist""")
+        await ctx.db.guilds.update_one(
+            {"id": ctx.guild.id}, {"$pull": {"blacklist": target.id}}
+        )
+        await ctx.inform(_("Target successfully removed from blacklist."))
 
     @guild.group(name="dmhelp")
     async def guild_dmhelp(self, ctx: core.Context):
@@ -405,7 +473,7 @@ class Admin(
             premium=guild["premium"],
             created_at=guild["created_at"],
             last_message_at=guild["last_message_at"],
-            owner_id=guild["owner_id"]
+            owner_id=guild["owner_id"],
         ).dict()
         await ctx.db.guilds.update_one({"id": ctx.guild.id}, {"$set": new_guild})
         await ctx.inform(_("Guild settings reset."))

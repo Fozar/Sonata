@@ -64,6 +64,7 @@ class Guild(DiscordConfigModel):
     disabled_cogs: List[str] = []
     disabled_commands: List[str] = []
     channels: List[Channel] = []
+    blacklist: List[int] = []
     left: Optional[datetime] = None
 
 

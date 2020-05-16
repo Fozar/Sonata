@@ -234,11 +234,9 @@ class Admin(
     @guild_blacklist.command(name="enable")
     async def guild_blacklist_enable(self, ctx: core.Context):
         _("""Enables blacklist in the guild""")
-        result = await ctx.db.guilds.update_one(
+        await ctx.db.guilds.update_one(
             {"id": ctx.guild.id}, {"$set": {"blacklist_enabled": True}},
         )
-        if result.matched_count == 0:
-            return await ctx.inform(_("The blacklist includes all guild channels."))
         await ctx.inform(_("Blacklist enabled"))
 
     @guild_blacklist.command(name="remove")

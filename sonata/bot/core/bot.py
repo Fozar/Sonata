@@ -274,7 +274,10 @@ class Sonata(commands.Bot):
         if await cursor.fetch_next:
             return False
         if message.guild:
-            if not message.author.guild_permissions.manage_messages:
+            if (
+                not message.author.guild_permissions.manage_messages
+                or not await self.is_owner(message.author)
+            ):
                 blacklisted = await self.guild_blacklist_check(message)
                 whitelisted = await self.guild_whitelist_check(message)
                 if blacklisted or not whitelisted:

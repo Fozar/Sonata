@@ -1,5 +1,6 @@
 import random
 import re
+from contextlib import suppress
 
 import discord
 from discord.ext import commands
@@ -198,7 +199,8 @@ class Fun(Games, description=_("""Entertainment"""), colour=discord.Colour(0xF5A
             )
             + str(self.sonata.emoji("choke"))
         )
-        await ctx.message.delete()
+        with suppress(discord.HTTPException):
+            await ctx.message.delete()
 
     @core.command()
     @commands.guild_only()
@@ -210,7 +212,8 @@ class Fun(Games, description=_("""Entertainment"""), colour=discord.Colour(0xF5A
             )
             + str(self.sonata.emoji("GivePLZ"))
         )
-        await ctx.message.delete()
+        with suppress(discord.HTTPException):
+            await ctx.message.delete()
 
     @core.command()
     @commands.guild_only()
@@ -222,7 +225,8 @@ class Fun(Games, description=_("""Entertainment"""), colour=discord.Colour(0xF5A
             )
             + str(self.sonata.emoji("peepoSmash"))
         )
-        await ctx.message.delete()
+        with suppress(discord.HTTPException):
+            await ctx.message.delete()
 
     @core.command()
     @commands.guild_only()
@@ -234,14 +238,16 @@ class Fun(Games, description=_("""Entertainment"""), colour=discord.Colour(0xF5A
             )
             + "😘"
         )
-        await ctx.message.delete()
+        with suppress(discord.HTTPException):
+            await ctx.message.delete()
 
     @core.command()
     @commands.guild_only()
     async def me(self, ctx: core.Context, *, action):
         _("""Perform a 3rd person action""")
         await ctx.send(f"*{ctx.author.display_name} {action}*")
-        await ctx.message.delete()
+        with suppress(discord.HTTPException):
+            await ctx.message.delete()
 
     @core.command()
     @commands.guild_only()
@@ -253,4 +259,5 @@ class Fun(Games, description=_("""Entertainment"""), colour=discord.Colour(0xF5A
             )
             + str(self.sonata.emoji("peepoWink"))
         )
-        await ctx.message.delete()
+        with suppress(discord.HTTPException):
+            await ctx.message.delete()

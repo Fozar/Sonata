@@ -436,7 +436,10 @@ class Tags(core.Cog, colour=discord.Colour.dark_teal()):
             ),
             clear_reactions_after=True,
         )
-        await pages.start(ctx)
+        try:
+            await pages.start(ctx)
+        except IndexError:
+            await ctx.inform(_("Tag `{0}` not found.").format(name))
 
     @core.command()
     @commands.guild_only()

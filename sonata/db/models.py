@@ -50,6 +50,11 @@ class Greeting(BaseModel):
     message: str
 
 
+class BWList(BaseModel):
+    enabled: bool = False
+    channels: List[int] = []
+
+
 class Guild(DiscordConfigModel):
     owner_id: int
     premium: bool = False
@@ -64,6 +69,8 @@ class Guild(DiscordConfigModel):
     disabled_cogs: List[str] = []
     disabled_commands: List[str] = []
     channels: List[Channel] = []
+    blacklist: BWList = BWList()
+    whitelist: BWList = BWList()
     left: Optional[datetime] = None
 
 

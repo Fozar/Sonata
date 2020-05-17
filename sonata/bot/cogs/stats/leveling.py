@@ -91,7 +91,7 @@ class Leveling(core.Cog):
     @commands.guild_only()
     async def rank(
         self, ctx: core.Context, member: Union[discord.Member, int] = None,
-    ):
+    ):  # TODO: Check if 1st msg
         _("""Shows your guild rank""")
         if ctx.invoked_subcommand is not None:
             return

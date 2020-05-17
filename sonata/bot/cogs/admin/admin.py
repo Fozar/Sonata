@@ -1,5 +1,3 @@
-from typing import Union
-
 import discord
 from babel import Locale
 from discord.ext import commands
@@ -10,9 +8,8 @@ from sonata.bot.utils.converters import (
     to_lower,
     locale_to_flag,
     validate_locale,
-    ModeratedMember,
 )
-from sonata.db.models import Channel, Guild, Greeting
+from sonata.db.models import Channel, Guild, Greeting, BWList
 
 
 class Admin(
@@ -177,77 +174,74 @@ class Admin(
         _(
             """Guild blacklist
 
-        The bot will not respond to commands of blacklisted members and in blacklisted \
-        channels. Members with the "Manage messages" permissions ignore this rule."""
+        The bot will not respond to commands in blacklisted channels."""
         )
         guild = await ctx.db.guilds.find_one({"id": ctx.guild.id}, {"blacklist": True})
-        members = []
-        channels = []
-        if not guild or not guild.get("blacklist"):
+        blacklist = guild.get("blacklist")
+        if blacklist is None:
             return await ctx.inform(_("Blacklist is empty."))
-        for target in guild["blacklist"]:
-            channel = ctx.guild.get_channel(target)
-            if channel:
-                channels.append(channel)
-                continue
-            try:
-                member = ctx.guild.get_member(target) or await ctx.guild.fetch_member(
-                    target
-                )
-            except discord.HTTPException:
-                pass
-            else:
-                members.append(member)
-        if not members and not channels:
-            return await ctx.inform(_("Blacklist is empty."))
+
+        channels_id = blacklist.get("channels")
         embed = discord.Embed(colour=self.colour, title=_("Blacklist"))
-        if channels:
-            embed.add_field(
-                name=_("Channels"), value=", ".join([ch.mention for ch in channels])
-            )
-        if members:
-            embed.add_field(name=_("Members"), value=", ".join(map(str, members)))
+        try:
+            channels = [ctx.guild.get_channel(ch) for ch in channels_id]
+            mentions = [ch.mention for ch in channels if ch is not None]
+            if not mentions:
+                raise TypeError
+            embed.description = _("**Channels**\n") + ", ".join(mentions)
+        except TypeError:
+            return await ctx.inform(_("Blacklist is empty."))
         await ctx.send(embed=embed)
 
     @guild_blacklist.command(name="add")
     async def guild_blacklist_add(
-        self, ctx: core.Context, target: Union[discord.TextChannel, ModeratedMember]
+        self, ctx: core.Context, channels: commands.Greedy[discord.TextChannel]
     ):
-        _("""Adds channel or member to blacklist""")
-        if target == ctx.author:
-            return await ctx.inform(_("You cannot add yourself to the blacklist."))
-        if target == ctx.guild.me:
-            return await ctx.inform(_("You cannot add me to the blacklist."))
+        _("""Adds channels to blacklist""")
         await ctx.db.guilds.update_one(
-            {"id": ctx.guild.id}, {"$addToSet": {"blacklist": target.id}}
+            {"id": ctx.guild.id},
+            {
+                "$addToSet": {
+                    "blacklist.channels": {"$each": [ch.id for ch in channels]}
+                }
+            },
         )
-        await ctx.inform(_("Target successfully added to blacklist."))
+        await ctx.inform(_("Channels successfully added to blacklist."))
+
+    @guild_blacklist.command(name="clear")
+    async def guild_blacklist_clear(self, ctx: core.Context):
+        _("""Clears the blacklist""")
+        await ctx.db.guilds.update_one(
+            {"id": ctx.guild.id}, {"$set": {"blacklist": BWList().dict()}}
+        )
+        await ctx.inform(_("Blacklist cleared successfully."))
 
     @guild_blacklist.command(name="disable")
     async def guild_blacklist_disable(self, ctx: core.Context):
         _("""Disables blacklist in the guild""")
         await ctx.db.guilds.update_one(
-            {"id": ctx.guild.id}, {"$set": {"blacklist_enabled": False}},
+            {"id": ctx.guild.id}, {"$set": {"blacklist.enabled": False}},
         )
-        await ctx.inform(_("Blacklist disabled"))
+        await ctx.inform(_("Blacklist disabled."))
 
     @guild_blacklist.command(name="enable")
     async def guild_blacklist_enable(self, ctx: core.Context):
         _("""Enables blacklist in the guild""")
         await ctx.db.guilds.update_one(
-            {"id": ctx.guild.id}, {"$set": {"blacklist_enabled": True}},
+            {"id": ctx.guild.id}, {"$set": {"blacklist.enabled": True}},
         )
-        await ctx.inform(_("Blacklist enabled"))
+        await ctx.inform(_("Blacklist enabled."))
 
     @guild_blacklist.command(name="remove")
     async def guild_blacklist_remove(
-        self, ctx: core.Context, target: Union[discord.TextChannel, ModeratedMember]
+        self, ctx: core.Context, channels: commands.Greedy[discord.TextChannel]
     ):
-        _("""Removes channel or member from blacklist""")
+        _("""Removes channels from blacklist""")
         await ctx.db.guilds.update_one(
-            {"id": ctx.guild.id}, {"$pull": {"blacklist": target.id}}
+            {"id": ctx.guild.id},
+            {"$pull": {"blacklist.channels": {"$in": [ch.id for ch in channels]}}},
         )
-        await ctx.inform(_("Target successfully removed from blacklist."))
+        await ctx.inform(_("Channels successfully removed from blacklist."))
 
     @guild.group(name="dmhelp")
     async def guild_dmhelp(self, ctx: core.Context):
@@ -648,75 +642,71 @@ class Admin(
         _(
             """Guild whitelist
 
-        The bot will respond to commands only of whitelisted members and/or in \
-        whitelisted channels. Members with the "Manage messages" permissions ignore \
-        this rule."""
+        The bot will respond to commands only in whitelisted channels."""
         )
         guild = await ctx.db.guilds.find_one({"id": ctx.guild.id}, {"whitelist": True})
-        members = []
-        channels = []
-        if not guild or not guild.get("whitelist"):
+        whitelist = guild.get("whitelist")
+        if whitelist is None:
             return await ctx.inform(_("Whitelist is empty."))
-        for target in guild["whitelist"]:
-            channel = ctx.guild.get_channel(target)
-            if channel:
-                channels.append(channel)
-                continue
-            try:
-                member = ctx.guild.get_member(target) or await ctx.guild.fetch_member(
-                    target
-                )
-            except discord.HTTPException:
-                pass
-            else:
-                members.append(member)
-        if not members and not channels:
-            return await ctx.inform(_("Whitelist is empty."))
+
+        channels_id = whitelist.get("channels")
         embed = discord.Embed(colour=self.colour, title=_("Whitelist"))
-        if channels:
-            embed.add_field(
-                name=_("Channels"), value=", ".join([ch.mention for ch in channels])
-            )
-        if members:
-            embed.add_field(name=_("Members"), value=", ".join(map(str, members)))
+        try:
+            channels = [ctx.guild.get_channel(ch) for ch in channels_id]
+            mentions = [ch.mention for ch in channels if ch is not None]
+            if not mentions:
+                raise TypeError
+            embed.description = _("**Channels**\n") + ", ".join(mentions)
+        except TypeError:
+            return await ctx.inform(_("Whitelist is empty."))
         await ctx.send(embed=embed)
 
     @guild_whitelist.command(name="add")
     async def guild_whitelist_add(
-        self, ctx: core.Context, target: Union[discord.TextChannel, ModeratedMember]
+        self, ctx: core.Context, channels: commands.Greedy[discord.TextChannel]
     ):
-        _("""Adds channel or member to whitelist""")
-        if target == ctx.guild.me:
-            return await ctx.inform(_("You cannot add me to the whitelist."))
+        _("""Adds channels to whitelist""")
         await ctx.db.guilds.update_one(
-            {"id": ctx.guild.id}, {"$addToSet": {"whitelist": target.id}}
+            {"id": ctx.guild.id},
+            {
+                "$addToSet": {
+                    "whitelist.channels": {"$each": [ch.id for ch in channels]}
+                }
+            },
         )
-        await ctx.inform(_("Target successfully added to whitelist."))
+        await ctx.inform(_("Channels successfully added to whitelist."))
+
+    @guild_whitelist.command(name="clear")
+    async def guild_whitelist_clear(self, ctx: core.Context):
+        _("""Clears the whitelist""")
+        await ctx.db.guilds.update_one(
+            {"id": ctx.guild.id}, {"$set": {"whitelist": BWList().dict()}}
+        )
+        await ctx.inform(_("Whitelist cleared successfully."))
 
     @guild_whitelist.command(name="disable")
     async def guild_whitelist_disable(self, ctx: core.Context):
         _("""Disables whitelist in the guild""")
         await ctx.db.guilds.update_one(
-            {"id": ctx.guild.id}, {"$set": {"whitelist_enabled": False}},
+            {"id": ctx.guild.id}, {"$set": {"whitelist.enabled": False}},
         )
         await ctx.inform(_("Whitelist disabled"))
 
     @guild_whitelist.command(name="enable")
     async def guild_whitelist_enable(self, ctx: core.Context):
         _("""Enables whitelist in the guild""")
-        result = await ctx.db.guilds.update_one(
-            {"id": ctx.guild.id}, {"$set": {"whitelist_enabled": True}},
+        await ctx.db.guilds.update_one(
+            {"id": ctx.guild.id}, {"$set": {"whitelist.enabled": True}},
         )
-        if result.matched_count == 0:
-            return await ctx.inform(_("Whitelist is empty."))
-        await ctx.inform(_("Whitelist enabled"))
+        await ctx.inform(_("Whitelist enabled."))
 
     @guild_whitelist.command(name="remove")
     async def guild_whitelist_remove(
-        self, ctx: core.Context, target: Union[discord.TextChannel, ModeratedMember]
+        self, ctx: core.Context, channels: commands.Greedy[discord.TextChannel]
     ):
-        _("""Removes channel or member from whitelist""")
+        _("""Removes channels from whitelist""")
         await ctx.db.guilds.update_one(
-            {"id": ctx.guild.id}, {"$pull": {"whitelist": target.id}}
+            {"id": ctx.guild.id},
+            {"$pull": {"whitelist.channels": {"$in": [ch.id for ch in channels]}}},
         )
-        await ctx.inform(_("Target successfully removed from whitelist."))
+        await ctx.inform(_("Channels successfully removed from whitelist."))

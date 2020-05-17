@@ -232,6 +232,36 @@ class Sonata(commands.Bot):
     async def set_locale(self, msg: discord.Message):
         self.locale = await self.define_locale(msg)
 
+    async def guild_blacklist_check(self, message: discord.Message):
+        """Return True if channel blacklisted or blacklist is disabled"""
+        cursor = self.db.guilds.find(
+            {"id": message.guild.id, "blacklist.channels": message.channel.id},
+            {"_id": False, "blacklist.enabled": True},
+        )
+        if not await cursor.fetch_next:
+            return False
+
+        bl = cursor.next_object().get("blacklist")
+        if bl:
+            return bl.get("enabled")
+        return False
+
+    async def guild_whitelist_check(self, message: discord.Message):
+        """Return True if channel whitelisted or whitelist is disabled"""
+        cursor = self.db.guilds.find(
+            {
+                "id": message.guild.id,
+                "whitelist.channels": {"$ne": message.channel.id},
+            },
+            {"_id": False, "whitelist.enabled": True},
+        )
+        if await cursor.fetch_next:
+            wl = cursor.next_object().get("whitelist")
+            if wl:
+                return not wl.get("enabled")
+
+        return True
+
     async def should_reply(self, message):
         """Returns whether the bot should reply to a given message"""
         if message.author.bot or not self.is_ready():
@@ -244,24 +274,11 @@ class Sonata(commands.Bot):
         if await cursor.fetch_next:
             return False
         if message.guild:
-            bl_cursor = self.db.guilds.find(
-                {
-                    "id": message.guild.id,
-                    "blacklist_enabled": True,
-                    "blacklist": {"$in": ids},
-                }
-            )
-            wl_cursor = self.db.guilds.find(
-                {
-                    "id": message.guild.id,
-                    "whitelist_enabled": True,
-                    "whitelist": {"$nin": ids},
-                }
-            )
-            if not message.author.guild_permissions.manage_messages and (
-                await bl_cursor.fetch_next or await wl_cursor.fetch_next
-            ):
-                return False
+            if not message.author.guild_permissions.manage_messages:
+                blacklisted = await self.guild_blacklist_check(message)
+                whitelisted = await self.guild_whitelist_check(message)
+                if blacklisted or not whitelisted:
+                    return False
         return True
 
     async def start(self, *args, **kwargs):

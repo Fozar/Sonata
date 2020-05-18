@@ -24,7 +24,7 @@ class CloseMenu(menus.Menu):
 
 class ConfirmMenu(menus.Menu):
     def __init__(self, msg: str = None, embed: discord.Embed = None):
-        super().__init__(timeout=30.0, delete_message_after=True)
+        super().__init__(timeout=30.0, clear_reactions_after=True)
         self.msg = msg
         self.embed = embed
         self.result = None

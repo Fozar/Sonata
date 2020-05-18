@@ -400,6 +400,8 @@ class Admin(
         Example:
         - guild greeting set #channel Hi, [member]! Welcome to our guild!"""
         )
+        if not channel.permissions_for(ctx.guild.me).send_messages:
+            return await ctx.inform(_("I can't send messages in this channel."))
         if len(message) > 2000:
             return await ctx.inform(_("Welcome message cannot exceed 2000 characters."))
 

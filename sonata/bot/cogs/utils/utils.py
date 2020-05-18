@@ -83,7 +83,7 @@ class Utils(core.Cog, colour=discord.Colour(0x7ED321)):
 
     @core.command(aliases=["calc"])
     async def calculate(
-        self, ctx: core.Context, *, expression: MathExpression() = None
+        self, ctx: core.Context, *, expression: MathExpression()
     ):
         _(
             """Calculates an expression

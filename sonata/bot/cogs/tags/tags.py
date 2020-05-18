@@ -269,7 +269,10 @@ class Tags(core.Cog, colour=discord.Colour.dark_teal()):
             ),
             clear_reactions_after=True,
         )
-        await pages.start(ctx)
+        try:
+            await pages.start(ctx)
+        except IndexError:
+            await ctx.inform(_("No tags."))
 
     @tag.command(name="delete", aliases=["remove"])
     async def tag_delete(self, ctx: core.Context, *, name: TagName()):
@@ -377,7 +380,10 @@ class Tags(core.Cog, colour=discord.Colour.dark_teal()):
             ),
             clear_reactions_after=True,
         )
-        await pages.start(ctx)
+        try:
+            await pages.start(ctx)
+        except IndexError:
+            await ctx.inform(_("No tags."))
 
     @tag.command(name="pass", aliases=["transfer"])
     async def tag_pass(
@@ -439,7 +445,7 @@ class Tags(core.Cog, colour=discord.Colour.dark_teal()):
         try:
             await pages.start(ctx)
         except IndexError:
-            await ctx.inform(_("Tag `{0}` not found.").format(name))
+            await ctx.inform(_("No results were found for your request."))
 
     @core.command()
     @commands.guild_only()

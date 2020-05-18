@@ -12,6 +12,7 @@ async def init_config(app):
         if not app["debug"]:
             BotConfig.discord_token = data["Bot"]["main_token"]
             BotConfig.dbl_token = data["Bot"]["dbl_token"]
+            BotConfig.sdc_token = data["Bot"]["sdc_token"]
             MongoConfig.username = data["Mongo"]["username"]
             MongoConfig.password = data["Mongo"]["password"]
         else:

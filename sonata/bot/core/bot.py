@@ -1,14 +1,19 @@
 import concurrent.futures
+import hashlib
+import hmac
 import inspect
 import traceback
 from datetime import datetime
+from json import JSONDecodeError
 from logging import Logger
 from typing import Union, Optional
 
 import aiohttp
 import dbl
 import discord
+from aiohttp import web
 from aiohttp.web_app import Application
+from aiohttp.web_request import Request
 from discord.ext import commands
 
 from sonata.bot.utils import i18n
@@ -47,6 +52,7 @@ class Sonata(commands.Bot):
         self.service_guild: Optional[discord.Guild] = None
         self.errors_channel: Optional[discord.TextChannel] = None
         self.reports_channel: Optional[discord.TextChannel] = None
+        self.init_handlers()
 
     # Properties
 
@@ -76,6 +82,57 @@ class Sonata(commands.Bot):
         return discord.utils.oauth_url(
             self.user.id, permissions=discord.Permissions(1409805510),
         )
+
+    # Handlers
+
+    # Handlers
+
+    async def handler_get(self, request: Request):
+        query = request.query
+        try:
+            if query["hub.mode"] == "denied":
+                return web.Response(text="OK", status=200)
+
+            if query["hub.challenge"]:
+                self.dispatch(
+                    "subscription_verify", query["hub.topic"], query["hub.mode"]
+                )
+                return web.Response(
+                    body=query["hub.challenge"], content_type="text/plain"
+                )
+        except KeyError:
+            return web.Response(text="Bad Request", status=400)
+
+        return web.Response(text="OK", status=200)
+
+    async def handler_post(self, request: Request):
+        body = await request.read()
+        signature = (
+            "sha256="
+            + hmac.new(
+                self.config["twitch"].hub_secret.encode("utf-8"), body, hashlib.sha256,
+            ).hexdigest()
+        )
+        if signature != request.headers["X-Hub-Signature"]:
+            return web.Response(text="Forbidden", status=403)
+
+        try:
+            json = await request.json()
+            data = json["data"]
+        except JSONDecodeError:
+            return web.Response(text="Bad Request", status=400)
+
+        try:
+            data = data[0]
+        except IndexError:
+            data = None
+
+        events = {"streams": "stream_changed"}
+        self.dispatch(
+            events[request.match_info["topic"]], data, request.match_info["id"]
+        )
+
+        return web.Response(text="OK", status=200)
 
     # Events
 
@@ -136,6 +193,8 @@ class Sonata(commands.Bot):
             response = _("Command `{cmd}` on cooldown. Try again in **{cd}s**.").format(
                 cmd=ctx.command.qualified_name, cd=round(exc.retry_after, 2)
             )
+        elif isinstance(exc, commands.PrivateMessageOnly):
+            response = _("This command can only be used in private messages.")
         else:
             response = None
         if not response:
@@ -168,6 +227,12 @@ class Sonata(commands.Bot):
         self.logger.info("Server count posted successfully")
 
     # Methods
+
+    def init_handlers(self):
+        cors = self.app["cors"]
+        resource = cors.add(self.app.router.add_resource(r"/wh/twitch/{topic}/{id}"))
+        cors.add(resource.add_route("GET", self.handler_get))
+        cors.add(resource.add_route("POST", self.handler_post))
 
     async def define_locale(
         self, obj: Union[discord.Message, Context, discord.TextChannel]

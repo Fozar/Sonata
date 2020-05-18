@@ -47,56 +47,12 @@ class TwitchUser(commands.Converter):
 
 class TwitchMixin(core.Cog):
     twitch_colour = discord.Colour(0x6441A4)
-    events = {"streams": "stream_changed"}
 
     def __init__(self, sonata: core.Sonata):
         self.sonata = sonata
-        app = sonata.app
-        cors = app["cors"]
-        resource = cors.add(app.router.add_resource(r"/wh/twitch/{topic}/{id}"))
-        cors.add(resource.add_route("GET", self.handler_get))
-        cors.add(resource.add_route("POST", self.handler_post))
         self._have_data = asyncio.Event()
         self._next_sub = None
         self._task = sonata.loop.create_task(self.dispatch_subs())
-
-    # Handlers
-
-    async def handler_get(self, request: Request):
-        query = request.query
-        try:
-            if query["hub.mode"] == "denied":
-                return web.Response(text="OK", status=200)
-
-            if query["hub.challenge"]:
-                self.sonata.dispatch(
-                    "subscription_verify", query["hub.topic"], query["hub.mode"]
-                )
-                return web.Response(
-                    body=query["hub.challenge"], content_type="text/plain"
-                )
-        except KeyError:
-            return web.Response(text="Bad Request", status=400)
-
-        return web.Response(text="OK", status=200)
-
-    async def handler_post(self, request: Request):
-        try:
-            j = await request.json()
-            data = j["data"]
-        except json.JSONDecodeError:
-            return web.Response(text="Bad Request", status=400)
-
-        try:
-            data = data[0]
-        except IndexError:
-            data = None
-
-        self.sonata.dispatch(
-            self.events[request.match_info["topic"]], data, request.match_info["id"]
-        )
-
-        return web.Response(text="OK", status=200)
 
     # Events
 

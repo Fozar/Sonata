@@ -55,6 +55,14 @@ class BWList(BaseModel):
     channels: List[int] = []
 
 
+class GuildAlertConfig(BaseModel):
+    enabled: bool = False
+    message: str = None
+    channel: int = None
+    mention: str = None
+    embed: bool = False
+
+
 class Guild(DiscordConfigModel):
     owner_id: int
     premium: bool = False
@@ -65,7 +73,7 @@ class Guild(DiscordConfigModel):
     admin_roles: List[int] = []
     mod_roles: List[int] = []
     modlog: Optional[int] = None
-    alerts: Optional[int] = None
+    alerts: Optional[GuildAlertConfig] = GuildAlertConfig()
     disabled_cogs: List[str] = []
     disabled_commands: List[str] = []
     channels: List[Channel] = []
@@ -138,11 +146,16 @@ class Tag(TagBase):
     language: str = "en"
 
 
+class TwitchSubscriptionAlertConfig(GuildAlertConfig):
+    id: int
+    message_id: int = None
+
+
 class TwitchSubscription(CreatedAtMixin):
-    guild_id: int
+    guilds: List[TwitchSubscriptionAlertConfig]
     id: str
     login: str
     topic: str
     callback: str
-    expires_at: datetime
+    expires_at: datetime = None
     verified: bool = False

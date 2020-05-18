@@ -1,11 +1,8 @@
 import asyncio
-import json
 import re
 from datetime import timedelta, datetime
 
 import discord
-from aiohttp import web
-from aiohttp.web_request import Request
 from discord.ext import commands
 from pymongo import ReturnDocument
 
@@ -67,64 +64,85 @@ class TwitchMixin(core.Cog):
 
     @core.Cog.listener()
     async def on_stream_changed(self, data: dict, user_id: str):
+        topic = STREAMS_URL + f"?user_id={user_id}"
         sub = await self.sonata.db.twitch_subs.find_one(
-            {"topic": STREAMS_URL + f"?user_id={user_id}"}, {"guilds": True}
+            {"topic": topic}, {"guilds": True}
         )
         try:
             guilds = sub["guilds"]
         except (KeyError, TypeError):
             return
-        for alert_guild_conf in guilds:
+
+        for alert_conf in guilds:
             try:
                 guild = self.sonata.get_guild(
-                    alert_guild_conf["id"]
-                ) or await self.sonata.fetch_guild(alert_guild_conf["id"])
+                    alert_conf["id"]
+                ) or await self.sonata.fetch_guild(alert_conf["id"])
             except discord.HTTPException:
                 continue
 
-            guild_conf = await self.sonata.db.guilds.find_one(
-                {"id": guild.id}, {"alerts": True}
-            )
-            try:
-                channel = guild.get_channel(
-                    alert_guild_conf.get("channel")
-                ) or guild.get_channel(guild_conf.get("alerts").get("channel"))
-                if channel is None:
-                    continue
-            except AttributeError:
+            if not data:
                 continue
 
-            if not channel.permissions_for(guild.me).send_messages:
-                continue
-
-            msg = alert_guild_conf.get("message") or guild_conf.get("message")
-            if msg is None:
-                msg = "{{link}}"
-            replacements = [
-                (r"{{\s*link\s*}}", f"https://www.twitch.tv/{data['user_name']}"),
-                (r"{{\s*name\s*}}", data["user_name"]),
-            ]
-            for old, new in replacements:
-                msg = re.sub(old, new, msg)
-
-            if alert_guild_conf.get("embed") or guild_conf.get("embed"):
-                embed = discord.Embed(
-                    colour=self.twitch_colour, description=msg, title=data["user_name"]
-                )
-                embed.set_image(
-                    url=data["thumbnail_url"].format(width=1920, height=1080)
-                )
-                content = ""
-            else:
-                content = msg
-                embed = None
-            mention = alert_guild_conf.get("mention") or guild_conf.get("mention")
-            if mention:
-                content += f"\n@{mention}"
-
-            await channel.send(content=content, embed=embed)
+            await self.new_alert(guild, alert_conf, topic, data)
 
     # Methods
+
+    @staticmethod
+    def make_custom_message(message: str, user_name: str):
+        replacements = [
+            (r"{{\s*link\s*}}", f"https://www.twitch.tv/{user_name}"),
+            (r"{{\s*name\s*}}", user_name),
+        ]
+        for old, new in replacements:
+            message = re.sub(old, new, message)
+        return message
+
+    async def new_alert(
+        self, guild: discord.Guild, alert_conf: dict, topic: str, data: dict
+    ):
+        alerts = await self.sonata.db.guilds.find_one(
+            {"id": guild.id}, {"alerts": True}
+        )
+        alerts = alerts["alerts"]
+        if not alerts or not alerts.get("enabled") or not alert_conf.get("enabled"):
+            return
+
+        try:
+            channel = guild.get_channel(alert_conf.get("channel")) or guild.get_channel(
+                alerts.get("channel")
+            )
+            if channel is None:
+                return
+        except AttributeError:
+            return
+
+        if not channel.permissions_for(guild.me).send_messages:
+            return
+
+        cnt = alert_conf.get("message") or alerts.get("message")
+        if cnt is None:
+            cnt = "{{link}}"
+        cnt = self.make_custom_message(cnt, data["user_name"])
+
+        if alert_conf.get("embed") or alerts.get("embed"):
+            embed = discord.Embed(
+                colour=self.twitch_colour, description=cnt, title=data["user_name"]
+            )
+            embed.set_image(url=data["thumbnail_url"].format(width=1920, height=1080))
+            content = ""
+        else:
+            content = cnt
+            embed = None
+        mention = alert_conf.get("mention") or alerts.get("mention")
+        if mention:
+            content += f"\n@{mention}"
+
+        msg = await channel.send(content=content, embed=embed)
+        await self.sonata.db.twitch_subs.update_one(
+            {"topic": topic, "guilds.id": guild.id},
+            {"$set": {"guilds.$.message_id": f"{msg.channel.id}-{msg.id}"}},
+        )
 
     async def extend_subscription(
         self, sub: TwitchSubscription, lease_seconds: int = 86400
@@ -194,13 +212,15 @@ class TwitchMixin(core.Cog):
 
         raise errors.SubscriptionNotFound
 
-    @staticmethod
-    def make_params(topic: str, callback: str, mode: str, lease_seconds: int = 86400):
+    def make_params(
+        self, topic: str, callback: str, mode: str, lease_seconds: int = 86400
+    ):
         return {
             "hub.callback": callback,
             "hub.mode": mode,
             "hub.topic": topic,
             "hub.lease_seconds": lease_seconds,
+            "hub.secret": self.sonata.config["twitch"].hub_secret,
         }
 
     async def subscribe(self, topic: str, callback: str, lease_seconds: int = 86400):

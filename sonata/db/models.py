@@ -147,6 +147,7 @@ class Tag(TagBase):
 
 
 class TwitchSubscriptionAlertConfig(GuildAlertConfig):
+    enabled: bool = True
     id: int
     message_id: int = None
 
@@ -157,5 +158,6 @@ class TwitchSubscription(CreatedAtMixin):
     login: str
     topic: str
     callback: str
+    secret: str = None
     expires_at: datetime = None
     verified: bool = False

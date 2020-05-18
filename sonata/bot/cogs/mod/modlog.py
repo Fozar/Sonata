@@ -98,7 +98,11 @@ class Modlog(core.Cog):
     async def fetch_modlog_case(
         self, guild: discord.Guild, user: Union[discord.Member, discord.User], action
     ):
-        if not guild.me.guild_permissions.view_audit_log:
+        try:
+            me = guild.me or await guild.fetch_member(self.sonata.user.id)
+        except discord.HTTPException:
+            return
+        if not me.guild_permissions.view_audit_log:
             return None
 
         guild_conf = await self.sonata.db.guilds.find_one(

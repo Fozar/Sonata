@@ -16,7 +16,12 @@ from discord.ext import commands
 
 from sonata.bot import core
 from sonata.bot.cogs import load_extension, unload_extension, reload_extension
-from sonata.bot.utils.converters import GlobalChannel, to_lower, EvalExpression
+from sonata.bot.utils.converters import (
+    GlobalChannel,
+    to_lower,
+    EvalExpression,
+    validate_locale,
+)
 
 
 class Owner(
@@ -374,3 +379,9 @@ class Owner(
             text = "```OK```"
 
         await ctx.send(text)
+
+    @core.command(name="description.raw")
+    async def raw_description(self, ctx: core.Context, locale: validate_locale = None):
+        if locale is not None:
+            ctx.locale = locale
+        await ctx.send(discord.utils.escape_markdown(ctx.bot.description))

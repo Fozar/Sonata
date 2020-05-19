@@ -33,13 +33,13 @@ class Games(core.Cog):
         return {"bulls": bulls, "cows": cows}
 
     @core.group()
-    async def play(self, ctx: core.Context):
+    async def game(self, ctx: core.Context):
         _("""Starts a game session""")
         if ctx.invoked_subcommand is not None:
             return
         await ctx.send_help()
 
-    @play.command(name="B&C")
+    @game.command(name="B&C")
     async def bulls_and_cows(self, ctx: core.Context):
         _(
             """Bulls & Cows

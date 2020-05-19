@@ -12,7 +12,7 @@ from typing import Union, Optional
 import aiohttp
 import dbl
 import discord
-from aiohttp import web
+from aiohttp import web, FormData
 from aiohttp.web_app import Application
 from aiohttp.web_request import Request
 from discord.ext import commands
@@ -227,10 +227,11 @@ class Sonata(commands.Bot):
                 )
 
     async def on_guild_post(self):
+        data = FormData({"servers": len(self.guilds)}, False)
         await self.session.post(
             f"https://api.server-discord.com/v2/bots/{self.user.id}/stats",
             headers={"Authorization": self.config["bot"].sdc_token},
-            params={"servers": len(self.guilds)},
+            data=data,
         )
         self.logger.info("Server count posted successfully")
 

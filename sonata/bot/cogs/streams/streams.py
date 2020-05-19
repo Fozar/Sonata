@@ -45,14 +45,14 @@ class Streams(TwitchMixin):
             """Sets default alert channel
         
         Example
-        - alerts set channel @TextChannel"""
+        - alerts set channel #TextChannel"""
         )
         if not channel.permissions_for(ctx.guild.me).send_messages:
             return await ctx.inform(_("I can't send messages in this channel."))
         await ctx.db.guilds.update_one(
             {"id": ctx.guild.id}, {"$set": {"alerts.channel": channel.id}}
         )
-        await ctx.inform(_("Alerts channels set."))
+        await ctx.inform(_("Alerts channel set."))
 
     @alerts_set.command(name="message")
     async def alerts_set_message(

@@ -20,9 +20,7 @@ from sonata.bot.utils.converters import GlobalChannel, to_lower, EvalExpression
 
 
 class Owner(
-    core.Cog,
-    description=_("""Commands of bot owner"""),
-    colour=discord.Colour(0xB91BA4),
+    core.Cog, colour=discord.Colour.purple(),
 ):
     def __init__(self, sonata: core.Sonata):
         self.sonata = sonata

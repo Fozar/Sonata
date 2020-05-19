@@ -14,9 +14,13 @@ from sonata.db.models import Channel, Guild, Greeting, BWList
 
 class Admin(
     core.Cog,
-    description=_("""Commands of guild admins"""),
-    colour=discord.Colour(0x8B572A),
-):  # TODO: Add ignore list. Maybe Mod
+    description=_(
+        "This module is responsible for the unique behavior of the bot in your guild. "
+        "You can disable and enable modules and commands, change the language and prefix "
+        "of the bot and so on"
+    ),
+    colour=discord.Colour.dark_orange(),
+):
     def __init__(self, sonata: core.Sonata):
         self.sonata = sonata
 

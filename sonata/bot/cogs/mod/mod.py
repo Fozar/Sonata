@@ -18,7 +18,14 @@ action_opposites = {
 }
 
 
-class Mod(Modlog, colour=discord.Colour(0xD0021B)):
+class Mod(
+    Modlog,
+    colour=discord.Colour.red(),
+    description=_(
+        "Using this module, moderators can ban, unban, kick, mute members, bulk delete "
+        "flood and other moderator things. All actions can be logged in the modlog."
+    ),
+):
     @core.Cog.listener()
     async def on_modlog_case_expire(self, case: ModlogCase):
         action = discord.AuditLogAction.try_value(case.action)

@@ -11,7 +11,9 @@ from sonata.db.models import Guild, User, Command, DailyStats, UserStats
 
 
 class Stats(
-    Leveling, description=_("""Sonata statistics"""), colour=discord.Colour(0xF5A623)
+    Leveling,
+    description=_("The module is responsible for general statistics and level system."),
+    colour=discord.Colour.orange(),
 ):
     def __init__(self, sonata: core.Sonata):
         super().__init__(sonata)

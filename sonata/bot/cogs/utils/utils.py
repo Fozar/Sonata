@@ -16,7 +16,13 @@ WEATHER_URL = "http://api.openweathermap.org/data/2.5/weather"
 OW_ICON_URL = "https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/icons/logo_60x60.png"
 
 
-class Utils(core.Cog, colour=discord.Colour(0x7ED321)):
+class Utils(
+    core.Cog,
+    colour=discord.Colour(0x7ED321),
+    description=_(
+        "Various useful utilities, such as a calculator, weather and virus info."
+    ),
+):
     def __init__(self, sonata: core.Sonata):
         self.sonata = sonata
 
@@ -82,9 +88,7 @@ class Utils(core.Cog, colour=discord.Colour(0x7ED321)):
         await ctx.send(embed=embed)
 
     @core.command(aliases=["calc"])
-    async def calculate(
-        self, ctx: core.Context, *, expression: MathExpression()
-    ):
+    async def calculate(self, ctx: core.Context, *, expression: MathExpression()):
         _(
             """Calculates an expression
         

@@ -10,7 +10,9 @@ from sonata.bot.utils.misc import make_locale_list
 
 
 class General(
-    core.Cog, description=_("General commands"), colour=discord.Colour(0x4A90E2)
+    core.Cog,
+    description=_("General commands and information."),
+    colour=discord.Colour.blue(),
 ):
     def __init__(self, sonata: Sonata):
         self.sonata = sonata

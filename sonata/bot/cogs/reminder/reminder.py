@@ -32,7 +32,14 @@ class ReminderListSource(menus.ListPageSource):
         return embed
 
 
-class Reminder(core.Cog, colour=discord.Colour(0x50E3C2)):
+class Reminder(
+    core.Cog,
+    colour=discord.Colour.teal(),
+    description=_(
+        "This module allows you to create reminders for a specific event after a "
+        "certain amount of time using natural language."
+    ),
+):
     def __init__(self, sonata: Sonata):
         self.sonata = sonata
         self._have_data = asyncio.Event(loop=sonata.loop)

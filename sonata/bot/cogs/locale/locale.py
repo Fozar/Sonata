@@ -9,7 +9,12 @@ from sonata.bot.utils.misc import make_locale_list
 
 
 class Locale(
-    core.Cog, description=_("""Multilingual support"""), colour=discord.Colour(0xFFFFFE)
+    core.Cog,
+    description=_(
+        "This module allows you to set the language in direct messages and display a "
+        "list of supported languages."
+    ),
+    colour=discord.Colour.light_grey(),
 ):
     def __init__(self, sonata: core.Sonata):
         self.sonata = sonata

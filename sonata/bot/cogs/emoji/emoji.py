@@ -14,7 +14,14 @@ from sonata.db.models import EmojiStats
 EMOJI_REGEX = re.compile(r"<a?:.+?:([0-9]{15,21})>")
 
 
-class Emoji(core.Cog, colour=discord.Color(0xF5A623)):
+class Emoji(
+    core.Cog,
+    colour=discord.Color.gold(),
+    description=_(
+        "The module allows you to get detailed information about emoji, and also keeps "
+        "emoji usage statistics."
+    ),
+):
     def __init__(self, sonata: core.Sonata):
         self.sonata = sonata
         self.recalc_started_at = None

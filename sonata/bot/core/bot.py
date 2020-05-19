@@ -1,3 +1,4 @@
+import collections
 import concurrent.futures
 import hashlib
 import hmac
@@ -63,7 +64,14 @@ class Sonata(commands.Bot):
     @property
     def description(self):
         """Applies locale when getting"""
-        return inspect.cleandoc(_(self._description))
+        cogs = collections.OrderedDict(sorted(self.cogs.items()))
+        desc = f"{_(self._description)}\n\n" + "\n".join(
+            f"`{name}` {_(cog.description)}"
+            for name, cog in cogs.items()
+            if cog.description is not None
+        )
+
+        return inspect.cleandoc(desc)
 
     @description.setter
     def description(self, value):

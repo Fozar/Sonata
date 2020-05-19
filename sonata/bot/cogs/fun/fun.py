@@ -33,7 +33,14 @@ class DogAPI:
         return await self._api_request(self.random_breed_endpoint.format(breed))
 
 
-class Fun(Games, description=_("""Entertainment"""), colour=discord.Colour(0xF5A623)):
+class Fun(
+    Games,
+    description=_(
+        "A large set of entertainment commands. Everything from 8ball and D&D roll to "
+        "cat and dog pictures."
+    ),
+    colour=discord.Colour.dark_gold(),
+):
     def __init__(self, sonata: core.Sonata):
         self.sonata = sonata
         super().__init__()

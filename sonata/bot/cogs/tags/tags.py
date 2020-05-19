@@ -47,7 +47,16 @@ class SearchSource(menus.AsyncIteratorPageSource):
         return embed
 
 
-class Tags(core.Cog, colour=discord.Colour.dark_teal()):
+class Tags(
+    core.Cog,
+    colour=discord.Colour.dark_teal(),
+    description=_(
+        "Tags is a very useful feature that allows you to save information for further "
+        "retrieval. There are many ways to use this module. You can, for example, save "
+        "links to funny pictures, quotes from great people, or even make a local "
+        "knowledge base. Advanced tag search will help you with this."
+    ),
+):
     def __init__(self, sonata: core.Sonata):
         self.sonata = sonata
 

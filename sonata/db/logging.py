@@ -65,6 +65,7 @@ def setup_logger():
         filename=os.getcwd() + "/logs/mongo/mongo.log",
         when="midnight",
         encoding="utf-8",
+        backupCount=1
     )
     file_handler.setFormatter(
         logging.Formatter("%(asctime)s [%(levelname)s] - %(filename)s - %(message)s")

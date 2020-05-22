@@ -62,8 +62,9 @@ class Streams(TwitchMixin):
             """Sets default alert message
         
         Replacements
-        {{link}} - stream link
+        {{link}} - stream link (required)
         {{name}} - streamer name
+        {{title}} - stream title
         
         Example
         - alerts set message {{name}} began to stream. Link: {{link}}"""
@@ -72,30 +73,6 @@ class Streams(TwitchMixin):
             {"id": ctx.guild.id}, {"$set": {"alerts.message": message}}
         )
         await ctx.inform(_("Alerts message set."))
-
-    @alerts_set.group(name="embed")
-    async def alerts_set_embed(self, ctx: core.Context):
-        _("""Enables/Disables sending an alert in an embedded message""")
-        if ctx.invoked_subcommand is not None:
-            return
-
-        await ctx.send_help()
-
-    @alerts_set_embed.command(name="enable")
-    async def alerts_set_embed_enable(self, ctx: core.Context):
-        _("""Enables sending an alert in an embedded message""")
-        await ctx.db.guilds.update_one(
-            {"id": ctx.guild.id}, {"$set": {"alerts.embed": True}}
-        )
-        await ctx.inform(_("Alerting in the embedded message is enabled."))
-
-    @alerts_set_embed.command(name="disable")
-    async def alerts_set_embed_disable(self, ctx: core.Context):
-        _("""Disables sending an alert in an embedded message""")
-        await ctx.db.guilds.update_one(
-            {"id": ctx.guild.id}, {"$set": {"alerts.embed": False}}
-        )
-        await ctx.inform(_("Alerting in the embedded message is disabled."))
 
     @alerts_set.group(name="mention")
     async def alerts_set_mention(self, ctx: core.Context):
@@ -107,7 +84,9 @@ class Streams(TwitchMixin):
 
     @alerts_set_mention.command(name="everyone")
     async def alerts_set_mention_everyone(self, ctx: core.Context):
-        _("""Enables alert everyone mention""")
+        _("""Enables alert everyone mention
+        
+        The bot must have the permission to mention everyone.""")
         await ctx.db.guilds.update_one(
             {"id": ctx.guild.id}, {"$set": {"alerts.mention": "everyone"}}
         )
@@ -115,7 +94,9 @@ class Streams(TwitchMixin):
 
     @alerts_set_mention.command(name="here")
     async def alerts_set_mention_here(self, ctx: core.Context):
-        _("""Enables alert here mention""")
+        _("""Enables alert here mention
+        
+        The bot must have the permission to mention everyone.""")
         await ctx.db.guilds.update_one(
             {"id": ctx.guild.id}, {"$set": {"alerts.mention": "here"}}
         )

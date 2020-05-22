@@ -121,7 +121,7 @@ class Sonata(commands.Bot):
                 self.config["twitch"].hub_secret.encode("utf-8"), body, hashlib.sha256,
             ).hexdigest()
         )
-        if signature != request.headers["X-Hub-Signature"]:
+        if signature != request.headers.get("X-Hub-Signature"):
             return web.Response(text="Forbidden", status=403)
 
         try:
@@ -188,7 +188,7 @@ class Sonata(commands.Bot):
                 "\n- ".join(list(exc.args))
             )
         elif isinstance(exc, commands.MissingRequiredArgument):
-            response = _("Required arguments not specified.")
+            response = _("Required argument `{0}` not specified.").format(exc.param.name)
         elif isinstance(exc, discord.HTTPException):
             response = _("An error occurred while making an HTTP request.")
         elif isinstance(exc, NoPremium):
@@ -227,10 +227,10 @@ class Sonata(commands.Bot):
                 )
 
     async def on_guild_post(self):
-        data = FormData({"servers": len(self.guilds)}, False)
+        data = FormData({"servers": len(self.guilds)})
         await self.session.post(
             f"https://api.server-discord.com/v2/bots/{self.user.id}/stats",
-            headers={"Authorization": self.config["bot"].sdc_token},
+            headers={"Authorization": "SDC " + self.config["bot"].sdc_token},
             data=data,
         )
         self.logger.info("Server count posted successfully")

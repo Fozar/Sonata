@@ -33,8 +33,7 @@ def limit_subs():
 
 class TwitchUserConverter(commands.Converter):
     async def convert(self, ctx: core.Context, argument):
-        streams = ctx.bot.get_cog("Streams")
-        client = streams.twitch
+        client = ctx.bot.twitch_client
         try:
             user = await client.get_user(int(argument))
         except ValueError:
@@ -49,8 +48,7 @@ class TwitchMixin(core.Cog):
 
     def __init__(self, sonata: core.Sonata):
         self.sonata = sonata
-        config = sonata.config["twitch"]
-        self.twitch = twitch.Client(config.client_id, config.bearer_token, sonata.loop)
+        self.twitch = sonata.twitch_client
         self._have_data = asyncio.Event()
         self._next_sub = None
         self._task = sonata.loop.create_task(self.dispatch_subs())

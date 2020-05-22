@@ -12,6 +12,7 @@ from typing import Union, Optional
 import aiohttp
 import dbl
 import discord
+import twitch
 from aiohttp import web, FormData
 from aiohttp.web_app import Application
 from aiohttp.web_request import Request
@@ -30,7 +31,7 @@ class Sonata(commands.Bot):
         self.app = app
         self.db = app.get("db")
         self.logger = logger
-        self.config = app["config"]
+        self.config = config = app["config"]
         super().__init__(
             owner_id=self.config["bot"].owner_id,
             command_prefix=determine_prefix,
@@ -43,7 +44,10 @@ class Sonata(commands.Bot):
         self.session = aiohttp.ClientSession(loop=self.loop)
         self.pool = concurrent.futures.ThreadPoolExecutor()
         self.launch_time = None
-        self.dblpy = (
+        self.twitch_client = twitch.Client(
+            config.client_id, config.bearer_token, self.loop
+        )
+        self.dbl_client = (
             dbl.DBLClient(
                 self, self.config["bot"].dbl_token, session=self.session, autopost=True
             )

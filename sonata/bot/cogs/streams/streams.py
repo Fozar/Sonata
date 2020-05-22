@@ -5,7 +5,10 @@ from .twitch import TwitchMixin
 from ... import core
 
 
-class Streams(TwitchMixin):
+class Streams(TwitchMixin, colour=discord.Colour.dark_orange()):
+    async def cog_check(self, ctx: core.Context):
+        return ctx.guild
+
     @core.group()
     @commands.is_owner()
     async def alerts(self, ctx: core.Context):
@@ -60,14 +63,19 @@ class Streams(TwitchMixin):
     ):
         _(
             """Sets default alert message
+            
+        Markdown is allowed.
         
         Replacements
-        {{link}} - stream link (required)
+        {{link}} - stream link
         {{name}} - streamer name
         {{title}} - stream title
+        {{game}} - game name
+        {{viewers}} - viewers count
+        {{views}} - user's views count
         
         Example
-        - alerts set message {{name}} began to stream. Link: {{link}}"""
+        - alerts set message {{name}} began broadcasting "{{game}}". Link: {{link}}"""
         )
         await ctx.db.guilds.update_one(
             {"id": ctx.guild.id}, {"$set": {"alerts.message": message}}
@@ -84,9 +92,11 @@ class Streams(TwitchMixin):
 
     @alerts_set_mention.command(name="everyone")
     async def alerts_set_mention_everyone(self, ctx: core.Context):
-        _("""Enables alert everyone mention
+        _(
+            """Enables alert everyone mention
         
-        The bot must have the permission to mention everyone.""")
+        The bot must have the permission to mention everyone."""
+        )
         await ctx.db.guilds.update_one(
             {"id": ctx.guild.id}, {"$set": {"alerts.mention": "everyone"}}
         )
@@ -94,9 +104,11 @@ class Streams(TwitchMixin):
 
     @alerts_set_mention.command(name="here")
     async def alerts_set_mention_here(self, ctx: core.Context):
-        _("""Enables alert here mention
+        _(
+            """Enables alert here mention
         
-        The bot must have the permission to mention everyone.""")
+        The bot must have the permission to mention everyone."""
+        )
         await ctx.db.guilds.update_one(
             {"id": ctx.guild.id}, {"$set": {"alerts.mention": "here"}}
         )

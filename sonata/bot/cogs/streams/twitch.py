@@ -85,14 +85,19 @@ class TwitchMixin(core.Cog):
     # Methods
 
     @staticmethod
-    def make_custom_message(message: str, stream: twitch.Stream):
+    def make_custom_message(
+        message: str, stream: twitch.Stream, user: twitch.User, game: twitch.Game
+    ):
         replacements = [
             (r"{{\s*link\s*}}", f"https://www.twitch.tv/{stream.user_name.lower()}"),
             (r"{{\s*name\s*}}", stream.user_name),
             (r"{{\s*title\s*}}", stream.title),
+            (r"{{\s*game\s*}}", game.name),
+            (r"{{\s*viewers\s*}}", str(stream.viewer_count)),
+            (r"{{\s*views\s*}}", str(user.view_count)),
         ]
         for old, new in replacements:
-            message = re.sub(old, new, message)
+            message = re.sub(old, new, message, flags=re.I)
         return message
 
     def make_alert_embed(

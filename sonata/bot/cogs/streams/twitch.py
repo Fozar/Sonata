@@ -101,7 +101,11 @@ class TwitchMixin(core.Cog):
         return message
 
     def make_alert_embed(
-        self, description: str, stream: twitch.Stream, user: twitch.User
+        self,
+        description: str,
+        stream: twitch.Stream,
+        user: twitch.User,
+        game: twitch.Game,
     ):
         embed = discord.Embed(
             colour=self.twitch_colour,
@@ -118,6 +122,9 @@ class TwitchMixin(core.Cog):
         embed.set_footer(
             text="Twitch", icon_url="https://www.sonata.fun/img/TwitchGlitchPurple.png"
         )
+        embed.add_field(name=_("Game"), value=game.name)
+        embed.add_field(name=_("Viewers"), value=str(stream.viewer_count))
+        embed.add_field(name=_("Views"), value=str(user.view_count))
         return embed
 
     async def new_alert(
@@ -137,10 +144,11 @@ class TwitchMixin(core.Cog):
             return
 
         cnt = sub_guild["message"] or guild_alerts["message"] or "{{link}}"
-        cnt = self.make_custom_message(cnt, stream)
-
         user = await stream.get_user()
-        embed = self.make_alert_embed(cnt, stream, user)
+        game = await stream.get_game()
+        cnt = self.make_custom_message(cnt, stream, user, game)
+        self.sonata.locale = await self.sonata.define_locale(channel)
+        embed = self.make_alert_embed(cnt, stream, user, game)
         content = None
         with suppress(discord.HTTPException):
             me = guild.me or await guild.fetch_member(self.sonata.user.id)

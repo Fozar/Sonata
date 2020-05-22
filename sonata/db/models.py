@@ -58,6 +58,7 @@ class BWList(BaseModel):
 class BaseAlertConfig(BaseModel):
     enabled: bool = False
     message: str = None
+    close_message: str = None
     channel: int = None
     mention: str = None
 

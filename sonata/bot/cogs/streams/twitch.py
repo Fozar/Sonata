@@ -87,7 +87,19 @@ class TwitchMixin(core.Cog):
                 continue
 
             if not data:
-                continue
+                if not alert_conf["message_id"]:
+                    continue
+                try:
+                    await self.close_alert(guild, alert_conf, user_id)
+                except discord.HTTPException:
+                    pass
+                else:
+                    await self.sonata.db.twitch_subs.update_one(
+                        {"topic": topic, "guilds.id": guild.id},
+                        {"$set": {"guilds.$.message_id": None}},
+                    )
+                finally:
+                    continue
 
             stream = twitch.Stream(self.twitch, data)
             try:
@@ -101,6 +113,37 @@ class TwitchMixin(core.Cog):
             )
 
     # Methods
+
+    async def close_alert(self, guild: discord.Guild, alert_config: dict, user_id: str):
+        guild_conf = await self.sonata.db.guilds.find_one(
+            {"id": guild.id}, {"alerts": True}
+        )
+        default_config = guild_conf["alerts"]
+        if not default_config["enabled"] or not alert_config["enabled"]:
+            return
+
+        channel_id, message_id = alert_config["message_id"].split("-")
+        channel = guild.get_channel(int(channel_id))
+        try:
+            message = await channel.fetch_message(int(message_id))
+        except discord.HTTPException:
+            return
+
+        embed = next(iter(message.embeds), None)
+        if embed is None:
+            return
+
+        close_cnt = (
+            alert_config["close_message"] or default_config["close_message"] or ""
+        )
+        user = await self.twitch.get_user(user_id)
+        close_cnt = self._format_content(close_cnt, user)
+        await self.sonata.set_locale(message)
+        embed.title = _("Stream is offline")
+        embed.description = close_cnt or discord.embeds.EmptyEmbed
+        embed.set_image(url=user.offline_image_url)
+        embed.remove_field(1)
+        await message.edit(content=None, embed=embed)
 
     @staticmethod
     def _format_content(

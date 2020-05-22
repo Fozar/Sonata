@@ -100,7 +100,7 @@ class General(
                 ),
                 online=format_timedelta(self.sonata.uptime, locale=ctx.locale),
                 guilds=len(self.sonata.guilds),
-                members=len(self.sonata.users),
+                members=sum([guild.member_count for guild in self.sonata.guilds]),
             ),
             _("Language support"): ", ".join(make_locale_list(display_name=True)),
             _("Useful links"): _(

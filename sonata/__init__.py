@@ -30,7 +30,7 @@ def setup_logger():
         filename=os.getcwd() + "/logs/app/app.log",
         when="midnight",
         encoding="utf-8",
-        backupCount=1
+        backupCount=1,
     )
     file_handler.setFormatter(
         logging.Formatter("%(asctime)s [%(levelname)s] - %(filename)s - %(message)s")
@@ -48,13 +48,14 @@ def create_app(debug: bool = False):
     app = web.Application()
     app["logger"] = logger
     app["debug"] = debug
-    cors = aiohttp_cors.setup(app, defaults={
-        "*": aiohttp_cors.ResourceOptions(
-            allow_credentials=True,
-            expose_headers="*",
-            allow_headers="*",
-        )
-    })
+    cors = aiohttp_cors.setup(
+        app,
+        defaults={
+            "*": aiohttp_cors.ResourceOptions(
+                allow_credentials=True, expose_headers="*", allow_headers="*",
+            )
+        },
+    )
     app["cors"] = cors
     logger.info("Append modules")
     app.on_startup.append(init_config)

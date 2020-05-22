@@ -34,11 +34,7 @@ async def init_bot(app):
     logger = setup_logger()
     loop = asyncio.get_event_loop()
     bot_config = app["config"]["bot"]
-    app["bot"] = Sonata(
-        logger=logger,
-        app=app,
-        loop=loop,
-    )
+    app["bot"] = Sonata(logger=logger, app=app, loop=loop)
     for cog in bot_config.cogs:
         load_extension(app["bot"], cog.lower())
     loop.create_task(app["bot"].start())

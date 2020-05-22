@@ -188,7 +188,9 @@ class Sonata(commands.Bot):
                 "\n- ".join(list(exc.args))
             )
         elif isinstance(exc, commands.MissingRequiredArgument):
-            response = _("Required argument `{0}` not specified.").format(exc.param.name)
+            response = _("Required argument `{0}` not specified.").format(
+                exc.param.name
+            )
         elif isinstance(exc, discord.HTTPException):
             response = _("An error occurred while making an HTTP request.")
         elif isinstance(exc, NoPremium):

@@ -1,45 +1,35 @@
 import asyncio
 import re
+from contextlib import suppress
 from datetime import timedelta, datetime
 
 import discord
+import twitch
 from discord.ext import commands
 from pymongo import ReturnDocument
 
 from sonata.bot import core
 from sonata.bot.core import errors
-from sonata.db.models import TwitchSubscription, TwitchSubscriptionAlertConfig
+from sonata.db.models import TwitchSubscription, SubscriptionAlertConfig
 
 HELIX_API = "https://api.twitch.tv/helix"
 STREAMS_URL = HELIX_API + "/streams"
-USERS_URL = HELIX_API + "/users"
-WEBHOOKS_HUB_URL = HELIX_API + "/webhooks/hub"
 
 
 CALLBACK_URL = "https://sonata.fun/api/wh/twitch"
 
 
-class TwitchUser(commands.Converter):
+class TwitchUserConverter(commands.Converter):
     async def convert(self, ctx: core.Context, argument):
+        streams = ctx.bot.get_cog("Streams")
+        client = streams.twitch
         try:
-            params = {"id": int(argument)}
+            user = await client.get_user(int(argument))
         except ValueError:
-            params = {"login": argument}
-
-        async with ctx.session.get(
-            USERS_URL,
-            headers={
-                "Client-ID": ctx.bot.config["twitch"].client_id,
-                "Authorization": "Bearer " + ctx.bot.config["twitch"].bearer_token,
-            },
-            params=params,
-        ) as resp:
-            j = await resp.json()
-            try:
-                data = j["data"]
-            except KeyError:
-                raise commands.BadArgument(_("Twitch user is not found"))
-        return data[0]
+            user = await client.get_user(user_login=argument)
+        if user is None:
+            raise commands.BadArgument(_("Twitch user is not found"))
+        return user
 
 
 class TwitchMixin(core.Cog):
@@ -47,6 +37,8 @@ class TwitchMixin(core.Cog):
 
     def __init__(self, sonata: core.Sonata):
         self.sonata = sonata
+        config = sonata.config["twitch"]
+        self.twitch = twitch.Client(config.client_id, config.bearer_token, sonata.loop)
         self._have_data = asyncio.Event()
         self._next_sub = None
         self._task = sonata.loop.create_task(self.dispatch_subs())
@@ -84,81 +76,97 @@ class TwitchMixin(core.Cog):
             if not data:
                 continue
 
-            await self.new_alert(guild, alert_conf, topic, data)
+            stream = twitch.Stream(self.twitch, data)
+            await self.new_alert(guild, alert_conf, topic, stream)
 
     # Methods
 
     @staticmethod
-    def make_custom_message(message: str, user_name: str):
+    def make_custom_message(message: str, stream: twitch.Stream):
         replacements = [
-            (r"{{\s*link\s*}}", f"https://www.twitch.tv/{user_name}"),
-            (r"{{\s*name\s*}}", user_name),
+            (r"{{\s*link\s*}}", f"https://www.twitch.tv/{stream.user_name.lower()}"),
+            (r"{{\s*name\s*}}", stream.user_name),
+            (r"{{\s*title\s*}}", stream.title),
         ]
         for old, new in replacements:
             message = re.sub(old, new, message)
         return message
 
-    async def new_alert(
-        self, guild: discord.Guild, alert_conf: dict, topic: str, data: dict
+    def make_alert_embed(
+        self, description: str, stream: twitch.Stream, user: twitch.User
     ):
-        alerts = await self.sonata.db.guilds.find_one(
+        embed = discord.Embed(
+            colour=self.twitch_colour,
+            description=description,
+            title=stream.title,
+            timestamp=stream.started_at,
+        )
+        url = f"https://www.twitch.tv/{user.login}"
+        embed.set_author(
+            name=user.display_name, url=url, icon_url=user.profile_image_url
+        )
+        embed.url = url
+        embed.set_image(url=stream.thumbnail_url())
+        embed.set_footer(
+            text="Twitch", icon_url="https://www.sonata.fun/img/TwitchGlitchPurple.png"
+        )
+        return embed
+
+    async def new_alert(
+        self, guild: discord.Guild, sub_guild: dict, topic: str, stream: twitch.Stream
+    ):
+        guild_conf = await self.sonata.db.guilds.find_one(
             {"id": guild.id}, {"alerts": True}
         )
-        alerts = alerts["alerts"]
-        if not alerts or not alerts.get("enabled") or not alert_conf.get("enabled"):
+        guild_alerts = guild_conf["alerts"]
+        if not guild_alerts["enabled"] or not sub_guild["enabled"]:
             return
 
-        try:
-            channel = guild.get_channel(alert_conf.get("channel")) or guild.get_channel(
-                alerts.get("channel")
-            )
-            if channel is None:
-                return
-        except AttributeError:
-            return
-
-        if not channel.permissions_for(guild.me).send_messages:
-            return
-
-        cnt = alert_conf.get("message") or alerts.get("message")
-        if cnt is None:
-            cnt = "{{link}}"
-        cnt = self.make_custom_message(cnt, data["user_name"])
-
-        if alert_conf.get("embed") or alerts.get("embed"):
-            embed = discord.Embed(
-                colour=self.twitch_colour, description=cnt, title=data["user_name"]
-            )
-            embed.set_image(url=data["thumbnail_url"].format(width=1920, height=1080))
-            content = ""
-        else:
-            content = cnt
-            embed = None
-        mention = alert_conf.get("mention") or alerts.get("mention")
-        if mention:
-            content += f"\n@{mention}"
-
-        msg = await channel.send(content=content, embed=embed)
-        await self.sonata.db.twitch_subs.update_one(
-            {"topic": topic, "guilds.id": guild.id},
-            {"$set": {"guilds.$.message_id": f"{msg.channel.id}-{msg.id}"}},
+        channel = guild.get_channel(sub_guild["channel"]) or guild.get_channel(
+            guild_alerts["channel"]
         )
+        if channel is None:
+            return
+
+        cnt = sub_guild["message"] or guild_alerts["message"] or "{{link}}"
+        cnt = self.make_custom_message(cnt, stream)
+
+        user = await stream.get_user()
+        embed = self.make_alert_embed(cnt, stream, user)
+        content = None
+        with suppress(discord.HTTPException):
+            me = guild.me or await guild.fetch_member(self.sonata.user.id)
+            if not channel.permissions_for(me).send_messages:
+                return
+            if channel.permissions_for(me).mention_everyone:
+                mention = sub_guild["mention"] or guild_alerts["mention"]
+                if mention:
+                    content = f"\n@{mention}"
+
+        with suppress(discord.HTTPException):
+            msg = await channel.send(content=content, embed=embed)
+            await self.sonata.db.twitch_subs.update_one(
+                {"topic": topic, "guilds.id": guild.id},
+                {"$set": {"guilds.$.message_id": f"{msg.channel.id}-{msg.id}"}},
+            )
 
     async def extend_subscription(
-        self, sub: TwitchSubscription, lease_seconds: int = 86400
+        self, sub: TwitchSubscription, lease_seconds: int = 864000
     ):
-        if await self.subscribe(sub.topic, sub.callback, lease_seconds):
+        try:
+            await self.twitch.subscribe_to_events(
+                sub.callback, sub.topic, lease_seconds, sub.secret
+            )
             expires_at = datetime.utcnow() + timedelta(seconds=lease_seconds)
             await self.sonata.db.twitch_subs.update_one(
-                {"topic": sub.topic},
-                {"$set": {"expires_at": expires_at, "verified": True}},
+                {"topic": sub.topic}, {"$set": {"expires_at": expires_at}},
             )
             return True
-
-        await self.sonata.db.twitch_subs.update_one(
-            {"topic": sub.topic}, {"$set": {"verified": False}},
-        )
-        return False
+        except twitch.HTTPException:
+            await self.sonata.db.twitch_subs.update_one(
+                {"topic": sub.topic}, {"$set": {"verified": False}},
+            )
+            return False
 
     async def get_active_sub(self, *, days=10):
         cursor = self.sonata.db.twitch_subs.find(
@@ -212,37 +220,11 @@ class TwitchMixin(core.Cog):
 
         raise errors.SubscriptionNotFound
 
-    def make_params(
-        self, topic: str, callback: str, mode: str, lease_seconds: int = 86400
-    ):
-        return {
-            "hub.callback": callback,
-            "hub.mode": mode,
-            "hub.topic": topic,
-            "hub.lease_seconds": lease_seconds,
-            "hub.secret": self.sonata.config["twitch"].hub_secret,
-        }
-
-    async def subscribe(self, topic: str, callback: str, lease_seconds: int = 86400):
-        """Return True if successful subscription"""
-        params = self.make_params(topic, callback, "subscribe", lease_seconds)
-        async with self.sonata.session.post(
-            WEBHOOKS_HUB_URL,
-            headers={
-                "Client-ID": self.sonata.config["twitch"].client_id,
-                "Authorization": "Bearer " + self.sonata.config["twitch"].bearer_token,
-            },
-            params=params,
-        ) as resp:
-            if resp.status != 202:
-                return False
-        return True
-
     # Commands
 
-    @core.group(invoke_without_command=True)
+    @core.group(name="twitch", invoke_without_command=True)
     @commands.is_owner()
-    async def twitch(self, ctx: core.Context):
+    async def _twitch(self, ctx: core.Context):
         if ctx.invoked_subcommand is not None:
             return await ctx.send_help()
         cursor = ctx.db.twitch_subs.find(
@@ -253,35 +235,33 @@ class TwitchMixin(core.Cog):
             users.append(cursor.next_object()["login"])
         await ctx.inform(", ".join(users), title=_("Tracked users"))
 
-    @twitch.command(name="add")
-    async def twitch_add(self, ctx: core.Context, user: TwitchUser()):
-        topic = STREAMS_URL + f"?user_id={user['id']}"
-        callback = CALLBACK_URL + f"/streams/{user['id']}"
-        config = TwitchSubscriptionAlertConfig(id=ctx.guild.id)
+    @_twitch.command(name="add")
+    async def twitch_add(self, ctx: core.Context, user: TwitchUserConverter()):
+        topic = f"{STREAMS_URL}?user_id={user.id}"
+        callback = f"{CALLBACK_URL}/streams/{user.id}"
+        alert_config = SubscriptionAlertConfig(id=ctx.guild.id)
         if await self.is_subscription_exist(topic):
-            sub = TwitchSubscription(
-                **(
-                    await ctx.db.twitch_subs.find_one_and_update(
-                        {"topic": topic},
-                        {"$addToSet": {"guilds": config.dict()}},
-                        return_document=ReturnDocument.AFTER,
-                    )
-                )
+            sub_doc = await ctx.db.twitch_subs.find_one_and_update(
+                {"topic": topic},
+                {"$addToSet": {"guilds": alert_config.dict()}},
+                return_document=ReturnDocument.AFTER,
             )
+            sub = TwitchSubscription(**sub_doc)
         else:
             now = ctx.message.created_at
             sub = TwitchSubscription(
                 created_at=now,
-                guilds=[config],
-                id=user["id"],
-                login=user["login"],
+                guilds=[alert_config],
+                id=user.id,
+                login=user.login,
                 topic=topic,
                 callback=callback,
+                secret=ctx.bot.config["twitch"].hub_secret,
             )
             await ctx.db.twitch_subs.insert_one(sub.dict())
         if not await self.is_subscription_verified(topic):
             async with ctx.typing():
-                if not await self.extend_subscription(sub):
+                if not await self.extend_subscription(sub, 864000):
                     return await ctx.inform(_("An error occurred while subscribing."))
 
                 expires_at = datetime.utcnow() + timedelta(seconds=864000)
@@ -290,19 +270,19 @@ class TwitchMixin(core.Cog):
                 )
                 self._have_data.set()
         await ctx.inform(
-            _("User {0} is now tracked in this guild.").format(user["login"])
+            _("User {0} is now tracked in this guild.").format(user.display_name)
         )
 
-    @twitch.command(name="clear")
+    @_twitch.command(name="clear")
     async def twitch_clear(self, ctx: core.Context):
         await ctx.db.twitch_subs.update_many(
             {"guilds.id": ctx.guild.id}, {"$pull": {"guilds": {"id": ctx.guild.id}}}
         )
         await ctx.inform(_("The list of tracked users in this guild has been cleared."))
 
-    @twitch.command(name="remove")
-    async def twitch_remove(self, ctx: core.Context, user: TwitchUser()):
-        topic = STREAMS_URL + f"?user_id={user['id']}"
+    @_twitch.command(name="remove")
+    async def twitch_remove(self, ctx: core.Context, user: TwitchUserConverter()):
+        topic = STREAMS_URL + f"?user_id={user.id}"
         if await self.is_subscription_exist(topic):
             result = await ctx.db.twitch_subs.update_one(
                 {"topic": topic, "guilds.id": ctx.guild.id},
@@ -311,9 +291,9 @@ class TwitchMixin(core.Cog):
             if result.modified_count != 0:
                 return await ctx.inform(
                     _("User {0} is no longer being tracked in this guild.").format(
-                        user["login"]
+                        user.display_name
                     )
                 )
         await ctx.inform(
-            _("User {0} is not tracked in this guild.").format(user["login"])
+            _("User {0} is not tracked in this guild.").format(user.display_name)
         )

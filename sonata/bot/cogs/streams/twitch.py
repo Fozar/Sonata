@@ -43,6 +43,9 @@ class TwitchMixin(core.Cog):
         self._next_sub = None
         self._task = sonata.loop.create_task(self.dispatch_subs())
 
+    def cog_unload(self):
+        self._task.cancel()
+
     # Events
 
     @core.Cog.listener()

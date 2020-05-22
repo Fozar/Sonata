@@ -28,6 +28,9 @@ class Modlog(core.Cog):
         self._next_case = None
         self._task = sonata.loop.create_task(self.dispatch_cases())
 
+    def cog_unload(self):
+        self._task.cancel()
+
     @core.Cog.listener()
     async def on_modlog_case_create(self, case: ModlogCase):
         channel = await self.get_modlog_channel(case.guild_id)

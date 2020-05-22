@@ -46,6 +46,9 @@ class Reminder(
         self._current_reminder = None
         self._task = sonata.loop.create_task(self.dispatch_reminders())
 
+    def cog_unload(self):
+        self._task.cancel()
+
     @commands.Cog.listener()
     async def on_reminder_complete(self, reminder: models.Reminder):
         try:

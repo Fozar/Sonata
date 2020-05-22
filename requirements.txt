@@ -26,6 +26,7 @@ pytz==2020.1
 ratelimiter==1.2.0.post0
 regex==2020.5.14
 six==1.14.0
+twitch-tools==0.1.6
 tzlocal==2.1
 websockets==8.1
 yarl==1.4.2

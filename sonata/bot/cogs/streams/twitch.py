@@ -2,6 +2,7 @@ import asyncio
 import re
 from contextlib import suppress
 from datetime import timedelta, datetime
+from typing import Optional
 
 import discord
 import twitch
@@ -10,7 +11,6 @@ from pymongo import ReturnDocument
 
 from sonata.bot import core
 from sonata.bot.core import errors
-from sonata.bot.core.checks import is_premium
 from sonata.db.models import TwitchSubscription, SubscriptionAlertConfig
 
 HELIX_API = "https://api.twitch.tv/helix"
@@ -24,7 +24,7 @@ def limit_subs():
     async def pred(ctx: core.Context):
         subs = await ctx.db.twitch_subs.count_documents({"guilds.id": ctx.guild.id})
         if subs >= 3:
-            return await is_premium(ctx)
+            return await core.is_premium(ctx)
 
         return True
 
@@ -70,7 +70,7 @@ class TwitchMixin(core.Cog):
             await self.sonata.db.twitch_subs.delete_one({"topic": topic})
 
     @core.Cog.listener()
-    async def on_stream_changed(self, data: dict, user_id: str):
+    async def on_stream_changed(self, data: Optional[dict], user_id: str):
         topic = STREAMS_URL + f"?user_id={user_id}"
         sub = await self.sonata.db.twitch_subs.find_one(
             {"topic": topic}, {"guilds": True}
@@ -92,27 +92,44 @@ class TwitchMixin(core.Cog):
                 continue
 
             stream = twitch.Stream(self.twitch, data)
-            await self.new_alert(guild, alert_conf, topic, stream)
+            try:
+                msg = await self.new_alert(guild, alert_conf, stream)
+            except discord.HTTPException:
+                continue
+
+            await self.sonata.db.twitch_subs.update_one(
+                {"topic": topic, "guilds.id": guild.id},
+                {"$set": {"guilds.$.message_id": f"{msg.channel.id}-{msg.id}"}},
+            )
 
     # Methods
 
     @staticmethod
-    def make_custom_message(
-        message: str, stream: twitch.Stream, user: twitch.User, game: twitch.Game
+    def _format_content(
+        message: str,
+        user: twitch.User,
+        stream: twitch.Stream = None,
+        game: twitch.Game = None,
     ):
         replacements = [
-            (r"{{\s*link\s*}}", f"https://www.twitch.tv/{stream.user_name.lower()}"),
-            (r"{{\s*name\s*}}", stream.user_name),
-            (r"{{\s*title\s*}}", stream.title),
-            (r"{{\s*game\s*}}", game.name),
-            (r"{{\s*viewers\s*}}", str(stream.viewer_count)),
+            (r"{{\s*link\s*}}", f"https://www.twitch.tv/{user.login}"),
+            (r"{{\s*name\s*}}", user.display_name),
             (r"{{\s*views\s*}}", str(user.view_count)),
         ]
+        if stream:
+            replacements.extend(
+                [
+                    (r"{{\s*title\s*}}", stream.title),
+                    (r"{{\s*viewers\s*}}", str(stream.viewer_count)),
+                ]
+            )
+        if game:
+            replacements.append((r"{{\s*game\s*}}", game.name))
         for old, new in replacements:
             message = re.sub(old, new, message, flags=re.I)
         return message
 
-    def make_alert_embed(
+    def _make_alert_embed(
         self,
         description: str,
         stream: twitch.Stream,
@@ -140,43 +157,40 @@ class TwitchMixin(core.Cog):
         return embed
 
     async def new_alert(
-        self, guild: discord.Guild, sub_guild: dict, topic: str, stream: twitch.Stream
+        self, guild: discord.Guild, alert_config: dict, stream: twitch.Stream
     ):
         guild_conf = await self.sonata.db.guilds.find_one(
             {"id": guild.id}, {"alerts": True}
         )
-        guild_alerts = guild_conf["alerts"]
-        if not guild_alerts["enabled"] or not sub_guild["enabled"]:
+        default_config = guild_conf["alerts"]
+        if not default_config["enabled"] or not alert_config["enabled"]:
             return
 
-        channel = guild.get_channel(sub_guild["channel"]) or guild.get_channel(
-            guild_alerts["channel"]
+        channel = guild.get_channel(alert_config["channel"]) or guild.get_channel(
+            default_config["channel"]
         )
         if channel is None:
             return
 
-        cnt = sub_guild["message"] or guild_alerts["message"] or "{{link}}"
+        cnt = alert_config["message"] or default_config["message"] or "{{link}}"
         user = await stream.get_user()
         game = await stream.get_game()
-        cnt = self.make_custom_message(cnt, stream, user, game)
+        cnt = self._format_content(cnt, user, stream, game)
         self.sonata.locale = await self.sonata.define_locale(channel)
-        embed = self.make_alert_embed(cnt, stream, user, game)
+        embed = self._make_alert_embed(cnt, stream, user, game)
         content = None
         with suppress(discord.HTTPException):
             me = guild.me or await guild.fetch_member(self.sonata.user.id)
-            if not channel.permissions_for(me).send_messages:
+            perms = channel.permissions_for(me)
+            if not perms.send_messages:
                 return
-            if channel.permissions_for(me).mention_everyone:
-                mention = sub_guild["mention"] or guild_alerts["mention"]
+
+            if perms.mention_everyone:
+                mention = alert_config["mention"] or default_config["mention"]
                 if mention:
                     content = f"\n@{mention}"
 
-        with suppress(discord.HTTPException):
-            msg = await channel.send(content=content, embed=embed)
-            await self.sonata.db.twitch_subs.update_one(
-                {"topic": topic, "guilds.id": guild.id},
-                {"$set": {"guilds.$.message_id": f"{msg.channel.id}-{msg.id}"}},
-            )
+        return await channel.send(content=content, embed=embed)
 
     async def extend_subscription(
         self, sub: TwitchSubscription, lease_seconds: int = 864000

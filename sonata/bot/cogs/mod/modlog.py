@@ -7,7 +7,6 @@ from discord.ext import commands
 from discord.ext.commands import clean_content
 
 from sonata.bot import core
-from sonata.bot.core import checks
 from sonata.bot.utils.converters import ModlogCaseConverter
 from sonata.db.models import ModlogCase
 
@@ -256,7 +255,7 @@ class Modlog(core.Cog):
         self.sonata.dispatch("modlog_case_expire", case)
 
     @core.group(usage="<id>", invoke_without_command=True)
-    @commands.check(checks.is_mod())
+    @commands.check(core.is_mod())
     async def case(self, ctx: core.Context, case: ModlogCaseConverter()):
         _("""Returns modlog case by specified ID""")
         embed = await self.make_case_embed(case)

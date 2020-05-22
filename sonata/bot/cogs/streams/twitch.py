@@ -10,6 +10,7 @@ from pymongo import ReturnDocument
 
 from sonata.bot import core
 from sonata.bot.core import errors
+from sonata.bot.core.checks import is_premium
 from sonata.db.models import TwitchSubscription, SubscriptionAlertConfig
 
 HELIX_API = "https://api.twitch.tv/helix"
@@ -17,6 +18,17 @@ STREAMS_URL = HELIX_API + "/streams"
 
 
 CALLBACK_URL = "https://sonata.fun/api/wh/twitch"
+
+
+def limit_subs():
+    async def pred(ctx: core.Context):
+        subs = await ctx.db.twitch_subs.count_documents({"guilds.id": ctx.guild.id})
+        if subs >= 3:
+            return await is_premium(ctx)
+
+        return True
+
+    return commands.check(pred)
 
 
 class TwitchUserConverter(commands.Converter):
@@ -252,6 +264,7 @@ class TwitchMixin(core.Cog):
         await ctx.inform(", ".join(users), title=_("Tracked users"))
 
     @_twitch.command(name="add")
+    @limit_subs()
     async def twitch_add(self, ctx: core.Context, user: TwitchUserConverter()):
         topic = f"{STREAMS_URL}?user_id={user.id}"
         callback = f"{CALLBACK_URL}/streams/{user.id}"

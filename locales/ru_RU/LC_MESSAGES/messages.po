@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-05-19 01:02+0700\n"
-"PO-Revision-Date: 2020-05-19 01:04+0700\n"
+"POT-Creation-Date: 2020-05-22 12:42+0700\n"
+"PO-Revision-Date: 2020-05-22 12:46+0700\n"
 "Last-Translator: \n"
 "Language: ru_RU\n"
 "Language-Team: ru_RU <LL@li.org>\n"
@@ -1394,7 +1394,7 @@ msgstr "С участника снято заглушение"
 msgid "User"
 msgstr "Пользователь"
 
-#: sonata/bot/cogs/mod/modlog.py:153 sonata/bot/cogs/owner/owner.py:326
+#: sonata/bot/cogs/mod/modlog.py:153 sonata/bot/cogs/owner/owner.py:331
 msgid "Bot"
 msgstr "Бот"
 
@@ -1422,31 +1422,31 @@ msgstr "Редактирует причину случая журнала мод
 msgid "Reason changed."
 msgstr "Причина изменена."
 
-#: sonata/bot/cogs/owner/owner.py:79
+#: sonata/bot/cogs/owner/owner.py:84
 msgid "Executes a command on behalf of a specific member in a specific channel."
 msgstr "Выполняет команду от имени определенного участника."
 
-#: sonata/bot/cogs/owner/owner.py:92
+#: sonata/bot/cogs/owner/owner.py:97
 msgid "Repeats the command the specified number of times"
 msgstr "Повторяет команду указанное количество раз"
 
-#: sonata/bot/cogs/owner/owner.py:104
+#: sonata/bot/cogs/owner/owner.py:109
 msgid "I did not find the cog: **{0}**!"
 msgstr "Я не нашла модуль: **{0}**!"
 
-#: sonata/bot/cogs/owner/owner.py:107
+#: sonata/bot/cogs/owner/owner.py:112
 msgid "The cog is already loaded: **{0}**!"
 msgstr "Модуль уже подключен: **{0}**!"
 
-#: sonata/bot/cogs/owner/owner.py:110
+#: sonata/bot/cogs/owner/owner.py:115
 msgid "I did not load the cog: **{0}**!"
 msgstr "Я не подключала модуль: **{0}**!"
 
-#: sonata/bot/cogs/owner/owner.py:113
+#: sonata/bot/cogs/owner/owner.py:118
 msgid "There is no setup function in the **{0}** extension."
 msgstr "В расширении модуля **{0}** отсутсвует функция запуска."
 
-#: sonata/bot/cogs/owner/owner.py:119
+#: sonata/bot/cogs/owner/owner.py:124
 msgid ""
 "An error occurred in the **{0.name}** cog or its setup function:\n"
 "{0.original}"
@@ -1454,15 +1454,15 @@ msgstr ""
 "В модуле **{0.name}** или его функции запуска произошла ошибка:\n"
 "{0.original}"
 
-#: sonata/bot/cogs/owner/owner.py:147
+#: sonata/bot/cogs/owner/owner.py:152
 msgid "Lists loaded cogs"
 msgstr "Выводит список подключенных модулей"
 
-#: sonata/bot/cogs/owner/owner.py:153
+#: sonata/bot/cogs/owner/owner.py:158
 msgid "No loaded cogs!"
 msgstr "Нет подключенных модулей!"
 
-#: sonata/bot/cogs/owner/owner.py:158
+#: sonata/bot/cogs/owner/owner.py:163
 msgid ""
 "Loaded cogs:\n"
 "{0}\n"
@@ -1470,39 +1470,39 @@ msgstr ""
 "Подключенные модули:\n"
 "{0}\n"
 
-#: sonata/bot/cogs/owner/owner.py:164
+#: sonata/bot/cogs/owner/owner.py:169
 msgid "Loads cog"
 msgstr "Подключает модуль"
 
-#: sonata/bot/cogs/owner/owner.py:167
+#: sonata/bot/cogs/owner/owner.py:172
 msgid "I loaded the cog: **{}**."
 msgstr "Подключила модуль: **{}**."
 
-#: sonata/bot/cogs/owner/owner.py:172
+#: sonata/bot/cogs/owner/owner.py:177
 msgid "Disables cog"
 msgstr "Отключает модуль"
 
-#: sonata/bot/cogs/owner/owner.py:174
+#: sonata/bot/cogs/owner/owner.py:179
 msgid "This cog cannot be disabled"
 msgstr "Этот модуль не может быть отключен"
 
-#: sonata/bot/cogs/owner/owner.py:178
+#: sonata/bot/cogs/owner/owner.py:183
 msgid "I disabled the cog: **{0}**."
 msgstr "Отключила модуль: **{0}**."
 
-#: sonata/bot/cogs/owner/owner.py:182
+#: sonata/bot/cogs/owner/owner.py:187
 msgid "Reloads cog"
 msgstr "Переподключает модуль"
 
-#: sonata/bot/cogs/owner/owner.py:185
+#: sonata/bot/cogs/owner/owner.py:190
 msgid "I reloaded the cog: **{0}**."
 msgstr "Пеподключила модуль: **{0}**."
 
-#: sonata/bot/cogs/owner/owner.py:190
+#: sonata/bot/cogs/owner/owner.py:195
 msgid "Displays uptime"
 msgstr "Показывает время работы"
 
-#: sonata/bot/cogs/owner/owner.py:195
+#: sonata/bot/cogs/owner/owner.py:200
 msgid ""
 "Evaluates input\n"
 "        Input is interpreted as newline separated statements.        If the "
@@ -1548,7 +1548,7 @@ msgstr ""
 "        ```\n"
 "        "
 
-#: sonata/bot/cogs/owner/owner.py:237
+#: sonata/bot/cogs/owner/owner.py:242
 msgid ""
 "Displays full source code for a specific command\n"
 "        \n"
@@ -1563,23 +1563,23 @@ msgstr ""
 "например, `tag.create` для подкоманды create команды tag или пробелами.\n"
 "        "
 
-#: sonata/bot/cogs/owner/owner.py:257
+#: sonata/bot/cogs/owner/owner.py:262
 msgid "Could not find command."
 msgstr "Не удалось найти команду."
 
-#: sonata/bot/cogs/owner/owner.py:279
+#: sonata/bot/cogs/owner/owner.py:284
 msgid "Displays system info"
 msgstr "Отображает системную информацию"
 
-#: sonata/bot/cogs/owner/owner.py:280
+#: sonata/bot/cogs/owner/owner.py:285
 msgid "System Info"
 msgstr "Системная информация"
 
-#: sonata/bot/cogs/owner/owner.py:282
+#: sonata/bot/cogs/owner/owner.py:287
 msgid "Platform"
 msgstr "Платформа"
 
-#: sonata/bot/cogs/owner/owner.py:283
+#: sonata/bot/cogs/owner/owner.py:288
 msgid ""
 "**System**: {system}\n"
 "**Release**: {release}\n"
@@ -1589,11 +1589,11 @@ msgstr ""
 "**Релиз**: {release}\n"
 "**Время работы**: {uptime}"
 
-#: sonata/bot/cogs/owner/owner.py:295
+#: sonata/bot/cogs/owner/owner.py:300
 msgid "CPU"
 msgstr "CPU"
 
-#: sonata/bot/cogs/owner/owner.py:296
+#: sonata/bot/cogs/owner/owner.py:301
 msgid ""
 "**Cores**: {count}\n"
 "**Usage**: {usage}%"
@@ -1601,11 +1601,11 @@ msgstr ""
 "**Ядра**: {count}\n"
 "**Использовано**: {usage}%"
 
-#: sonata/bot/cogs/owner/owner.py:302
+#: sonata/bot/cogs/owner/owner.py:307
 msgid "RAM"
 msgstr "RAM"
 
-#: sonata/bot/cogs/owner/owner.py:303
+#: sonata/bot/cogs/owner/owner.py:308
 msgid ""
 "**Total**: {total}GB\n"
 "**Available**: {available}GB\n"
@@ -1615,7 +1615,7 @@ msgstr ""
 "**Доступно**: {available}GB\n"
 "**Использовано**: {usage}%"
 
-#: sonata/bot/cogs/owner/owner.py:327 sonata/bot/cogs/owner/owner.py:345
+#: sonata/bot/cogs/owner/owner.py:332 sonata/bot/cogs/owner/owner.py:350
 msgid ""
 "**Uptime**: {uptime}\n"
 "**PID**: {pid}\n"
@@ -1627,11 +1627,11 @@ msgstr ""
 "**Использовано памяти**: {mem}MB ({mem_percent}%)\n"
 "**Использовано CPU**: {cpu}%"
 
-#: sonata/bot/cogs/owner/owner.py:344
+#: sonata/bot/cogs/owner/owner.py:349
 msgid "Database"
 msgstr "База данных"
 
-#: sonata/bot/cogs/owner/owner.py:363
+#: sonata/bot/cogs/owner/owner.py:368
 msgid "Runs a shell command"
 msgstr "Запускает команду оболочки"
 
@@ -1854,100 +1854,118 @@ msgstr "Канал для оповещений установлен."
 #: sonata/bot/cogs/streams/streams.py:61
 msgid ""
 "Sets default alert message\n"
+"            \n"
+"        Markdown is allowed.\n"
 "        \n"
 "        Replacements\n"
 "        {{link}} - stream link\n"
 "        {{name}} - streamer name\n"
+"        {{title}} - stream title\n"
+"        {{game}} - game name\n"
+"        {{viewers}} - viewers count\n"
+"        {{views}} - user's views count\n"
 "        \n"
 "        Example\n"
-"        - alerts set message {{name}} began to stream. Link: {{link}}"
+"        - alerts set message {{name}} began broadcasting \"{{game}}\". Link: "
+"{{link}}"
 msgstr ""
-"Устанавливает сообщение в оповещении по умолчанию\n"
+"Устанавливает сообщение оповещений по умолчанию\n"
+"            \n"
+"        Markdown разрешен.\n"
 "        \n"
 "        Замены\n"
 "        {{link}} - ссылка на стрим\n"
 "        {{name}} - имя стримера\n"
+"        {{title}} - заголовок стрима\n"
+"        {{game}} - название игры\n"
+"        {{viewers}} - количество зрителей\n"
+"        {{views}} - количество просмотров пользователя\n"
 "        \n"
 "        Пример\n"
-"        - alerts set message {{name}} начал трансляцию. Ссылка: {{link}}"
+"        - alerts set message {{name}} начал трансляцию \"{{game}}\". Ссылка: "
+"{{link}}"
 
-#: sonata/bot/cogs/streams/streams.py:74
+#: sonata/bot/cogs/streams/streams.py:80
 msgid "Alerts message set."
 msgstr "Сообщение в оповещении установлено."
 
-#: sonata/bot/cogs/streams/streams.py:78
-msgid "Enables/Disables sending an alert in an embedded message"
-msgstr "Включает/отключает отправку оповещений в Embed сообщении"
-
-#: sonata/bot/cogs/streams/streams.py:86
-msgid "Enables sending an alert in an embedded message"
-msgstr "Включает отправку оповещений в Embed сообщении"
-
-#: sonata/bot/cogs/streams/streams.py:90
-msgid "Alerting in the embedded message is enabled."
-msgstr "Оповещения в Embed сообщении включены."
-
-#: sonata/bot/cogs/streams/streams.py:94
-msgid "Disables sending an alert in an embedded message"
-msgstr "Отключает отправку оповещений в Embed сообщении"
-
-#: sonata/bot/cogs/streams/streams.py:98
-msgid "Alerting in the embedded message is disabled."
-msgstr "Оповещения в Embed сообщении отключены."
-
-#: sonata/bot/cogs/streams/streams.py:102
+#: sonata/bot/cogs/streams/streams.py:84
 msgid "Enables/Disables alert mentions"
 msgstr "Включает/отключает упоминания в оповещениях"
 
-#: sonata/bot/cogs/streams/streams.py:110
-msgid "Enables alert everyone mention"
-msgstr "Включает упоминание everyone в оповещениях"
+#: sonata/bot/cogs/streams/streams.py:92
+msgid ""
+"Enables alert everyone mention\n"
+"        \n"
+"        The bot must have the permission to mention everyone."
+msgstr ""
+"Включает упоминание everyone в оповещениях\n"
+"        \n"
+"        Бот должен иметь право упоминания everyone."
 
-#: sonata/bot/cogs/streams/streams.py:114
+#: sonata/bot/cogs/streams/streams.py:100
 msgid "Alerts will mention `everyone`."
 msgstr "Оповещения будут упоминать `everyone`."
 
-#: sonata/bot/cogs/streams/streams.py:118
-msgid "Enables alert here mention"
-msgstr "Включает упоминание here в оповещениях"
+#: sonata/bot/cogs/streams/streams.py:104
+msgid ""
+"Enables alert here mention\n"
+"        \n"
+"        The bot must have the permission to mention everyone."
+msgstr ""
+"Включает упоминание here в оповещениях\n"
+"        \n"
+"        Бот должен иметь право упоминания everyone."
 
-#: sonata/bot/cogs/streams/streams.py:122
+#: sonata/bot/cogs/streams/streams.py:112
 msgid "Alerts will mention `here`."
 msgstr "Оповещения будут упоминать `here`."
 
-#: sonata/bot/cogs/streams/streams.py:126
+#: sonata/bot/cogs/streams/streams.py:116
 msgid "Disables alert mentions"
 msgstr "Отключает упоминания в оповещениях"
 
-#: sonata/bot/cogs/streams/streams.py:130
+#: sonata/bot/cogs/streams/streams.py:120
 msgid "Alert mentions disabled."
 msgstr "Упоминания в оповещениях отключены."
 
-#: sonata/bot/cogs/streams/twitch.py:41
+#: sonata/bot/cogs/streams/twitch.py:31
 msgid "Twitch user is not found"
 msgstr "Пользователь Twitch не найден"
 
-#: sonata/bot/cogs/streams/twitch.py:254
+#: sonata/bot/cogs/streams/twitch.py:122
+msgid "Game"
+msgstr "Игра"
+
+#: sonata/bot/cogs/streams/twitch.py:123
+msgid "Viewers"
+msgstr "Зрители"
+
+#: sonata/bot/cogs/streams/twitch.py:124
+msgid "Views"
+msgstr "Просмотры"
+
+#: sonata/bot/cogs/streams/twitch.py:249
 msgid "Tracked users"
 msgstr "Отслеживаемые пользователи"
 
-#: sonata/bot/cogs/streams/twitch.py:285
+#: sonata/bot/cogs/streams/twitch.py:278
 msgid "An error occurred while subscribing."
 msgstr "Произошла ошибка при подписке."
 
-#: sonata/bot/cogs/streams/twitch.py:293
+#: sonata/bot/cogs/streams/twitch.py:286
 msgid "User {0} is now tracked in this guild."
 msgstr "Пользователь {0} теперь отслеживается в этой гильдии."
 
-#: sonata/bot/cogs/streams/twitch.py:301
+#: sonata/bot/cogs/streams/twitch.py:294
 msgid "The list of tracked users in this guild has been cleared."
 msgstr "Список отслеживаемых пользователей в этой гильдии был очищен."
 
-#: sonata/bot/cogs/streams/twitch.py:313
+#: sonata/bot/cogs/streams/twitch.py:306
 msgid "User {0} is no longer being tracked in this guild."
 msgstr "Пользователь {0} больше не отслеживается в этой гильдии."
 
-#: sonata/bot/cogs/streams/twitch.py:318
+#: sonata/bot/cogs/streams/twitch.py:311
 msgid "User {0} is not tracked in this guild."
 msgstr "Пользователь {0} не отслеживается в этой гильдии."
 
@@ -2348,8 +2366,8 @@ msgstr ""
 "- {0}```"
 
 #: sonata/bot/core/bot.py:191
-msgid "Required arguments not specified."
-msgstr "Обязательные аргументы не указаны."
+msgid "Required argument `{0}` not specified."
+msgstr "Обязательный аргумент `{0}` не указан."
 
 #: sonata/bot/core/bot.py:193
 msgid "An error occurred while making an HTTP request."
@@ -2979,3 +2997,46 @@ msgstr ""
 #~ "        `Fun` Большой набор развлекательных команд. Все от 8ball до картинок "
 #~ "котиков. Также имеет продвинутую версию roll.\n"
 #~ "        "
+
+#~ msgid ""
+#~ "Sets default alert message\n"
+#~ "        \n"
+#~ "        Replacements\n"
+#~ "        {{link}} - stream link\n"
+#~ "        {{name}} - streamer name\n"
+#~ "        \n"
+#~ "        Example\n"
+#~ "        - alerts set message {{name}} began to stream. Link: {{link}}"
+#~ msgstr ""
+#~ "Устанавливает сообщение в оповещении по умолчанию\n"
+#~ "        \n"
+#~ "        Замены\n"
+#~ "        {{link}} - ссылка на стрим\n"
+#~ "        {{name}} - имя стримера\n"
+#~ "        \n"
+#~ "        Пример\n"
+#~ "        - alerts set message {{name}} начал трансляцию. Ссылка: {{link}}"
+
+#~ msgid "Enables/Disables sending an alert in an embedded message"
+#~ msgstr "Включает/отключает отправку оповещений в Embed сообщении"
+
+#~ msgid "Enables sending an alert in an embedded message"
+#~ msgstr "Включает отправку оповещений в Embed сообщении"
+
+#~ msgid "Alerting in the embedded message is enabled."
+#~ msgstr "Оповещения в Embed сообщении включены."
+
+#~ msgid "Disables sending an alert in an embedded message"
+#~ msgstr "Отключает отправку оповещений в Embed сообщении"
+
+#~ msgid "Alerting in the embedded message is disabled."
+#~ msgstr "Оповещения в Embed сообщении отключены."
+
+#~ msgid "Enables alert everyone mention"
+#~ msgstr "Включает упоминание everyone в оповещениях"
+
+#~ msgid "Enables alert here mention"
+#~ msgstr "Включает упоминание here в оповещениях"
+
+#~ msgid "Required arguments not specified."
+#~ msgstr "Обязательные аргументы не указаны."

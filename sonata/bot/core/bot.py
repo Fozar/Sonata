@@ -4,6 +4,7 @@ import hashlib
 import hmac
 import inspect
 import traceback
+from contextlib import suppress
 from datetime import datetime
 from json import JSONDecodeError
 from typing import Union, Optional, TYPE_CHECKING
@@ -31,8 +32,6 @@ class Sonata(commands.Bot):
         self, app: "Application", logger: "Logger" = None, *args, **kwargs,
     ):
         self.app = app
-        self.db = app.get("db")
-        self.logger = logger
         self.config = config = app["config"]
         super().__init__(
             owner_id=self.config["bot"].owner_id,
@@ -41,25 +40,31 @@ class Sonata(commands.Bot):
             *args,
             **kwargs,
         )
-        self.description = self.config["bot"].description
-        self.default_prefix = self.config["bot"].default_prefix
-        self.session = aiohttp.ClientSession(loop=self.loop)
+        self.db = app["db"]
+        self.logger = logger
+        self.description = config["bot"].description
+        self.default_prefix = config["bot"].default_prefix
+        self.session = aiohttp.ClientSession()
         self.pool = concurrent.futures.ThreadPoolExecutor()
         self.launch_time = None
         self.twitch_client = twitch.Client(
-            config.client_id, config.bearer_token, self.loop
+            config["twitch"].client_id, config["twitch"].bearer_token, self.session
         )
         self.dbl_client = (
             dbl.DBLClient(
-                self, self.config["bot"].dbl_token, session=self.session, autopost=True
+                self, config["bot"].dbl_token, session=self.session, autopost=True
             )
-            if self.config["bot"].dbl_token
+            if config["bot"].dbl_token
             else None
         )
         self.service_guild: Optional[discord.Guild] = None
         self.errors_channel: Optional[discord.TextChannel] = None
         self.reports_channel: Optional[discord.TextChannel] = None
-        self.init_handlers()
+        self.log_channel: Optional[discord.TextChannel] = None
+        cors = self.app["cors"]
+        resource = cors.add(self.app.router.add_resource(r"/wh/twitch/{topic}/{id}"))
+        cors.add(resource.add_route("GET", self.handler_get))
+        cors.add(resource.add_route("POST", self.handler_post))
 
     # Properties
 
@@ -149,11 +154,13 @@ class Sonata(commands.Bot):
     # Events
 
     async def on_ready(self):
-        self.service_guild = self.get_guild(
-            313726240710197250
-        ) or await self.fetch_guild(313726240710197250)
-        self.errors_channel = self.service_guild.get_channel(707180649454370827)
-        self.reports_channel = self.service_guild.get_channel(707206460878356551)
+        with suppress(discord.HTTPException):
+            self.service_guild = service_guild = self.get_guild(
+                313726240710197250
+            ) or await self.fetch_guild(313726240710197250)
+            self.errors_channel = service_guild.get_channel(707180649454370827)
+            self.reports_channel = service_guild.get_channel(707206460878356551)
+            self.log_channel = service_guild.get_channel(714881722163920917)
 
         await self.change_presence(
             status=discord.Status.dnd, activity=discord.Game("https://www.sonata.fun/")
@@ -170,13 +177,19 @@ class Sonata(commands.Bot):
         await self.process_commands(message)
 
     async def on_guild_join(self, guild: discord.Guild):
-        owner = self.get_user(self.owner_id) or await self.fetch_user(self.owner_id)
-        await owner.send(
-            f"New guild joined: {guild.name}. ID: {guild.id}. Members: {guild.member_count}"
+        await self.log_channel.send(
+            f"New guild joined: {guild.name}.\n'"
+            f"ID: {guild.id}.\n"
+            f"Owner: {guild.owner}\n"
+            f"Members: {guild.member_count}"
         )
-        await owner.send(f"Channels: ```{', '.join(map(str, guild.channels))}```")
+        await self.log_channel.send(
+            f"Channels: ```{', '.join(map(str, guild.channels))}```"
+        )
 
-    async def on_command_error(self, ctx: Context, exc):
+    async def on_command_error(
+        self, ctx: Context, exc
+    ):  # TODO: Add check error handler
         if hasattr(exc, "original"):
             exc = exc.original
         if isinstance(exc, commands.MissingPermissions):
@@ -233,7 +246,8 @@ class Sonata(commands.Bot):
                 )
 
     async def on_guild_post(self):
-        data = FormData({"servers": len(self.guilds)})
+        data = FormData()
+        data.add_field(name="servers", value=str(len(self.guilds)))
         await self.session.post(
             f"https://api.server-discord.com/v2/bots/{self.user.id}/stats",
             headers={"Authorization": "SDC " + self.config["bot"].sdc_token},
@@ -242,12 +256,6 @@ class Sonata(commands.Bot):
         self.logger.info("Server count posted successfully")
 
     # Methods
-
-    def init_handlers(self):
-        cors = self.app["cors"]
-        resource = cors.add(self.app.router.add_resource(r"/wh/twitch/{topic}/{id}"))
-        cors.add(resource.add_route("GET", self.handler_get))
-        cors.add(resource.add_route("POST", self.handler_post))
 
     async def define_locale(
         self, obj: Union[discord.Message, Context, discord.TextChannel]
@@ -292,23 +300,27 @@ class Sonata(commands.Bot):
         await self.set_locale(message)
         ctx = await self.get_context(message, cls=Context)
         # Check command is disabled
-        if ctx.guild and ctx.command is not None:
-            guild = await self.db.guilds.find_one(
-                {"id": message.guild.id},
-                {"_id": False, "disabled_cogs": True, "disabled_commands": True},
-            )
-            if (
-                (
-                    ctx.command.cog
-                    and ctx.command.cog.qualified_name in guild["disabled_cogs"]
+        if ctx.command:
+            if ctx.guild:
+                guild = await self.db.guilds.find_one(
+                    {"id": message.guild.id},
+                    {"_id": False, "disabled_cogs": True, "disabled_commands": True},
                 )
-                or ctx.command.qualified_name in guild["disabled_commands"]
-                or discord.utils.find(
-                    lambda parent: parent.qualified_name in guild["disabled_commands"],
-                    ctx.command.parents,
-                )
-            ):
-                ctx.command.enabled = False
+                if (
+                    (
+                        ctx.command.cog
+                        and ctx.command.cog.qualified_name in guild["disabled_cogs"]
+                    )
+                    or ctx.command.qualified_name in guild["disabled_commands"]
+                    or discord.utils.find(
+                        lambda parent: parent.qualified_name
+                        in guild["disabled_commands"],
+                        ctx.command.parents,
+                    )
+                ):
+                    ctx.command.enabled = False
+                else:
+                    ctx.command.enabled = True
             else:
                 ctx.command.enabled = True
 
@@ -347,7 +359,7 @@ class Sonata(commands.Bot):
 
         return True
 
-    async def should_reply(self, message):
+    async def should_reply(self, message: discord.Message):
         """Returns whether the bot should reply to a given message"""
         if message.author.bot or not self.is_ready():
             return False

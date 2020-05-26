@@ -152,12 +152,11 @@ class SubscriptionAlertConfig(BaseAlertConfig):
     message_id: int = None
 
 
-class TwitchSubscription(CreatedAtMixin):
+class TwitchSubscriptionStatus(CreatedAtMixin):
     guilds: List[SubscriptionAlertConfig]
     id: str
     login: str
     topic: str
     callback: str
-    secret: str = None
     expires_at: datetime = None
     verified: bool = False

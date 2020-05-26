@@ -1,13 +1,11 @@
 import functools
-from typing import Union, List, Dict, TYPE_CHECKING
+from typing import Union, List, Dict
 
 import discord
 from discord.ext import commands
 
 from .command import Command, Group
-
-if TYPE_CHECKING:
-    from .context import Context
+from .context import Context
 
 
 class _HelpCommandImpl(Command):
@@ -216,7 +214,7 @@ class HelpCommand(commands.HelpCommand):
         else:
             self.dm_help = False
 
-    async def command_callback(self, ctx: "Context", *, command=None):
+    async def command_callback(self, ctx: Context, *, command=None):
         await super().command_callback(ctx=ctx, command=command)
         if self.dm_help:
             await ctx.message.add_reaction("✅")

@@ -1,10 +1,5 @@
-from typing import TYPE_CHECKING
-
 from .tags import Tags
 
-if TYPE_CHECKING:
-    from ... import Sonata
 
-
-def setup(bot: "Sonata"):
+def setup(bot):
     bot.add_cog(Tags(bot))

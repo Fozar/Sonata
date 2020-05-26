@@ -1,10 +1,5 @@
-from typing import TYPE_CHECKING
-
 from .fun import Fun
 
-if TYPE_CHECKING:
-    from ... import Sonata
 
-
-def setup(bot: "Sonata"):
+def setup(bot):
     bot.add_cog(Fun(bot))

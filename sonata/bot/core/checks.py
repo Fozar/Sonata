@@ -1,11 +1,16 @@
+from typing import TYPE_CHECKING
+
 import discord
 from discord.ext import commands
 
-from .context import Context
+
 from .errors import NoPremium
 
+if TYPE_CHECKING:
+    from .context import Context
 
-async def is_premium(ctx: Context):
+
+async def is_premium(ctx: "Context"):
     if ctx.guild is None:
         raise commands.NoPrivateMessage()
     guild = await ctx.db.guilds.find_one({"id": ctx.guild.id}, {"premium": True})
@@ -25,7 +30,7 @@ def premium_only():
 
 
 def is_mod():
-    async def predicate(ctx: Context):
+    async def predicate(ctx: "Context"):
         guild = await ctx.db.guilds.find_one(
             {"id": ctx.guild.id}, {"mod_roles": True, "admin_roles": True}
         )

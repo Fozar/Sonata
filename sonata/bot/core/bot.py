@@ -6,16 +6,13 @@ import inspect
 import traceback
 from datetime import datetime
 from json import JSONDecodeError
-from logging import Logger
-from typing import Union, Optional
+from typing import Union, Optional, TYPE_CHECKING
 
 import aiohttp
 import dbl
 import discord
 import twitch
 from aiohttp import web, FormData
-from aiohttp.web_app import Application
-from aiohttp.web_request import Request
 from discord.ext import commands
 
 from sonata.bot.utils import i18n
@@ -23,10 +20,15 @@ from .cog import Cog
 from .context import Context
 from .errors import NoPremium
 
+if TYPE_CHECKING:
+    from logging import Logger
+    from aiohttp.web_app import Application
+    from aiohttp.web_request import Request
+
 
 class Sonata(commands.Bot):
     def __init__(
-        self, app: Application, logger: Logger = None, *args, **kwargs,
+        self, app: "Application", logger: "Logger" = None, *args, **kwargs,
     ):
         self.app = app
         self.db = app.get("db")
@@ -97,9 +99,7 @@ class Sonata(commands.Bot):
 
     # Handlers
 
-    # Handlers
-
-    async def handler_get(self, request: Request):
+    async def handler_get(self, request: "Request"):
         query = request.query
         try:
             if query["hub.mode"] == "denied":
@@ -117,7 +117,7 @@ class Sonata(commands.Bot):
 
         return web.Response(text="OK", status=200)
 
-    async def handler_post(self, request: Request):
+    async def handler_post(self, request: "Request"):
         body = await request.read()
         signature = (
             "sha256="

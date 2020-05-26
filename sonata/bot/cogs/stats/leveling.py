@@ -5,11 +5,11 @@ from typing import Dict, Union
 import discord
 from discord.ext import commands
 
-from sonata.bot import core, Sonata
+from sonata.bot import core
 
 
 class Leveling(core.Cog):
-    def __init__(self, sonata: Sonata):
+    def __init__(self, sonata: core.Sonata):
         self.sonata = sonata
         self.exp_offset = 100
         self.exp_multiplier = 100

@@ -4,9 +4,12 @@ from io import StringIO
 from typing import Optional
 
 import discord
+from aiocache import cached
+from aiocache.serializers import PickleSerializer
 from babel.dates import format_datetime
 from dateutil import parser
 from discord.ext import commands
+from discord.ext.commands import BucketType
 
 from sonata.bot import core
 from sonata.bot.utils.converters import MathExpression, to_lower, locale_to_lang
@@ -118,14 +121,18 @@ class Utils(
         )
         await ctx.inform(_("Result: {0}").format(expression.normalize()))
 
-    @core.command(aliases=["virus"])
-    async def covid(self, ctx: core.Context, *, country: to_lower = None):
-        _("""Shows COVID-19 pandemic statistics""")
-        async with ctx.session.get(
+    @cached(ttl=300, serializer=PickleSerializer())
+    async def get_covid_data(self):
+        async with self.sonata.session.get(
             "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/web-data/data/cases_country.csv"
         ) as response:
             csv_file = (await response.content.read()).decode("utf-8")
-        data = list(csv.DictReader(StringIO(csv_file), skipinitialspace=True))
+        return list(csv.DictReader(StringIO(csv_file), skipinitialspace=True))
+
+    @core.command(aliases=["virus"])
+    async def covid(self, ctx: core.Context, *, country: to_lower = None):
+        _("""Shows COVID-19 pandemic statistics""")
+        data = await self.get_covid_data()
         embed = discord.Embed(title="COVID-19", colour=self.colour)
         embed.set_footer(text="Johns Hopkins CSSE")
         embed.set_thumbnail(
@@ -174,27 +181,35 @@ class Utils(
         message = await ctx.send(embed=embed)
         await message.add_reaction(self.sonata.emoji("monkaSoap"))
 
+    @cached(
+        ttl=300,
+        serializer=PickleSerializer(),
+        key_builder=lambda f, s, locality, locale: f"{f.__name__}_{locale}_{locality}",
+    )
+    async def get_weather_data(self, locality: str, locale: str):
+        params = {
+            "q": locality,
+            "type": "like",
+            "units": "metric",
+            "lang": locale,
+            "APPID": self.sonata.config["api"].open_weather,
+        }
+        async with self.sonata.session.get(WEATHER_URL, params=params) as resp:
+            return await resp.json() if resp.status == 200 else None
+
     @core.command(aliases=["w"])
-    @commands.cooldown(1, 1)
+    @commands.cooldown(1, 1, type=BucketType.guild)
     async def weather(self, ctx: core.Context, locality: str):
         _(
             """Finds out the weather
 
         The name of the locality may be specified in any language."""
         )
-        params = {
-            "q": locality,
-            "type": "like",
-            "units": "metric",
-            "lang": locale_to_lang(ctx.locale),
-            "APPID": self.sonata.config["api"].open_weather,
-        }
-        async with ctx.session.get(WEATHER_URL, params=params) as resp:
-            if resp.status != 200:
-                return await ctx.send(
-                    _("{0}, I did not find such a locality.").format(ctx.author.mention)
-                )
-            js = await resp.json()
-        embed = self.make_weather_embed(js)
+        data = await self.get_weather_data(locality, locale_to_lang(ctx.locale))
+        if data is None:
+            return await ctx.send(
+                _("{0}, I did not find such a locality.").format(ctx.author.mention)
+            )
+        embed = self.make_weather_embed(data)
         menu = CloseMenu(embed=embed)
         await menu.prompt(ctx)

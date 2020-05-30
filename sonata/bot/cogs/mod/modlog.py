@@ -20,6 +20,11 @@ action_mapping = {
 }
 
 
+async def modlog_enabled(ctx: core.Context):
+    guild = await ctx.db.guilds.find_one({"id": ctx.guild.id}, {"modlog": True})
+    return guild.get("modlog", False)
+
+
 class Modlog(core.Cog):
     def __init__(self, sonata: core.Sonata):
         self.sonata = sonata
@@ -255,7 +260,8 @@ class Modlog(core.Cog):
         self.sonata.dispatch("modlog_case_expire", case)
 
     @core.group(usage="<id>", invoke_without_command=True)
-    @commands.check(core.is_mod())
+    @core.mod_only()
+    @commands.check(modlog_enabled)
     async def case(self, ctx: core.Context, case: ModlogCaseConverter()):
         _("""Returns modlog case by specified ID""")
         embed = await self.make_case_embed(case)

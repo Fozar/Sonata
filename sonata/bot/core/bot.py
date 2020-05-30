@@ -7,8 +7,7 @@ import traceback
 from contextlib import suppress
 from datetime import datetime
 from json import JSONDecodeError
-from logging import Logger
-from typing import Union, Optional
+from typing import Union, Optional, TYPE_CHECKING, List
 
 import aiohttp
 import dbl
@@ -24,10 +23,15 @@ from .cog import Cog
 from .context import Context
 from .errors import NoPremium
 
+if TYPE_CHECKING:
+    from logging import Logger
+    from aiohttp.web_app import Application
+    from aiohttp.web_request import Request
+
 
 class Sonata(commands.Bot):
     def __init__(
-        self, app: Application, logger: Logger = None, *args, **kwargs,
+        self, app: "Application", logger: "Logger" = None, *args, **kwargs,
     ):
         self.app = app
         self.config = config = app["config"]
@@ -103,9 +107,7 @@ class Sonata(commands.Bot):
 
     # Handlers
 
-    # Handlers
-
-    async def handler_get(self, request: Request):
+    async def handler_get(self, request: "Request"):
         query = request.query
         try:
             if query["hub.mode"] == "denied":
@@ -123,16 +125,19 @@ class Sonata(commands.Bot):
 
         return web.Response(text="OK", status=200)
 
-    async def handler_post(self, request: Request):
-        body = await request.read()
-        signature = (
-            "sha256="
-            + hmac.new(
-                self.config["twitch"].hub_secret.encode("utf-8"), body, hashlib.sha256,
-            ).hexdigest()
-        )
-        if signature != request.headers.get("X-Hub-Signature"):
-            return web.Response(text="Forbidden", status=403)
+    async def handler_post(self, request: "Request"):
+        if not self.app["debug"]:
+            body = await request.read()
+            signature = (
+                "sha256="
+                + hmac.new(
+                    self.config["twitch"].hub_secret.encode("utf-8"),
+                    body,
+                    hashlib.sha256,
+                ).hexdigest()
+            )
+            if signature != request.headers.get("X-Hub-Signature"):
+                return web.Response(text="Forbidden", status=403)
 
         try:
             json = await request.json()

@@ -14,9 +14,9 @@ import aiohttp
 import dbl
 import discord
 import twitch
-from aiohttp import web, FormData
-from aiohttp.web_app import Application
-from aiohttp.web_request import Request
+from aiocache import cached, Cache
+from aiocache.serializers import PickleSerializer
+from aiohttp import web
 from discord.ext import commands
 
 from sonata.bot.utils import i18n
@@ -63,6 +63,7 @@ class Sonata(commands.Bot):
         resource = cors.add(self.app.router.add_resource(r"/wh/twitch/{topic}/{id}"))
         cors.add(resource.add_route("GET", self.handler_get))
         cors.add(resource.add_route("POST", self.handler_post))
+        self.cache = Cache()
 
     # Properties
 
@@ -257,6 +258,9 @@ class Sonata(commands.Bot):
 
     # Methods
 
+    @cached(
+        ttl=5, serializer=PickleSerializer(),
+    )
     async def define_locale(
         self, obj: Union[discord.Message, Context, discord.TextChannel]
     ):
@@ -359,6 +363,11 @@ class Sonata(commands.Bot):
 
         return True
 
+    @cached(
+        ttl=5,
+        serializer=PickleSerializer(),
+        key_builder=lambda f, b, m: f"{f.__name__}_{m.id}",
+    )
     async def should_reply(self, message: discord.Message):
         """Returns whether the bot should reply to a given message"""
         if message.author.bot or not self.is_ready():

@@ -251,16 +251,6 @@ class Sonata(commands.Bot):
                     )
                 )
 
-    async def on_guild_post(self):
-        data = FormData()
-        data.add_field(name="servers", value=str(len(self.guilds)))
-        await self.session.post(
-            f"https://api.server-discord.com/v2/bots/{self.user.id}/stats",
-            headers={"Authorization": "SDC " + self.config["bot"].sdc_token},
-            data=data,
-        )
-        self.logger.info("Server count posted successfully")
-
     # Methods
 
     @cached(

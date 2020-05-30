@@ -1,6 +1,7 @@
 from typing import Union
 
 import discord
+from aiohttp import FormData
 from babel.dates import format_datetime, format_timedelta
 from discord.ext import commands
 from discord.ext.commands import clean_content
@@ -22,6 +23,19 @@ class General(
 
     def cog_unload(self):
         self.sonata.help_command = self._original_help_command
+
+    @core.Cog.listener()
+    async def on_guild_post(self):
+        bot = self.sonata
+        data = FormData(
+            {"servers": str(len(bot.guilds)), "shards": str(bot.shard_count or 1)}
+        )
+        await bot.session.post(
+            f"https://api.server-discord.com/v2/bots/{bot.user.id}/stats",
+            headers={"Authorization": "SDC " + bot.config["bot"].sdc_token},
+            data=data,
+        )
+        bot.logger.info("Server count posted successfully")
 
     @core.group(invoke_without_command=True)
     async def about(

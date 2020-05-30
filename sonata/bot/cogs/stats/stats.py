@@ -1,3 +1,5 @@
+import re
+from contextlib import suppress
 from datetime import datetime
 
 import discord
@@ -7,7 +9,8 @@ from discord.ext import commands
 
 from sonata.bot import core
 from sonata.bot.cogs.stats.leveling import Leveling
-from sonata.db.models import Guild, User, Command, DailyStats, UserStats
+from sonata.bot.utils import i18n
+from sonata.db.models import Command, DailyStats, Guild, UserStats, User
 
 
 class Stats(
@@ -101,6 +104,32 @@ class Stats(
             embed.add_field(name="Автор", value=str(ctx.author))
             await self.sonata.errors_channel.send(embed=embed)
 
+    async def define_guild_locale(self, guild: discord.Guild):
+        hint = list(i18n.LOCALES)
+        msgs = []
+        if not guild.me.guild_permissions.read_message_history:
+            return None
+
+        for channel in guild.channels:
+            if (
+                isinstance(channel, discord.TextChannel)
+                and channel.permissions_for(guild.me).read_message_history
+            ):
+                async for msg in channel.history(limit=2):
+                    if msg.content:
+                        msgs.append(" ".join(re.findall(r"\w+\D\b", msg.content)))
+            if len(msgs) > 5:
+                break
+        if msgs:
+            language = await self.sonata.ya_define_locale(
+                ". ".join(msgs), [loc[:2] for loc in hint]
+            )
+            r = re.compile(language + r"_\w{2}")
+            locale = next(filter(r.match, hint), None)
+            return locale
+
+        return None
+
     @core.Cog.listener()
     async def on_guild_join(self, guild: discord.Guild):
         guild_conf = await self.sonata.db.guilds.find_one_and_update(
@@ -108,6 +137,10 @@ class Stats(
         )
         if not guild_conf:
             guild_conf = Guild(id=guild.id, name=guild.name, owner_id=guild.owner_id)
+            with suppress(Exception):
+                locale = await self.define_guild_locale(guild)
+                if locale:
+                    guild_conf.locale = locale
             await self.sonata.db.guilds.insert_one(guild_conf.dict())
         for member in guild.members:
             await self.on_member_join(member)

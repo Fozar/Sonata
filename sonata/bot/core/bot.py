@@ -287,6 +287,22 @@ class Sonata(commands.Bot):
             user = await self.db.users.find_one({"id": obj.author.id}, {"locale": True})
             return user["locale"]
 
+    async def ya_define_locale(self, text: str, hint: List[str] = None):
+        """Yandex Translate API"""
+        params = {"key": self.config["yandex"].translate, "text": text}
+        if hint:
+            params["hint"] = ",".join(hint)
+        async with self.session.post(
+            url="https://translate.yandex.net/api/v1.5/tr.json/detect", params=params
+        ) as r:
+            if r.status == 200:
+                data = await r.json()
+                lang = data["lang"]
+                self.logger.info(f"Language is defined: {lang}. Source: '{text}'")
+                return lang
+
+            return None
+
     def emoji(self, search_term: Union[int, str]) -> Optional[discord.Emoji]:
         """Get an emoji by ID or filename.
 

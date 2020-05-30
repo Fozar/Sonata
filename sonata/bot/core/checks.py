@@ -24,7 +24,7 @@ def premium_only():
     return commands.check(is_premium)
 
 
-def is_mod():
+def mod_only():
     async def predicate(ctx: Context):
         guild = await ctx.db.guilds.find_one(
             {"id": ctx.guild.id}, {"mod_roles": True, "admin_roles": True}

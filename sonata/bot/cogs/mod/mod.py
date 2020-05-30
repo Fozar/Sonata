@@ -9,7 +9,7 @@ from discord.ext.commands import clean_content
 from sonata.bot import core
 from sonata.bot.cogs.mod.modlog import Modlog
 from sonata.bot.utils.converters import ModeratedMember, delete_message_days
-from sonata.db.models import ChannelPermissionsCache, ModlogCase
+from sonata.db.models import ModlogCase, ChannelPermissionsCache
 
 action_opposites = {
     discord.AuditLogAction.ban: discord.AuditLogAction.unban,
@@ -152,7 +152,7 @@ class Mod(
 
     @core.command()
     @commands.bot_has_permissions(kick_members=True)
-    @commands.check_any(commands.has_permissions(kick_members=True), core.is_mod())
+    @commands.check_any(commands.has_permissions(kick_members=True), core.mod_only())
     async def kick(
         self, ctx: core.Context, member: ModeratedMember(), *, reason: clean_content(),
     ):
@@ -173,7 +173,7 @@ class Mod(
 
     @core.group(invoke_without_command=True)
     @commands.bot_has_permissions(ban_members=True)
-    @commands.check_any(commands.has_permissions(ban_members=True), core.is_mod())
+    @commands.check_any(commands.has_permissions(ban_members=True), core.mod_only())
     async def ban(
         self,
         ctx: core.Context,
@@ -236,7 +236,7 @@ class Mod(
 
     @core.command()
     @commands.bot_has_permissions(ban_members=True)
-    @commands.check_any(commands.has_permissions(ban_members=True), core.is_mod())
+    @commands.check_any(commands.has_permissions(ban_members=True), core.mod_only())
     async def unban(self, ctx: core.Context, user: int, *, reason: clean_content()):
         _(
             """Unban user in the guild
@@ -259,7 +259,7 @@ class Mod(
 
     @core.group(aliases=["clear"], invoke_without_command=True)
     @commands.bot_has_permissions(manage_messages=True)
-    @commands.check_any(commands.has_permissions(manage_messages=True), core.is_mod())
+    @commands.check_any(commands.has_permissions(manage_messages=True), core.mod_only())
     async def purge(
         self,
         ctx: core.Context,
@@ -297,7 +297,7 @@ class Mod(
 
     @core.group(invoke_without_command=True)
     @commands.bot_has_permissions(manage_roles=True)
-    @commands.check_any(commands.has_permissions(manage_roles=True), core.is_mod())
+    @commands.check_any(commands.has_permissions(manage_roles=True), core.mod_only())
     async def mute(
         self, ctx: core.Context, member: ModeratedMember(), *, reason: clean_content()
     ):
@@ -360,7 +360,7 @@ class Mod(
 
     @core.command()
     @commands.bot_has_permissions(manage_roles=True)
-    @commands.check_any(commands.has_permissions(manage_roles=True), core.is_mod())
+    @commands.check_any(commands.has_permissions(manage_roles=True), core.mod_only())
     async def unmute(
         self, ctx: core.Context, member: ModeratedMember(), *, reason: clean_content()
     ):

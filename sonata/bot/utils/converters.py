@@ -14,7 +14,7 @@ from discord.ext import commands
 
 from sonata.bot import core
 from . import i18n
-from ...db.models import ModlogCase
+from sonata.db.models import ModlogCase
 
 
 def delete_message_days(days: str) -> int:

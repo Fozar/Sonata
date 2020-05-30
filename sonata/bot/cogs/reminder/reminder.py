@@ -9,7 +9,7 @@ from discord.ext import commands, menus
 
 from sonata.bot import core, Sonata
 from sonata.bot.utils.converters import UserFriendlyTime
-from sonata.db import models
+from sonata.db.models import Reminder as ReminderModel
 
 
 class ReminderListSource(menus.ListPageSource):
@@ -50,7 +50,7 @@ class Reminder(
         self._task.cancel()
 
     @commands.Cog.listener()
-    async def on_reminder_complete(self, reminder: models.Reminder):
+    async def on_reminder_complete(self, reminder: ReminderModel):
         try:
             channel: Union[
                 discord.TextChannel, discord.DMChannel
@@ -106,7 +106,7 @@ class Reminder(
         )
         if await cursor.fetch_next:
             reminder = cursor.next_object()
-            return models.Reminder(**reminder)
+            return ReminderModel(**reminder)
         else:
             return None
 
@@ -121,7 +121,7 @@ class Reminder(
         await self._have_data.wait()
         return await self.get_active_reminder(days=days)
 
-    async def call_reminder(self, reminder: models.Reminder):
+    async def call_reminder(self, reminder: ReminderModel):
         await self.sonata.db.reminders.update_one(
             {"id": reminder.id}, {"$set": {"active": False}}
         )
@@ -152,7 +152,7 @@ class Reminder(
     async def create_reminder(self, ctx: core.Context, remind):
         now = ctx.message.created_at.replace(tzinfo=pytz.utc)
         when = remind.dt.astimezone(pytz.utc)
-        reminder = models.Reminder(
+        reminder = ReminderModel(
             id=ctx.message.id,
             created_at=now,
             reminder=remind.arg,

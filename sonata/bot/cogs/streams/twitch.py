@@ -309,7 +309,7 @@ class TwitchMixin(core.Cog):
     # Commands
 
     @core.group(name="twitch", invoke_without_command=True)
-    @commands.is_owner()
+    @commands.has_guild_permissions(manage_messages=True)
     async def _twitch(self, ctx: core.Context):
         if ctx.invoked_subcommand is not None:
             return await ctx.send_help()

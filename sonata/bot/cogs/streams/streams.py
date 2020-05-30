@@ -10,7 +10,7 @@ class Streams(TwitchMixin, colour=discord.Colour.dark_orange()):
         return ctx.guild
 
     @core.group()
-    @commands.is_owner()
+    @commands.has_guild_permissions(manage_messages=True)
     async def alerts(self, ctx: core.Context):
         _("""Alerts settings""")
         if ctx.invoked_subcommand is not None:

@@ -9,7 +9,7 @@ from sonata.bot.utils.converters import (
     locale_to_flag,
     validate_locale,
 )
-from sonata.db.models import Channel, Guild, Greeting, BWList
+from sonata.db.models import Channel, Greeting, BWList, Guild
 
 
 class Admin(
@@ -437,7 +437,7 @@ class Admin(
             )
         )
 
-    @guild.group(name="modlog")
+    @guild.group(name="modlog", invoke_without_command=True)
     async def guild_modlog(self, ctx: core.Context, channel: discord.TextChannel):
         _("""Set modlog channel""")
         if not channel.permissions_for(ctx.guild.me).send_messages:
@@ -446,7 +446,13 @@ class Admin(
         await ctx.db.guilds.update_one(
             {"id": ctx.guild.id}, {"$set": {"modlog": channel.id}}
         )
-        await ctx.inform(_("Modlog channel is set to {0}").format(channel.mention))
+        await ctx.inform(_("Modlog channel is set to {0}.").format(channel.mention))
+
+    @guild_modlog.command(name="reset")
+    async def guild_modlog_reset(self, ctx: core.Context):
+        _("""Reset modlog channel""")
+        await ctx.db.guilds.update_one({"id": ctx.guild.id}, {"$set": {"modlog": None}})
+        await ctx.inform(_("Modlog channel reset."))
 
     @guild.command(name="prefix")
     async def guild_prefix(self, ctx: core.Context, prefix: str = None):

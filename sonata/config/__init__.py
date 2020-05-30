@@ -1,7 +1,7 @@
 import json
 import pathlib
 
-from .settings import MongoConfig, BotConfig, TwitchConfig, ApiConfig
+from .settings import MongoConfig, BotConfig, TwitchConfig, ApiConfig, Yandex
 
 
 async def init_config(app):
@@ -22,10 +22,13 @@ async def init_config(app):
             setattr(TwitchConfig, key, value)
         for key, value in data["Api"].items():
             setattr(ApiConfig, key, value)
+        for key, value in data["Yandex"].items():
+            setattr(Yandex, key, value)
     app["config"] = {
         "bot": BotConfig(),
         "mongo": MongoConfig(),
         "twitch": TwitchConfig(),
         "api": ApiConfig(),
+        "yandex": Yandex(),
     }
     app["logger"].info("Config initialized")

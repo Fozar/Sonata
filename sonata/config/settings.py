@@ -51,3 +51,7 @@ class ApiConfig:
     open_weather: str = None  # https://openweathermap.org/api
     random_org: str = None  # https://www.random.org/
     cat_api: str = None  # https://docs.thecatapi.com/
+
+
+class Yandex:
+    translate: str = None  # https://yandex.ru/dev/translate/doc/dg/

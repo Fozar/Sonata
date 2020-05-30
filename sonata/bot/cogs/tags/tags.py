@@ -6,7 +6,7 @@ from discord.ext import commands, menus
 
 from sonata.bot import core
 from sonata.bot.utils.converters import TagName
-from sonata.db.models import Tag, TagAlias
+from sonata.db.models import TagAlias, Tag
 
 
 class TagSource(menus.AsyncIteratorPageSource):

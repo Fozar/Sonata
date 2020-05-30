@@ -36,7 +36,7 @@ class Streams(TwitchMixin, colour=discord.Colour.dark_orange()):
 
     @alerts.group(name="set")
     async def alerts_set(self, ctx: core.Context):
-        _("""Sets alert settings""")
+        _("""Sets default alert settings""")
         if ctx.invoked_subcommand is not None:
             return
 

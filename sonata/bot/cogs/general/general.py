@@ -75,7 +75,7 @@ class General(
         await ctx.inform(_("The `About` field is cleared."))
 
     @core.command()
-    async def invite(self, ctx: core.context):
+    async def invite(self, ctx: core.Context):
         _("""Returns an invitation link""")
         embed = discord.Embed(
             title=_("You can invite me at this link"),

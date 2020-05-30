@@ -586,6 +586,9 @@ class TwitchMixin(core.Cog):
         Replacements
         {{link}} - stream link
         {{name}} - streamer name
+        {{title}} - stream title
+        {{game}} - game name
+        {{viewers}} - viewers count
         {{views}} - user's views count
 
         Example

@@ -57,6 +57,28 @@ class Streams(TwitchMixin, colour=discord.Colour.dark_orange()):
         )
         await ctx.inform(_("Alerts channel set."))
 
+    @alerts_set.command(name="offline.message")
+    async def alerts_set_close_message(
+        self, ctx: core.Context, *, message: commands.clean_content()
+    ):
+        _(
+            """Sets default offline alert message
+
+        Markdown is allowed.
+
+        Replacements
+        {{link}} - stream link
+        {{name}} - streamer name
+        {{views}} - user's views count
+
+        Example
+        - alerts set offline.message {{name}} if offline."""
+        )
+        await ctx.db.guilds.update_one(
+            {"id": ctx.guild.id}, {"$set": {"alerts.close_message": message}}
+        )
+        await ctx.inform(_("Alerts offline message set."))
+
     @alerts_set.command(name="message")
     async def alerts_set_message(
         self, ctx: core.Context, *, message: commands.clean_content()

@@ -106,7 +106,7 @@ class Streams(TwitchMixin, colour=discord.Colour.dark_orange()):
 
     @alerts_set.group(name="mention")
     async def alerts_set_mention(self, ctx: core.Context):
-        _("""Enables/Disables alert mentions""")
+        _("""Toggles alert mentions""")
         if ctx.invoked_subcommand is not None:
             return
 
@@ -115,31 +115,39 @@ class Streams(TwitchMixin, colour=discord.Colour.dark_orange()):
     @alerts_set_mention.command(name="everyone")
     async def alerts_set_mention_everyone(self, ctx: core.Context):
         _(
-            """Enables alert everyone mention
+            """Sets alert mentions to `@everyone`
         
         The bot must have the permission to mention everyone."""
         )
         await ctx.db.guilds.update_one(
-            {"id": ctx.guild.id}, {"$set": {"alerts.mention": "everyone"}}
+            {"id": ctx.guild.id}, {"$set": {"alerts.mention.value": "everyone"}}
         )
-        await ctx.inform(_("Alerts will mention `everyone`."))
+        await ctx.inform(_("Alerts will mention `@everyone`."))
 
     @alerts_set_mention.command(name="here")
     async def alerts_set_mention_here(self, ctx: core.Context):
         _(
-            """Enables alert here mention
+            """Sets alert mentions to `@here`
         
         The bot must have the permission to mention everyone."""
         )
         await ctx.db.guilds.update_one(
-            {"id": ctx.guild.id}, {"$set": {"alerts.mention": "here"}}
+            {"id": ctx.guild.id}, {"$set": {"alerts.mention.value": "here"}}
         )
-        await ctx.inform(_("Alerts will mention `here`."))
+        await ctx.inform(_("Alerts will mention `@here`."))
+
+    @alerts_set_mention.command(name="enable")
+    async def alerts_set_mention_enable(self, ctx: core.Context):
+        _("""Enables alert mentions""")
+        await ctx.db.guilds.update_one(
+            {"id": ctx.guild.id}, {"$set": {"alerts.mention.enabled": True}}
+        )
+        await ctx.inform(_("Alert mentions enabled."))
 
     @alerts_set_mention.command(name="disable")
     async def alerts_set_mention_disable(self, ctx: core.Context):
         _("""Disables alert mentions""")
         await ctx.db.guilds.update_one(
-            {"id": ctx.guild.id}, {"$set": {"alerts.mention": None}}
+            {"id": ctx.guild.id}, {"$set": {"alerts.mention.enabled": False}}
         )
         await ctx.inform(_("Alert mentions disabled."))

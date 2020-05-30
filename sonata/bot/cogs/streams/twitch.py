@@ -1,5 +1,6 @@
 import asyncio
 import re
+import weakref
 from contextlib import suppress
 from datetime import timedelta, datetime
 from typing import Optional
@@ -11,7 +12,7 @@ from twitch.webhook import StreamChanged
 
 from sonata.bot import core
 from sonata.bot.core import errors
-from sonata.db.models import TwitchSubscriptionStatus, SubscriptionAlertConfig
+from sonata.db.models import SubscriptionAlertConfig, TwitchSubscriptionStatus
 
 HELIX_API = "https://api.twitch.tv/helix"
 STREAMS_URL = HELIX_API + "/streams"
@@ -23,7 +24,7 @@ CALLBACK_URL = "https://sonata.fun/api/wh/twitch"
 def limit_subs():
     async def pred(ctx: core.Context):
         subs = await ctx.db.twitch_subs.count_documents({"guilds.id": ctx.guild.id})
-        if subs >= 3:
+        if subs >= 5:
             return await core.is_premium(ctx)
 
         return True
@@ -43,12 +44,29 @@ class TwitchUserConverter(commands.Converter):
         return user
 
 
+class TwitchSubscriptionConverter(commands.Converter):
+    def __init__(self):
+        self.user = None
+        self.topic = None
+
+    async def convert(self, ctx: core.Context, argument):
+        self.user = user = await TwitchUserConverter().convert(ctx, argument)
+        self.topic = topic = StreamChanged(user.id)
+        cursor = ctx.bot.db.twitch_subs.find({"topic": str(topic)}, {"id": True})
+        if not await cursor.fetch_next:
+            raise commands.BadArgument(
+                _("User {0} is not tracked in this guild.").format(user.display_name)
+            )
+        return self
+
+
 class TwitchMixin(core.Cog):
     twitch_colour = discord.Colour(0x6441A4)
 
     def __init__(self, sonata: core.Sonata):
         self.sonata = sonata
         self.twitch = sonata.twitch_client
+        self._locks = weakref.WeakValueDictionary()
         self._have_data = asyncio.Event()
         self._next_sub = None
         self._task = sonata.loop.create_task(self.dispatch_subs())
@@ -69,61 +87,96 @@ class TwitchMixin(core.Cog):
 
     @core.Cog.listener()
     async def on_stream_changed(self, data: Optional[dict], user_id: str):
-        topic = STREAMS_URL + f"?user_id={user_id}"
-        sub_status = await self.sonata.db.twitch_subs.find_one(
-            {"topic": topic}, {"guilds": True}
-        )
-        try:
-            guilds = sub_status["guilds"]
-        except (KeyError, TypeError):
-            return
-
-        for alert_conf in guilds:
-            try:
-                guild = self.sonata.get_guild(
-                    alert_conf["id"]
-                ) or await self.sonata.fetch_guild(alert_conf["id"])
-            except discord.HTTPException:
-                continue
-
-            if not data:
-                if alert_conf["message_id"]:
-                    with suppress(discord.HTTPException):
-                        await self.close_alert(guild, alert_conf, user_id)
-                        await self.sonata.db.twitch_subs.update_one(
-                            {"topic": topic, "guilds.id": guild.id},
-                            {"$set": {"guilds.$.message_id": None}},
-                        )
-                continue
-
-            stream = twitch.Stream(self.twitch, data)
-            try:
-                msg = await self.new_alert(guild, alert_conf, stream)
-            except discord.HTTPException:
-                continue
-
-            await self.sonata.db.twitch_subs.update_one(
-                {"topic": topic, "guilds.id": guild.id},
-                {"$set": {"guilds.$.message_id": f"{msg.channel.id}-{msg.id}"}},
+        lock = self._locks.get(user_id)
+        if lock is None:
+            lock = asyncio.Lock()
+            self._locks[user_id] = lock
+        async with lock:
+            if not data:  # Maybe it's just a reconnect
+                await asyncio.sleep(60)  # Check to avoid spam alerts.
+                stream = await self.twitch.get_stream(user_id)
+            else:
+                stream = twitch.Stream(self.twitch, data)
+            if stream:
+                await stream.get_game()
+                user = await stream.get_user()
+            else:
+                user = await self.twitch.get_user(user_id)
+            topic = StreamChanged(user_id)
+            sub_status = await self.sonata.db.twitch_subs.find_one(
+                {"topic": str(topic)}, {"guilds": True}
             )
+            try:
+                alert_configs = sub_status["guilds"]
+            except (KeyError, TypeError):
+                return  # No subs
+
+            for alert_config in alert_configs:
+                await self.process_alert(alert_config, topic, stream, user)
 
     # Methods
 
-    async def close_alert(self, guild: discord.Guild, alert_config: dict, user_id: str):
+    async def process_alert(
+        self,
+        alert_config: dict,
+        topic: twitch.Topic,
+        stream: twitch.Stream,
+        user: twitch.User,
+    ):
+        try:
+            guild = self.sonata.get_guild(
+                alert_config["id"]
+            ) or await self.sonata.fetch_guild(alert_config["id"])
+        except discord.HTTPException:
+            return
+
         guild_conf = await self.sonata.db.guilds.find_one(
             {"id": guild.id}, {"alerts": True}
         )
         default_config = guild_conf["alerts"]
-        if not default_config["enabled"] or not alert_config["enabled"]:
+
+        with suppress(KeyError, AttributeError, discord.HTTPException):
+            channel_id, message_id = alert_config["message_id"].split("-")
+            try:
+                channel = guild.get_channel(int(channel_id))
+                message = await channel.fetch_message(int(message_id))
+            except (discord.HTTPException, AttributeError):
+                raise
+            else:
+                if not stream:
+                    await self.close_alert(message, default_config, alert_config, user)
+                else:
+                    await self.update_alert(
+                        message, alert_config, default_config, stream
+                    )
+            finally:
+                await self.sonata.db.twitch_subs.update_one(
+                    {"topic": str(topic), "guilds.id": guild.id},
+                    {"$set": {"guilds.$.message_id": None}},
+                )
             return
 
-        channel_id, message_id = alert_config["message_id"].split("-")
-        channel = guild.get_channel(int(channel_id))
+        if not stream:
+            return
+
         try:
-            message = await channel.fetch_message(int(message_id))
+            msg = await self.new_alert(guild, default_config, alert_config, stream)
         except discord.HTTPException:
             return
 
+        if msg:
+            await self.sonata.db.twitch_subs.update_one(
+                {"topic": str(topic), "guilds.id": guild.id},
+                {"$set": {"guilds.$.message_id": f"{msg.channel.id}-{msg.id}"}},
+            )
+
+    async def close_alert(
+        self,
+        message: discord.Message,
+        default_config: dict,
+        alert_config: dict,
+        user: twitch.User,
+    ):
         embed = next(iter(message.embeds), None)
         if embed is None:
             return
@@ -131,7 +184,6 @@ class TwitchMixin(core.Cog):
         close_cnt = (
             alert_config["close_message"] or default_config["close_message"] or ""
         )
-        user = await self.twitch.get_user(user_id)
         close_cnt = self._format_content(close_cnt, user)
         await self.sonata.set_locale(message)
         embed.title = _("Stream is offline")
@@ -139,6 +191,62 @@ class TwitchMixin(core.Cog):
         embed.set_image(url=user.offline_image_url)
         embed.remove_field(1)
         await message.edit(content=None, embed=embed)
+
+    async def new_alert(
+        self,
+        guild: discord.Guild,
+        default_config: dict,
+        alert_config: dict,
+        stream: twitch.Stream,
+    ):
+        if not default_config["enabled"] or not alert_config["enabled"]:
+            return
+
+        channel = guild.get_channel(alert_config["channel"]) or guild.get_channel(
+            default_config["channel"]
+        )
+        if channel is None:
+            return
+
+        cnt = alert_config["message"] or default_config["message"] or "{{link}}"
+        cnt = self._format_content(cnt, stream.user, stream, stream.game)
+        self.sonata.locale = await self.sonata.define_locale(channel)
+        embed = self._make_alert_embed(cnt, stream, stream.user, stream.game)
+        content = None
+        with suppress(discord.HTTPException):
+            me = guild.me or await guild.fetch_member(self.sonata.user.id)
+            perms = channel.permissions_for(me)
+            if not perms.send_messages:
+                return
+
+            if perms.mention_everyone:
+                mention = (
+                    lambda conf: conf["mention"]["value"]
+                    if conf["mention"]["enabled"]
+                    else None
+                )
+                mention = mention(
+                    default_config
+                    if alert_config["mention"]["inherit"]
+                    else alert_config
+                )
+                if mention:
+                    content = f"\n@{mention}"
+
+        return await channel.send(content=content, embed=embed)
+
+    async def update_alert(
+        self,
+        message: discord.Message,
+        alert_config: dict,
+        default_config: dict,
+        stream: twitch.Stream,
+    ):
+        cnt = alert_config["message"] or default_config["message"] or "{{link}}"
+        cnt = self._format_content(cnt, stream.user, stream, stream.game)
+        await self.sonata.set_locale(message)
+        embed = self._make_alert_embed(cnt, stream, stream.user, stream.game)
+        await message.edit(embed=embed)
 
     @staticmethod
     def _format_content(
@@ -191,42 +299,6 @@ class TwitchMixin(core.Cog):
         embed.add_field(name=_("Viewers"), value=str(stream.viewer_count))
         embed.add_field(name=_("Views"), value=str(user.view_count))
         return embed
-
-    async def new_alert(
-        self, guild: discord.Guild, alert_config: dict, stream: twitch.Stream
-    ):
-        guild_conf = await self.sonata.db.guilds.find_one(
-            {"id": guild.id}, {"alerts": True}
-        )
-        default_config = guild_conf["alerts"]
-        if not default_config["enabled"] or not alert_config["enabled"]:
-            return
-
-        channel = guild.get_channel(alert_config["channel"]) or guild.get_channel(
-            default_config["channel"]
-        )
-        if channel is None:
-            return
-
-        cnt = alert_config["message"] or default_config["message"] or "{{link}}"
-        user = await stream.get_user()
-        game = await stream.get_game()
-        cnt = self._format_content(cnt, user, stream, game)
-        self.sonata.locale = await self.sonata.define_locale(channel)
-        embed = self._make_alert_embed(cnt, stream, user, game)
-        content = None
-        with suppress(discord.HTTPException):
-            me = guild.me or await guild.fetch_member(self.sonata.user.id)
-            perms = channel.permissions_for(me)
-            if not perms.send_messages:
-                return
-
-            if perms.mention_everyone:
-                mention = alert_config["mention"] or default_config["mention"]
-                if mention:
-                    content = f"\n@{mention}"
-
-        return await channel.send(content=content, embed=embed)
 
     async def extend_subscription(
         self, sub_status: TwitchSubscriptionStatus, lease_seconds: int = 864000
@@ -311,6 +383,7 @@ class TwitchMixin(core.Cog):
     @core.group(name="twitch", invoke_without_command=True)
     @commands.has_guild_permissions(manage_messages=True)
     async def _twitch(self, ctx: core.Context):
+        _("""Twitch alerts""")
         if ctx.invoked_subcommand is not None:
             return await ctx.send_help()
         cursor = ctx.db.twitch_subs.find(
@@ -324,6 +397,12 @@ class TwitchMixin(core.Cog):
     @_twitch.command(name="add")
     @limit_subs()
     async def twitch_add(self, ctx: core.Context, user: TwitchUserConverter()):
+        _(
+            """Adds the user to the list of tracked streamers
+        
+        Example
+        - twitch add ninja"""
+        )
         topic = StreamChanged(user.id)
         callback = f"{CALLBACK_URL}/streams/{user.id}"
         subscription = self.twitch.create_subscription(
@@ -360,28 +439,266 @@ class TwitchMixin(core.Cog):
         await ctx.inform(
             _("User {0} is now tracked in this guild.").format(user.display_name)
         )
+        resp = await self.twitch.http.get_streams([user.id])
+        data = resp["data"]
+        if data:
+            await self.on_stream_changed(data[0], user.id)
 
     @_twitch.command(name="clear")
     async def twitch_clear(self, ctx: core.Context):
+        _("""Clears the list of tracked streamers""")
         await ctx.db.twitch_subs.update_many(
             {"guilds.id": ctx.guild.id}, {"$pull": {"guilds": {"id": ctx.guild.id}}}
         )
         await ctx.inform(_("The list of tracked users in this guild has been cleared."))
 
     @_twitch.command(name="remove")
-    async def twitch_remove(self, ctx: core.Context, user: TwitchUserConverter()):
-        topic = StreamChanged(user.id)
-        if await self.is_subscription_exist(topic):
-            result = await ctx.db.twitch_subs.update_one(
-                {"topic": str(topic), "guilds.id": ctx.guild.id},
-                {"$pull": {"guilds": {"id": ctx.guild.id}}},
+    async def twitch_remove(self, ctx: core.Context, user: TwitchSubscriptionConverter):
+        _(
+            """Removes a user from the list of tracked streamers
+        
+        This will also reset all non-default settings related to this user.
+        
+        Example
+        - twitch remove ninja"""
+        )
+        await ctx.db.twitch_subs.update_one(
+            {"topic": str(user.topic), "guilds.id": ctx.guild.id},
+            {"$pull": {"guilds": {"id": ctx.guild.id}}},
+        )
+        return await ctx.inform(
+            _("User {0} is no longer being tracked in this guild.").format(
+                user.user.display_name
             )
-            if result.modified_count != 0:
-                return await ctx.inform(
-                    _("User {0} is no longer being tracked in this guild.").format(
-                        user.display_name
-                    )
-                )
-        await ctx.inform(
-            _("User {0} is not tracked in this guild.").format(user.display_name)
+        )
+
+    @_twitch.command(name="disable")
+    @core.premium_only()
+    async def twitch_disable(
+        self, ctx: core.Context, user: TwitchSubscriptionConverter
+    ):
+        _(
+            """Disables alerts from the specified streamer
+        
+        Example
+        - twitch disable ninja"""
+        )
+        await ctx.db.twitch_subs.update_one(
+            {"topic": str(user.topic), "guilds.id": ctx.guild.id},
+            {"$set": {"guilds.$.enabled": False}},
+        )
+        return await ctx.inform(
+            _("Alerts from {0} are disabled.").format(user.user.display_name)
+        )
+
+    @_twitch.command(name="enable")
+    @core.premium_only()
+    async def twitch_enable(self, ctx: core.Context, user: TwitchSubscriptionConverter):
+        _(
+            """Enables alerts from the specified streamer
+        
+        Example
+        - twitch enable ninja"""
+        )
+        await ctx.db.twitch_subs.update_one(
+            {"topic": str(user.topic), "guilds.id": ctx.guild.id},
+            {"$set": {"guilds.$.enabled": True}},
+        )
+        return await ctx.inform(
+            _("Alerts from {0} are enabled.").format(user.user.display_name)
+        )
+
+    @_twitch.group(name="set")
+    @core.premium_only()
+    async def twitch_set(self, ctx: core.Context):
+        _("""Sets alert settings for specified user""")
+        if ctx.invoked_subcommand is not None:
+            return
+
+        await ctx.send_help()
+
+    @twitch_set.command(name="channel")
+    async def twitch_set_channel(
+        self,
+        ctx: core.Context,
+        user: TwitchSubscriptionConverter(),
+        channel: discord.TextChannel,
+    ):
+        _(
+            """Sets alert channel for specified user
+
+        Example
+        - twitch set channel ninja #TextChannel"""
+        )
+        if not channel.permissions_for(ctx.guild.me).send_messages:
+            return await ctx.inform(_("I can't send messages in this channel."))
+
+        await ctx.db.twitch_subs.update_one(
+            {"topic": str(user.topic), "guilds.id": ctx.guild.id},
+            {"$set": {"guilds.$.channel": channel.id}},
+        )
+        return await ctx.inform(
+            _("Alert channel set for {0}.").format(user.user.display_name)
+        )
+
+    @twitch_set.command(name="offline.message")
+    async def twitch_set_offline_message(
+        self,
+        ctx: core.Context,
+        user: TwitchSubscriptionConverter,
+        *,
+        message: commands.clean_content(),
+    ):
+        _(
+            """Sets offline alert message for specified user
+
+        Markdown is allowed.
+
+        Replacements
+        {{link}} - stream link
+        {{name}} - streamer name
+        {{views}} - user's views count
+
+        Example
+        - twitch set offline.message ninja {{name}} if offline."""
+        )
+        await ctx.db.twitch_subs.update_one(
+            {"topic": str(user.topic), "guilds.id": ctx.guild.id},
+            {"$set": {"guilds.$.close_message": message}},
+        )
+        return await ctx.inform(
+            _("Alert offline message set for {0}.").format(user.user.display_name)
+        )
+
+    @twitch_set.command(name="message")
+    async def twitch_set_message(
+        self,
+        ctx: core.Context,
+        user: TwitchSubscriptionConverter,
+        *,
+        message: commands.clean_content(),
+    ):
+        _(
+            """Sets alert message for specified user
+
+        Markdown is allowed.
+
+        Replacements
+        {{link}} - stream link
+        {{name}} - streamer name
+        {{views}} - user's views count
+
+        Example
+        - twitch set message ninja {{name}} began broadcasting "{{game}}". Link: {{link}}
+        """
+        )
+        await ctx.db.twitch_subs.update_one(
+            {"topic": str(user.topic), "guilds.id": ctx.guild.id},
+            {"$set": {"guilds.$.message": message}},
+        )
+        return await ctx.inform(
+            _("Alert message set for {0}.").format(user.user.display_name)
+        )
+
+    @twitch_set.group(name="mention")
+    async def twitch_set_mention(self, ctx: core.Context):
+        _("""Toggles alert mentions for specified user""")
+        if ctx.invoked_subcommand is not None:
+            return
+
+        await ctx.send_help()
+
+    @twitch_set_mention.command(name="everyone")
+    async def twitch_set_mention_everyone(
+        self, ctx: core.Context, user: TwitchSubscriptionConverter
+    ):
+        _(
+            """Sets alert mentions to `@everyone` for specified user
+
+        The bot must have the permission to mention everyone."""
+        )
+        await ctx.db.twitch_subs.update_one(
+            {"topic": str(user.topic), "guilds.id": ctx.guild.id},
+            {
+                "$set": {
+                    "guilds.$.mention.value": "everyone",
+                    "guilds.$.mention.inherit": False,
+                }
+            },
+        )
+        return await ctx.inform(
+            _("Alerts will mention `@everyone` for {0}.").format(user.user.display_name)
+        )
+
+    @twitch_set_mention.command(name="here")
+    async def twitch_set_mention_here(
+        self, ctx: core.Context, user: TwitchSubscriptionConverter
+    ):
+        _(
+            """Sets alert mentions to `@here` for specified user
+
+        The bot must have the permission to mention everyone."""
+        )
+        await ctx.db.twitch_subs.update_one(
+            {"topic": str(user.topic), "guilds.id": ctx.guild.id},
+            {
+                "$set": {
+                    "guilds.$.mention.value": "here",
+                    "guilds.$.mention.inherit": False,
+                }
+            },
+        )
+        return await ctx.inform(
+            _("Alerts will mention `here` for {0}.").format(user.user.display_name)
+        )
+
+    @twitch_set_mention.command(name="enable")
+    async def twitch_set_mention_enable(
+        self, ctx: core.Context, user: TwitchSubscriptionConverter
+    ):
+        _("""Enables alert mentions for specified user""")
+        await ctx.db.twitch_subs.update_one(
+            {"topic": str(user.topic), "guilds.id": ctx.guild.id},
+            {
+                "$set": {
+                    "guilds.$.mention.enabled": True,
+                    "guilds.$.mention.inherit": False,
+                }
+            },
+        )
+        return await ctx.inform(
+            _("Alert mentions enabled for {0}.").format(user.user.display_name)
+        )
+
+    @twitch_set_mention.command(name="disable")
+    async def twitch_set_mention_disable(
+        self, ctx: core.Context, user: TwitchSubscriptionConverter
+    ):
+        _("""Disables alert mentions for specified user""")
+        await ctx.db.twitch_subs.update_one(
+            {"topic": str(user.topic), "guilds.id": ctx.guild.id},
+            {
+                "$set": {
+                    "guilds.$.mention.enabled": False,
+                    "guilds.$.mention.inherit": False,
+                }
+            },
+        )
+        return await ctx.inform(
+            _("Alert mentions disabled for {0}.").format(user.user.display_name)
+        )
+
+    @twitch_set_mention.command(name="inherit")
+    async def twitch_set_mention_inherit(
+        self, ctx: core.Context, user: TwitchSubscriptionConverter
+    ):
+        _("""Inherits mentions settings from default settings""")
+        await ctx.db.twitch_subs.update_one(
+            {"topic": str(user.topic), "guilds.id": ctx.guild.id},
+            {"$set": {"guilds.$.mention.inherit": True}},
+        )
+        return await ctx.inform(
+            _("Mention settings inherited from default settings for {0}.").format(
+                user.user.display_name
+            )
         )

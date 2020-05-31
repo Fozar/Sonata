@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Optional
+from typing import Optional, List
 
 from pydantic import BaseModel, validator
 
@@ -38,3 +38,8 @@ class BaseAlertConfig(BaseModel):
     close_message: str = None
     channel: int = None
     mention: Mention = Mention()
+
+
+class BWList(BaseModel):
+    enabled: bool = False
+    items: List[int] = []

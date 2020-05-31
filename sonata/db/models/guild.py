@@ -3,7 +3,7 @@ from typing import List, Optional
 
 from pydantic import BaseModel
 
-from .base import DiscordConfigModel, BaseAlertConfig
+from .base import BWList, DiscordConfigModel, BaseAlertConfig
 
 
 class Channel(DiscordConfigModel):
@@ -13,11 +13,6 @@ class Channel(DiscordConfigModel):
 class Greeting(BaseModel):
     channel_id: int
     message: str
-
-
-class BWList(BaseModel):
-    enabled: bool = False
-    channels: List[int] = []
 
 
 class Guild(DiscordConfigModel):

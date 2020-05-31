@@ -128,11 +128,18 @@ class Emoji(
             limit=24,
         )
         embed = discord.Embed(colour=self.colour, title=_("Emoji statistics"))
+        total = 0
         while await cursor.fetch_next:
             emoji = cursor.next_object()
+            emoji_total = emoji["total"]
+            total += emoji_total
             embed.add_field(
-                name=str(ctx.bot.emoji(emoji["id"])), value=str(emoji["total"])
+                name=str(ctx.bot.emoji(emoji["id"])), value=str(emoji_total)
             )
+        if len(embed.fields) == 0:
+            embed.description = _("Empty")
+        else:
+            embed.description = _("**Total**: {0}").format(total)
         await ctx.send(embed=embed)
 
     @core.command(name="recalc.emoji")

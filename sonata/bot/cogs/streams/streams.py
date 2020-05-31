@@ -5,7 +5,14 @@ from .twitch import TwitchMixin
 from ... import core
 
 
-class Streams(TwitchMixin, colour=discord.Colour.dark_orange()):
+class Streams(
+    TwitchMixin,
+    colour=discord.Colour.dark_orange(),
+    description=_(
+        "This module allows you to track online broadcasts of your favorite streamers "
+        "with the possibility of flexible settings."
+    ),
+):
     async def cog_check(self, ctx: core.Context):
         return ctx.guild
 

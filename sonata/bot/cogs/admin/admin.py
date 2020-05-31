@@ -658,7 +658,7 @@ class Admin(
         )
         guild = await ctx.db.guilds.find_one({"id": ctx.guild.id}, {"whitelist": True})
         whitelist = guild.get("whitelist")
-        if whitelist is None:
+        if not whitelist:
             return await ctx.inform(_("Whitelist is empty."))
 
         channels_id = whitelist.get("items")

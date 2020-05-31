@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-05-30 17:47+0700\n"
-"PO-Revision-Date: 2020-05-30 17:49+0700\n"
+"POT-Creation-Date: 2020-05-30 18:36+0700\n"
+"PO-Revision-Date: 2020-05-30 18:36+0700\n"
 "Last-Translator: \n"
 "Language: ru_RU\n"
 "Language-Team: ru_RU <LL@li.org>\n"
@@ -289,7 +289,7 @@ msgstr ""
 "гильдию!"
 
 #: sonata/bot/cogs/admin/admin.py:408 sonata/bot/cogs/admin/admin.py:444
-#: sonata/bot/cogs/streams/streams.py:54 sonata/bot/cogs/streams/twitch.py:534
+#: sonata/bot/cogs/streams/streams.py:61 sonata/bot/cogs/streams/twitch.py:534
 msgid "I can't send messages in this channel."
 msgstr "Я не могу отправлять сообщения в этот канал."
 
@@ -1706,31 +1706,39 @@ msgstr "Таблица лидеров гильдии"
 msgid "The module is responsible for general statistics and level system."
 msgstr "Модуль отвечает за общую статистку и уровневую систему."
 
-#: sonata/bot/cogs/streams/streams.py:15
+#: sonata/bot/cogs/streams/streams.py:11
+msgid ""
+"This module allows you to track online broadcasts of your favorite streamers "
+"with the possibility of flexible settings."
+msgstr ""
+"Этот модуль позволяет отслеживать онлайн трансляций ваших любимых стримеров с "
+"возможностью гибкой настройки."
+
+#: sonata/bot/cogs/streams/streams.py:22
 msgid "Alerts settings"
 msgstr "Настройки оповещений"
 
-#: sonata/bot/cogs/streams/streams.py:23
+#: sonata/bot/cogs/streams/streams.py:30
 msgid "Enables alerts"
 msgstr "Включает оповещения"
 
-#: sonata/bot/cogs/streams/streams.py:27
+#: sonata/bot/cogs/streams/streams.py:34
 msgid "Alerts enabled."
 msgstr "Оповещения включены."
 
-#: sonata/bot/cogs/streams/streams.py:31
+#: sonata/bot/cogs/streams/streams.py:38
 msgid "Disables alerts"
 msgstr "Отключает оповещения"
 
-#: sonata/bot/cogs/streams/streams.py:35
+#: sonata/bot/cogs/streams/streams.py:42
 msgid "Alerts disabled."
 msgstr "Оповещения отключены."
 
-#: sonata/bot/cogs/streams/streams.py:39
+#: sonata/bot/cogs/streams/streams.py:46
 msgid "Sets default alert settings"
 msgstr "Устанавливает настройки оповещений по умолчанию"
 
-#: sonata/bot/cogs/streams/streams.py:47
+#: sonata/bot/cogs/streams/streams.py:54
 msgid ""
 "Sets default alert channel\n"
 "        \n"
@@ -1742,11 +1750,11 @@ msgstr ""
 "        Пример\n"
 "        - alerts set channel #ТекстовыйКанал"
 
-#: sonata/bot/cogs/streams/streams.py:58
+#: sonata/bot/cogs/streams/streams.py:65
 msgid "Alerts channel set."
 msgstr "Канал для оповещений установлен."
 
-#: sonata/bot/cogs/streams/streams.py:64
+#: sonata/bot/cogs/streams/streams.py:71
 msgid ""
 "Sets default offline alert message\n"
 "\n"
@@ -1772,11 +1780,11 @@ msgstr ""
 "        Пример\n"
 "        - alerts set offline.message {{name}} не в сети."
 
-#: sonata/bot/cogs/streams/streams.py:80
+#: sonata/bot/cogs/streams/streams.py:87
 msgid "Alerts offline message set."
 msgstr "Оффлайн-сообщение в оповещении установлено."
 
-#: sonata/bot/cogs/streams/streams.py:86
+#: sonata/bot/cogs/streams/streams.py:93
 msgid ""
 "Sets default alert message\n"
 "            \n"
@@ -1810,15 +1818,15 @@ msgstr ""
 "        - alerts set message {{name}} начал трансляцию \"{{game}}\". Ссылка: "
 "{{link}}"
 
-#: sonata/bot/cogs/streams/streams.py:105
+#: sonata/bot/cogs/streams/streams.py:112
 msgid "Alerts message set."
 msgstr "Сообщение в оповещении установлено."
 
-#: sonata/bot/cogs/streams/streams.py:109
+#: sonata/bot/cogs/streams/streams.py:116
 msgid "Toggles alert mentions"
 msgstr "Переключает упоминания в оповещениях"
 
-#: sonata/bot/cogs/streams/streams.py:117
+#: sonata/bot/cogs/streams/streams.py:124
 msgid ""
 "Sets alert mentions to `@everyone`\n"
 "        \n"
@@ -1828,11 +1836,11 @@ msgstr ""
 "        \n"
 "        Бот должен иметь право упоминания everyone."
 
-#: sonata/bot/cogs/streams/streams.py:125
+#: sonata/bot/cogs/streams/streams.py:132
 msgid "Alerts will mention `@everyone`."
 msgstr "Оповещения будут упоминать `@everyone`."
 
-#: sonata/bot/cogs/streams/streams.py:129
+#: sonata/bot/cogs/streams/streams.py:136
 msgid ""
 "Sets alert mentions to `@here`\n"
 "        \n"
@@ -1842,23 +1850,23 @@ msgstr ""
 "        \n"
 "        Бот должен иметь право упоминания everyone."
 
-#: sonata/bot/cogs/streams/streams.py:137
+#: sonata/bot/cogs/streams/streams.py:144
 msgid "Alerts will mention `@here`."
 msgstr "Оповещения будут упоминать `@here`."
 
-#: sonata/bot/cogs/streams/streams.py:141
+#: sonata/bot/cogs/streams/streams.py:148
 msgid "Enables alert mentions"
 msgstr "Включает упоминания в оповещениях"
 
-#: sonata/bot/cogs/streams/streams.py:145
+#: sonata/bot/cogs/streams/streams.py:152
 msgid "Alert mentions enabled."
 msgstr "Упоминания в оповещениях включены."
 
-#: sonata/bot/cogs/streams/streams.py:149
+#: sonata/bot/cogs/streams/streams.py:156
 msgid "Disables alert mentions"
 msgstr "Отключает упоминания в оповещениях"
 
-#: sonata/bot/cogs/streams/streams.py:153
+#: sonata/bot/cogs/streams/streams.py:160
 msgid "Alert mentions disabled."
 msgstr "Упоминания в оповещениях отключены."
 

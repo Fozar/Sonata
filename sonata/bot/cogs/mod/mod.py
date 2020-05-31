@@ -201,6 +201,8 @@ class Mod(
         await self.create_modlog_case(ctx, member, discord.AuditLogAction.ban, reason)
 
     @ban.command(name="temp")
+    @commands.bot_has_permissions(manage_messages=True)
+    @commands.check_any(commands.has_permissions(manage_messages=True), core.mod_only())
     async def ban_temp(
         self,
         ctx: core.Context,
@@ -282,6 +284,8 @@ class Mod(
         await self.purge_channel(ctx, limit, before, reason)
 
     @purge.command(name="bot")
+    @commands.bot_has_permissions(manage_messages=True)
+    @commands.check_any(commands.has_permissions(manage_messages=True), core.mod_only())
     async def purge_bot(
         self,
         ctx: core.Context,
@@ -324,6 +328,8 @@ class Mod(
         )
 
     @mute.command(name="temp")
+    @commands.bot_has_permissions(manage_messages=True)
+    @commands.check_any(commands.has_permissions(manage_messages=True), core.mod_only())
     async def mute_temp(
         self,
         ctx: core.Context,

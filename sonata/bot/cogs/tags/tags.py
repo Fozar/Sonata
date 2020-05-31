@@ -206,6 +206,7 @@ class Tags(
             await ctx.inform(_("Tag `{0}` not found.").format(name))
 
     @tag.command(name="add", aliases=["create"])
+    @commands.guild_only()
     async def tag_add(
         self, ctx: core.Context, name: TagName(), *, content: commands.clean_content()
     ):
@@ -231,6 +232,7 @@ class Tags(
         await ctx.inform(_("Tag `{0}` successfully created.").format(name))
 
     @tag.command(name="alias")
+    @commands.guild_only()
     async def tag_alias(self, ctx: core.Context, name: TagName(), *, alias: TagName()):
         _(
             """Creates new tag alias
@@ -263,6 +265,7 @@ class Tags(
         )
 
     @tag.command(name="all", ignore_extra=False)
+    @commands.guild_only()
     async def tag_all(self, ctx: core.Context):
         _(
             """Lists all tags
@@ -284,6 +287,7 @@ class Tags(
             await ctx.inform(_("No tags."))
 
     @tag.command(name="delete", aliases=["remove"])
+    @commands.guild_only()
     async def tag_delete(self, ctx: core.Context, *, name: TagName()):
         _("""Deletes your tag or alias""")
         is_alias = await self.is_alias_exists(name, ctx.guild)
@@ -313,6 +317,7 @@ class Tags(
                 await ctx.inform(_("You are not the owner of this tag."))
 
     @tag.command(name="edit")
+    @commands.guild_only()
     async def tag_edit(
         self,
         ctx: core.Context,
@@ -342,6 +347,7 @@ class Tags(
         await ctx.inform(_("Tag content changed."))
 
     @tag.command(name="info")
+    @commands.guild_only()
     async def tag_info(self, ctx: core.Context, name: TagName()):
         _("""Displays tag information""")
         tag = await self.get_tag(name, ctx.guild, {"content": False})
@@ -369,6 +375,7 @@ class Tags(
         await ctx.send(embed=embed)
 
     @tag.command(name="list")
+    @commands.guild_only()
     async def tag_list(self, ctx: core.Context, member: discord.Member = None):
         _(
             """Lists the tags of the specified member
@@ -395,6 +402,7 @@ class Tags(
             await ctx.inform(_("No tags."))
 
     @tag.command(name="pass", aliases=["transfer"])
+    @commands.guild_only()
     async def tag_pass(
         self, ctx: core.Context, member: discord.Member, *, name: TagName()
     ):
@@ -417,6 +425,7 @@ class Tags(
         await ctx.inform(_("Tag owner changed."))
 
     @tag.command(name="raw")
+    @commands.guild_only()
     async def tag_raw(self, ctx: core.Context, *, name: TagName()):
         _(
             """Returns the raw content with the specified tag
@@ -430,6 +439,7 @@ class Tags(
         return await ctx.send(discord.utils.escape_markdown(tag["content"]))
 
     @tag.command(name="search")
+    @commands.guild_only()
     async def tag_search(self, ctx: core.Context, *, query: str):
         _(
             """Searches for tags

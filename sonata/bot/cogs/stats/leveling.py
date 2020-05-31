@@ -136,6 +136,7 @@ class Leveling(core.Cog):
         await ctx.send(embed=embed)
 
     @rank.group(name="message", aliases=["msg"], invoke_without_command=True)
+    @commands.guild_only()
     async def rank_message(self, ctx: core.Context):
         _("""Disables/Enables auto-message when leveling up""")
         if ctx.invoked_subcommand is not None:
@@ -144,6 +145,7 @@ class Leveling(core.Cog):
         await ctx.send_help()
 
     @rank_message.command(name="enable", aliases=["on"])
+    @commands.guild_only()
     async def rank_message_enable(self, ctx: core.Context):
         _("""Enables auto-message when leveling up""")
         result = await ctx.db.user_stats.update_one(
@@ -156,6 +158,7 @@ class Leveling(core.Cog):
             await ctx.inform(_("Auto-message when leveling up is enabled."))
 
     @rank_message.command(name="disable", aliases=["off"])
+    @commands.guild_only()
     async def rank_message_disable(self, ctx: core.Context):
         _("""Disables auto-message when leveling up""")
         result = await ctx.db.user_stats.update_one(
@@ -168,6 +171,7 @@ class Leveling(core.Cog):
             await ctx.inform(_("Auto-message when leveling up is disabled."))
 
     @core.group()
+    @commands.guild_only()
     async def top(self, ctx: core.Context):
         _("""Shows guild leaderboard""")
         if ctx.invoked_subcommand is not None:

@@ -185,7 +185,7 @@ class Admin(
         if blacklist is None:
             return await ctx.inform(_("Blacklist is empty."))
 
-        channels_id = blacklist.get("channels")
+        channels_id = blacklist.get("items")
         embed = discord.Embed(colour=self.colour, title=_("Blacklist"))
         try:
             channels = [ctx.guild.get_channel(ch) for ch in channels_id]
@@ -206,7 +206,7 @@ class Admin(
             {"id": ctx.guild.id},
             {
                 "$addToSet": {
-                    "blacklist.channels": {"$each": [ch.id for ch in channels]}
+                    "blacklist.items": {"$each": [ch.id for ch in channels]}
                 }
             },
         )
@@ -243,7 +243,7 @@ class Admin(
         _("""Removes channels from blacklist""")
         await ctx.db.guilds.update_one(
             {"id": ctx.guild.id},
-            {"$pull": {"blacklist.channels": {"$in": [ch.id for ch in channels]}}},
+            {"$pull": {"blacklist.items": {"$in": [ch.id for ch in channels]}}},
         )
         await ctx.inform(_("Channels successfully removed from blacklist."))
 
@@ -661,7 +661,7 @@ class Admin(
         if whitelist is None:
             return await ctx.inform(_("Whitelist is empty."))
 
-        channels_id = whitelist.get("channels")
+        channels_id = whitelist.get("items")
         embed = discord.Embed(colour=self.colour, title=_("Whitelist"))
         try:
             channels = [ctx.guild.get_channel(ch) for ch in channels_id]
@@ -682,7 +682,7 @@ class Admin(
             {"id": ctx.guild.id},
             {
                 "$addToSet": {
-                    "whitelist.channels": {"$each": [ch.id for ch in channels]}
+                    "whitelist.items": {"$each": [ch.id for ch in channels]}
                 }
             },
         )
@@ -719,6 +719,6 @@ class Admin(
         _("""Removes channels from whitelist""")
         await ctx.db.guilds.update_one(
             {"id": ctx.guild.id},
-            {"$pull": {"whitelist.channels": {"$in": [ch.id for ch in channels]}}},
+            {"$pull": {"whitelist.items": {"$in": [ch.id for ch in channels]}}},
         )
         await ctx.inform(_("Channels successfully removed from whitelist."))

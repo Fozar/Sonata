@@ -268,6 +268,8 @@ class Modlog(core.Cog):
         await ctx.send(embed=embed)
 
     @case.command(name="edit", usage="<id> <reason>")
+    @core.mod_only()
+    @commands.check(modlog_enabled)
     async def case_edit(
         self, ctx: core.Context, case: ModlogCaseConverter(), *, reason: clean_content()
     ):

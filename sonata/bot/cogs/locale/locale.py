@@ -1,3 +1,5 @@
+import copy
+
 import discord
 from babel import Locale as BabelLocale
 from discord.ext import commands
@@ -20,9 +22,13 @@ class Locale(
         self.sonata = sonata
 
     @core.command()
-    @commands.dm_only()
     async def locale(self, ctx: core.Context, locale: validate_locale = None):
-        _("""Set user locale""")
+        _("""Set locale""")
+        if ctx.guild:
+            msg = copy.copy(ctx.message)
+            msg.content = ctx.prefix + f"guild locale {locale}"
+            new_ctx = await self.sonata.get_context(msg, cls=type(ctx))
+            return await ctx.bot.invoke(new_ctx)
         if locale is None:
             user = await ctx.db.users.find_one({"id": ctx.author.id}, {"locale": True})
             return await ctx.inform(

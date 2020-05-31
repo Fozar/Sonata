@@ -1,11 +1,23 @@
 from datetime import datetime
 from typing import List
 
-from .base import BaseAlertConfig, Mention, CreatedAtMixin
+from pydantic import BaseModel
+
+from .base import BaseAlertConfig, Mention, CreatedAtMixin, BWList
 
 
 class CustomMention(Mention):
     inherit: bool = True
+
+
+class BaseFilter(BaseModel):
+    blacklist: BWList = BWList()
+    whitelist: BWList = BWList()
+
+
+class Filter(BaseModel):
+    game: BaseFilter = BaseFilter()
+    title: BaseFilter = BaseFilter()
 
 
 class SubscriptionAlertConfig(BaseAlertConfig):
@@ -13,6 +25,7 @@ class SubscriptionAlertConfig(BaseAlertConfig):
     id: int
     message_id: int = None
     mention: CustomMention = CustomMention()
+    filter: Filter = Filter()
 
 
 class TwitchSubscriptionStatus(CreatedAtMixin):

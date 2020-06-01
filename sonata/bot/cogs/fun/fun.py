@@ -88,7 +88,7 @@ class Fun(
         ]
         return random.choice(responses)
 
-    @core.command(aliases=["8ball", "q"])
+    @core.command(aliases=["8ball", "q"], examples=_("donate to the developer?"))
     async def question(self, ctx: core.Context):
         _("""Answers the question""")
         await ctx.send(f"{ctx.author.mention}, {self.random_magic_ball_response()}")
@@ -102,34 +102,29 @@ class Fun(
             + str(self.sonata.emoji("coin"))
         )
 
-    @core.command()
-    async def choose(self, ctx: core.Context, *, options: str):
-        _(
-            """Selects one of the options.
-
-        Options need to be separated by a comma.
-        Examples:
-            coffee,tea,juice
-            love, doesn't love
-        """
-        )
-        choice = random.choice(options.split(","))
+    @core.command(examples=[_("coffee tea juice"), _("love, doesn't love")])
+    async def choose(self, ctx: core.Context, *options: commands.clean_content()):
+        _("""Selects one of the options.""")
+        choice = random.choice(options)
         await ctx.send(f"{ctx.author.mention}, {choice.strip()}")
 
-    @core.command()
+    @core.command(
+        examples=[
+            _("5 - rolls 5 dice with 6 faces"),
+            _("d54 - rolls 1 dice with 54 faces"),
+            _("2d8 - rolls 2 dice with 8 faces"),
+            _(
+                "+10 + 2d10 - rolls 1 dice with 6 faces and adds 10 to the result, then "
+                "rolls 2 dice with 10 faces and adds to the result."
+            ),
+        ]
+    )
     async def roll(self, ctx: core.Context, *, expression: str = ""):
         _(
             """Rolls the dice
 
-        Template: 1d6+0 + 1d6+0 + ...
-        Examples:
-            5 - rolls 5 dice with 6 faces.
-            d54 - rolls 1 dice with 54 faces.
-            2d8 - rolls 2 dice with 8 faces.
-            +10 + 2d10 - rolls 1 dice with 6 faces and adds 10 to the result,
-                then rolls 2 dice with 10 faces and adds to the result.
-        """
-        )
+        Template: 1d6+0 + 1d6+0 + ..."""
+        )  # TODO: Объяснить принцип в описании
         exps = expression.split(" + ")
         result = 0
         for exp in exps:
@@ -177,7 +172,7 @@ class Fun(
             embed=discord.Embed(colour=self.colour).set_image(url=js[0]["url"])
         )
 
-    @core.command()
+    @core.command(examples=["akita"])
     async def dog(self, ctx: core.Context, breed: to_lower = None):
         _(
             """Finds a random dog image
@@ -196,7 +191,7 @@ class Fun(
         embed.set_image(url=data.get("message"))
         await ctx.send(embed=embed)
 
-    @core.command()
+    @core.command(examples=[_("@Member")])
     @commands.guild_only()
     async def choke(self, ctx: core.Context, member: discord.Member):
         _("""Choke a guild member""")
@@ -209,7 +204,7 @@ class Fun(
         with suppress(discord.HTTPException):
             await ctx.message.delete()
 
-    @core.command()
+    @core.command(examples=[_("@Member")])
     @commands.guild_only()
     async def hug(self, ctx: core.Context, member: discord.Member):
         _("""Hug a guild member""")
@@ -222,7 +217,7 @@ class Fun(
         with suppress(discord.HTTPException):
             await ctx.message.delete()
 
-    @core.command()
+    @core.command(examples=[_("@Member")])
     @commands.guild_only()
     async def hit(self, ctx: core.Context, member: discord.Member):
         _("""Hit a guild member""")
@@ -235,7 +230,7 @@ class Fun(
         with suppress(discord.HTTPException):
             await ctx.message.delete()
 
-    @core.command()
+    @core.command(examples=[_("@Member")])
     @commands.guild_only()
     async def kiss(self, ctx: core.Context, member: discord.Member):
         _("""Kiss a guild member""")
@@ -248,7 +243,7 @@ class Fun(
         with suppress(discord.HTTPException):
             await ctx.message.delete()
 
-    @core.command()
+    @core.command(examples=[_("reflects on the eternal")])
     @commands.guild_only()
     async def me(self, ctx: core.Context, *, action):
         _("""Perform a 3rd person action""")
@@ -256,7 +251,7 @@ class Fun(
         with suppress(discord.HTTPException):
             await ctx.message.delete()
 
-    @core.command()
+    @core.command(examples=[_("@Member")])
     @commands.guild_only()
     async def wink(self, ctx: core.Context, member: discord.Member):
         _("""Wink at guild member""")

@@ -7,6 +7,7 @@ from sonata.bot.utils import i18n
 
 class Command(commands.Command):
     def __init__(self, func, **kwargs):
+        self._examples = kwargs.get('examples')
         self.raw_doc = getattr(func, "__doc__", None)
         super().__init__(func, **kwargs)
 

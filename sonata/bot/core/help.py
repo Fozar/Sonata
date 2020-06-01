@@ -188,22 +188,31 @@ class HelpCommand(commands.HelpCommand):
 
     async def send_group_help(self, group: Group):
         filtered = await self.filter_commands(group.commands, sort=True)
-        subcommands = self.make_command_list(filtered)
+        fields = {_("__Usage:__"): f"`{self.get_command_signature(group)}`"}
+        if group.examples:
+            fields[_("__Examples:__")] = "\n".join(
+                f"`{self.context.prefix}{group.qualified_name} {e}`"
+                for e in group.examples
+            )
+        fields[_("__Subcommands:__")] = self.make_command_list(filtered)
         embed = self.make_embed(
             _("Command {0}").format(self.context.prefix + group.qualified_name),
             group.help,
-            {
-                _("__Usage:__"): f"`{self.get_command_signature(group)}`",
-                _("__Subcommands:__"): subcommands,
-            },
+            fields,
         )
         await self.context.channel.send(embed=embed)
 
     async def send_command_help(self, command: Command):
+        fields = {_("__Usage:__"): f"`{self.get_command_signature(command)}`"}
+        if command.examples:
+            fields[_("__Examples:__")] = "\n".join(
+                f"`{self.context.prefix}{command.qualified_name} {e}`"
+                for e in command.examples
+            )
         embed = self.make_embed(
             _("Command {0}").format(self.context.prefix + command.qualified_name),
             command.help,
-            {_("__Usage:__"): f"`{self.get_command_signature(command)}`"},
+            fields,
         )
         await self.context.channel.send(embed=embed)
 

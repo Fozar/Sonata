@@ -20,10 +20,15 @@ class Leveling(core.Cog):
             + self.exp_offset
         )
 
-    def make_leaderboard_embed(self, user_list: Dict[int, Dict[str, int]]):
+    async def make_leaderboard_embed(self, user_list: Dict[int, Dict[str, int]]):
         embed = discord.Embed(colour=self.colour)
         for rank, user_conf in user_list.items():
-            user = self.sonata.get_user(user_conf["user_id"])
+            try:
+                user = self.sonata.get_user(
+                    user_conf["user_id"]
+                ) or await self.sonata.fetch_user(user_conf["user_id"])
+            except discord.HTTPException:
+                continue
             embed.add_field(
                 name=f"`#{rank}` **{user.display_name}**",
                 value=_("**Level**: {lvl} | **Experience**: {exp}/{max_exp}").format(
@@ -197,6 +202,6 @@ class Leveling(core.Cog):
             )
             user_list[rank] = author
 
-        embed = self.make_leaderboard_embed(user_list)
+        embed = await self.make_leaderboard_embed(user_list)
         embed.title = _("Guild Leaderboard")
         await ctx.send(embed=embed)

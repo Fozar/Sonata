@@ -172,6 +172,8 @@ class General(
         if member.bot:
             return await ctx.send(embed=embed)
         user = await ctx.db.users.find_one({"id": member.id}, {"about": True})
+        if user.get("about"):
+            embed.description = user["about"]
         user_stats = await ctx.db.user_stats.find_one(
             {"guild_id": ctx.guild.id, "user_id": member.id},
             {
@@ -182,29 +184,27 @@ class General(
                 "exp": True,
             },
         )
-
-        if user.get("about"):
-            embed.description = user["about"]
-        stats_cog = self.sonata.cogs.get("Stats")
-        statistics = {
-            _("Statistics has been running since"): format_datetime(
-                user_stats["created_at"], locale=ctx.locale
-            ),
-            _("Total messages"): user_stats["total_messages"],
-            _("Commands invoked"): user_stats["commands_invoked"],
-            _("Level"): user_stats["lvl"],
-            _(
-                "Experience"
-            ): f"{user_stats['exp']}/{stats_cog.calculate_exp(user_stats['lvl'] + 1)}",
-        }
-        if ctx.guild and ctx.guild.get_member(member.id):
-            statistics[_("Guild rank")] = await ctx.db.user_stats.count_documents(
-                {"guild_id": ctx.guild.id, "exp": {"$gte": user_stats["exp"]}}
-            )
-        statistics = [f"**{key}**: {value}" for key, value in statistics.items()]
-        statistics = "\n".join(statistics)
-        statistics += _("\n`Statistics counts only messages visible to the bot`")
-        embed.add_field(name=_("Statistics"), value=statistics, inline=False)
+        if user_stats:
+            stats_cog = self.sonata.cogs.get("Stats")
+            statistics = {
+                _("Statistics has been running since"): format_datetime(
+                    user_stats["created_at"], locale=ctx.locale
+                ),
+                _("Total messages"): user_stats["total_messages"],
+                _("Commands invoked"): user_stats["commands_invoked"],
+                _("Level"): user_stats["lvl"],
+                _(
+                    "Experience"
+                ): f"{user_stats['exp']}/{stats_cog.calculate_exp(user_stats['lvl'] + 1)}",
+            }
+            if ctx.guild and ctx.guild.get_member(member.id):
+                statistics[_("Guild rank")] = await ctx.db.user_stats.count_documents(
+                    {"guild_id": ctx.guild.id, "exp": {"$gte": user_stats["exp"]}}
+                )
+            statistics = [f"**{key}**: {value}" for key, value in statistics.items()]
+            statistics = "\n".join(statistics)
+            statistics += _("\n`Statistics counts only messages visible to the bot`")
+            embed.add_field(name=_("Statistics"), value=statistics, inline=False)
 
         await ctx.send(embed=embed)
 

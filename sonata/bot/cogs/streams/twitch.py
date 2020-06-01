@@ -168,8 +168,8 @@ class TwitchMixin(core.Cog):
 
         with suppress(KeyError, AttributeError, discord.HTTPException):
             channel_id, message_id = alert_config["message_id"].split("-")
-            delete_message = True
             try:
+                delete_message = True
                 channel = guild.get_channel(int(channel_id))
                 message = await channel.fetch_message(int(message_id))
             except (discord.HTTPException, AttributeError):
@@ -178,10 +178,10 @@ class TwitchMixin(core.Cog):
                 if not stream:
                     await self.close_alert(message, default_config, alert_config, user)
                 else:
+                    delete_message = False
                     await self.update_alert(
                         message, alert_config, default_config, stream
                     )
-                    delete_message = False
             finally:
                 if delete_message:
                     await self.sonata.db.twitch_subs.update_one(
@@ -324,18 +324,20 @@ class TwitchMixin(core.Cog):
             title=stream.title,
             timestamp=stream.started_at,
         )
-        url = f"https://www.twitch.tv/{user.login}"
-        embed.set_author(
-            name=user.display_name, url=url, icon_url=user.profile_image_url
-        )
-        embed.url = url
         embed.set_image(url=stream.thumbnail_url())
         embed.set_footer(
             text="Twitch", icon_url="https://www.sonata.fun/img/TwitchGlitchPurple.png"
         )
-        embed.add_field(name=_("Game"), value=game.name)
+        if game:
+            embed.add_field(name=_("Game"), value=game.name)
         embed.add_field(name=_("Viewers"), value=str(stream.viewer_count))
         embed.add_field(name=_("Views"), value=str(user.view_count))
+        if user:
+            url = f"https://www.twitch.tv/{user.login}"
+            embed.set_author(
+                name=user.display_name, url=url, icon_url=user.profile_image_url
+            )
+            embed.url = url
         return embed
 
     async def extend_subscription(

@@ -144,7 +144,7 @@ class Emoji(
             embed.description = _("**Total**: {0}").format(total)
         await ctx.send(embed=embed)
 
-    @core.command(name="recalc.emoji")
+    @core.command(name="recalc.emoji", hidden=True)
     @commands.is_owner()
     async def recalculate_emoji(self, ctx: core.Context, *, date: str):
         status = await ctx.send("```Initialization...```")

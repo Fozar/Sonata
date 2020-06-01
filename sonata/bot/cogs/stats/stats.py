@@ -236,7 +236,7 @@ class Stats(
         if result.matched_count != 0:
             await self.update_daily_stats(message.created_at, message.guild)
 
-    @core.command(name="recalc.stats")
+    @core.command(name="recalc.stats", hidden=True)
     @commands.is_owner()
     async def recalculate_stats(self, ctx: core.Context, *, date: str):
         self.recalc_started_at = ctx.message.created_at

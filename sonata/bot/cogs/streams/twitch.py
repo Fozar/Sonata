@@ -819,7 +819,7 @@ class TwitchMixin(core.Cog):
             )
         )
 
-    @twitch_filter.group(name="title")
+    @twitch_filter.group(name="title", hidden=True)
     @commands.is_owner()
     async def twitch_filter_title(self, ctx: core.Context):
         _("""Title filter""")

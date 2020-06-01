@@ -315,11 +315,17 @@ class Sonata(commands.Bot):
         await self.set_locale(message)
         ctx = await self.get_context(message, cls=Context)
         # Check command is disabled
+        delete_message = False
         if ctx.command:
             if ctx.guild:
                 guild = await self.db.guilds.find_one(
                     {"id": message.guild.id},
-                    {"_id": False, "disabled_cogs": True, "disabled_commands": True},
+                    {
+                        "_id": False,
+                        "disabled_cogs": True,
+                        "disabled_commands": True,
+                        "delete_commands": True,
+                    },
                 )
                 if (
                     (
@@ -336,10 +342,17 @@ class Sonata(commands.Bot):
                     ctx.command.enabled = False
                 else:
                     ctx.command.enabled = True
+                    delete_message = guild["delete_commands"]
             else:
                 ctx.command.enabled = True
 
         await self.invoke(ctx)
+        if (
+            ctx.guild
+            and delete_message
+            and message.guild.me.guild_permissions.manage_messages
+        ):
+            await message.delete(delay=1.0)
 
     async def set_locale(self, msg: discord.Message):
         self.locale = await self.define_locale(msg)

@@ -20,6 +20,7 @@ class Guild(DiscordConfigModel):
     premium: bool = False
     dm_help: bool = False
     auto_lvl_msg: bool = False
+    delete_commands: bool = False
     greeting: Optional[Greeting] = None
     last_message_at: datetime = None
     admin_roles: List[int] = []

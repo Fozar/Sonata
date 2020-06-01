@@ -204,11 +204,7 @@ class Admin(
         _("""Adds channels to blacklist""")
         await ctx.db.guilds.update_one(
             {"id": ctx.guild.id},
-            {
-                "$addToSet": {
-                    "blacklist.items": {"$each": [ch.id for ch in channels]}
-                }
-            },
+            {"$addToSet": {"blacklist.items": {"$each": [ch.id for ch in channels]}}},
         )
         await ctx.inform(_("Channels successfully added to blacklist."))
 
@@ -482,6 +478,32 @@ class Admin(
         )
         await ctx.inform(_("The guild prefix is set to `{0}`.").format(prefix))
 
+    @guild.group(name="delete.commands")
+    @commands.bot_has_guild_permissions(manage_messages=True)
+    async def guild_delete_command(self, ctx: core.Context):
+        _("""Toggles deletion of commands""")
+        if ctx.invoked_subcommand is not None:
+            return
+
+        await ctx.send_help()
+
+    @guild_delete_command.command(name="enable")
+    async def guild_delete_command_enable(self, ctx: core.Context):
+        _("""Enables deletion of commands""")
+        await ctx.db.guilds.update_one(
+            {"id": ctx.guild.id}, {"$set": {"delete_commands": True}}
+        )
+        await ctx.inform(_("Deleting commands is enabled."))
+        await ctx.message.delete(delay=1.0)
+
+    @guild_delete_command.command(name="disable")
+    async def guild_delete_command_disable(self, ctx: core.Context):
+        _("""Disables deletion of commands""")
+        await ctx.db.guilds.update_one(
+            {"id": ctx.guild.id}, {"$set": {"delete_commands": False}}
+        )
+        await ctx.inform(_("Deleting commands is disabled."))
+
     @guild.command(name="reset")
     async def guild_reset(self, ctx: core.Context):
         _("""Resets guild settings""")
@@ -680,11 +702,7 @@ class Admin(
         _("""Adds channels to whitelist""")
         await ctx.db.guilds.update_one(
             {"id": ctx.guild.id},
-            {
-                "$addToSet": {
-                    "whitelist.items": {"$each": [ch.id for ch in channels]}
-                }
-            },
+            {"$addToSet": {"whitelist.items": {"$each": [ch.id for ch in channels]}}},
         )
         await ctx.inform(_("Channels successfully added to whitelist."))
 

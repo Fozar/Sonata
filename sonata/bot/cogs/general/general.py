@@ -1,5 +1,3 @@
-from typing import Union
-
 import discord
 from aiohttp import FormData
 from babel.dates import format_datetime, format_timedelta
@@ -37,10 +35,15 @@ class General(
         )
         bot.logger.info("Server count posted successfully")
 
-    @core.group(invoke_without_command=True)
-    async def about(
-        self, ctx: core.Context, *, about: Union[clean_content, str] = None
-    ):
+    @core.group(
+        invoke_without_command=True,
+        examples=_(
+            "Amazingly varies depending on the interlocutor. One day I can be the "
+            "kindest and brightest person on the planet, on another curse everything "
+            "around. I can talk on absolutely any topic."
+        ),
+    )
+    async def about(self, ctx: core.Context, *, about: commands.clean_content() = None):
         _("""Fills in "About" field in the profile info""")
         if ctx.invoked_subcommand is not None:
             return
@@ -128,7 +131,7 @@ class General(
             embed.add_field(name=name, value=value, inline=False)
         await ctx.send(embed=embed)
 
-    @core.command(aliases=["user"])
+    @core.command(aliases=["user"], example=[_("@Member")])
     @commands.guild_only()
     async def profile(self, ctx: core.Context, member: discord.Member = None):
         if member is None:
@@ -208,7 +211,7 @@ class General(
 
         await ctx.send(embed=embed)
 
-    @core.command()
+    @core.command(examples=[_("The coin command constantly responds with an eagle.")])
     async def report(self, ctx: core.Context, *, report: clean_content()):
         _("""Sends a bug report to the bot owner""")
         embed = discord.Embed(

@@ -180,7 +180,15 @@ class Reminder(
 
         return reminder
 
-    @core.group(aliases=["reminder"], invoke_without_command=True)
+    @core.group(
+        aliases=["reminder"],
+        invoke_without_command=True,
+        examples=[
+            _("10/10/2024 go to the dentist"),
+            _("after 2 years check if i won the argument"),
+            _("after 30 minutes start stream on Twitch"),
+        ],
+    )
     async def remind(
         self,
         ctx: core.Context,
@@ -194,12 +202,6 @@ class Reminder(
         It is recommended to check if I recognized the time correctly. \
         In the Date field, you will see the date in UTC. Even lower will \
         be the date in your local time.
-        
-        Examples:
-        
-        - 10/10/2024 go to the dentist
-        - after 2 years check if i won the argument
-        - after 30 minutes start stream on Twitch
         
         The timedelta cannot be more than 5 years."""
         )
@@ -246,7 +248,13 @@ class Reminder(
         )
         await pages.start(ctx)
 
-    @remind.command(name="remove", aliases=["delete"], usage="<id>", ignore_extra=False)
+    @remind.command(
+        name="remove",
+        aliases=["delete"],
+        usage="<id>",
+        ignore_extra=False,
+        examples=["702553022131208657"],
+    )
     async def remind_remove(self, ctx: core.Context, _id: int):
         _("""Deletes a reminder by ID""")
         result = await ctx.db.reminders.update_one(

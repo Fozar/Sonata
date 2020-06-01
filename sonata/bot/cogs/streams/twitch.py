@@ -433,16 +433,11 @@ class TwitchMixin(core.Cog):
             users.append(cursor.next_object()["login"])
         await ctx.inform(", ".join(users), title=_("Tracked users"))
 
-    @_twitch.command(name="add")
+    @_twitch.command(name="add", examples=["ninja"])
     @limit_subs()
     @commands.has_guild_permissions(manage_messages=True)
     async def twitch_add(self, ctx: core.Context, user: TwitchUserConverter()):
-        _(
-            """Adds the user to the list of tracked streamers
-        
-        Example
-        - twitch add ninja"""
-        )
+        _("""Adds the user to the list of tracked streamers""")
         topic = StreamChanged(user.id)
         callback = f"{CALLBACK_URL}/streams/{user.id}"
         subscription = self.twitch.create_subscription(
@@ -493,16 +488,13 @@ class TwitchMixin(core.Cog):
         )
         await ctx.inform(_("The list of tracked users in this guild has been cleared."))
 
-    @_twitch.command(name="remove")
+    @_twitch.command(name="remove", examples=["ninja"])
     @commands.has_guild_permissions(manage_messages=True)
     async def twitch_remove(self, ctx: core.Context, user: TwitchSubscriptionConverter):
         _(
             """Removes a user from the list of tracked streamers
         
-        This will also reset all non-default settings related to this user.
-        
-        Example
-        - twitch remove ninja"""
+        This will also reset all non-default settings related to this user."""
         )
         await ctx.db.twitch_subs.update_one(
             {"topic": str(user.topic), "guilds.id": ctx.guild.id},
@@ -514,18 +506,13 @@ class TwitchMixin(core.Cog):
             )
         )
 
-    @_twitch.command(name="disable")
+    @_twitch.command(name="disable", examples=["ninja"])
     @core.premium_only()
     @commands.has_guild_permissions(manage_messages=True)
     async def twitch_disable(
         self, ctx: core.Context, user: TwitchSubscriptionConverter
     ):
-        _(
-            """Disables alerts from the specified streamer
-        
-        Example
-        - twitch disable ninja"""
-        )
+        _("""Disables alerts from the specified streamer""")
         await ctx.db.twitch_subs.update_one(
             {"topic": str(user.topic), "guilds.id": ctx.guild.id},
             {"$set": {"guilds.$.enabled": False}},
@@ -534,16 +521,11 @@ class TwitchMixin(core.Cog):
             _("Alerts from {0} are disabled.").format(user.user.display_name)
         )
 
-    @_twitch.command(name="enable")
+    @_twitch.command(name="enable", examples=["ninja"])
     @core.premium_only()
     @commands.has_guild_permissions(manage_messages=True)
     async def twitch_enable(self, ctx: core.Context, user: TwitchSubscriptionConverter):
-        _(
-            """Enables alerts from the specified streamer
-        
-        Example
-        - twitch enable ninja"""
-        )
+        _("""Enables alerts from the specified streamer""")
         await ctx.db.twitch_subs.update_one(
             {"topic": str(user.topic), "guilds.id": ctx.guild.id},
             {"$set": {"guilds.$.enabled": True}},
@@ -580,7 +562,10 @@ class TwitchMixin(core.Cog):
         await ctx.send_help()
 
     @twitch_filter_game.group(
-        name="whitelist", aliases=["wl"], invoke_without_command=True
+        name="whitelist",
+        aliases=["wl"],
+        invoke_without_command=True,
+        examples=["ninja"],
     )
     async def twitch_filter_game_whitelist(
         self, ctx: core.Context, user: TwitchSubscriptionConverter
@@ -611,16 +596,11 @@ class TwitchMixin(core.Cog):
             return await ctx.inform(_("Whitelist is empty."))
         await ctx.send(embed=embed)
 
-    @twitch_filter_game_whitelist.command(name="enable")
+    @twitch_filter_game_whitelist.command(name="enable", examples=["ninja"])
     async def twitch_filter_game_whitelist_enable(
         self, ctx: core.Context, user: TwitchSubscriptionConverter
     ):
-        _(
-            """Enables game filter whitelisting
-        
-        Example
-        - twitch filter game whitelist enable ninja"""
-        )
+        _("""Enables game filter whitelisting""")
         await ctx.db.twitch_subs.update_one(
             {"topic": str(user.topic), "guilds.id": ctx.guild.id},
             {"$set": {"guilds.$.filter.game.whitelist.enabled": True}},
@@ -631,16 +611,11 @@ class TwitchMixin(core.Cog):
             )
         )
 
-    @twitch_filter_game_whitelist.command(name="disable")
+    @twitch_filter_game_whitelist.command(name="disable", examples=["ninja"])
     async def twitch_filter_game_whitelist_disable(
         self, ctx: core.Context, user: TwitchSubscriptionConverter
     ):
-        _(
-            """Disables game filter whitelisting
-        
-        Example
-        - twitch filter game whitelist disable ninja"""
-        )
+        _("""Disables game filter whitelisting""")
         await ctx.db.twitch_subs.update_one(
             {"topic": str(user.topic), "guilds.id": ctx.guild.id},
             {"$set": {"guilds.$.filter.game.whitelist.enabled": False}},
@@ -651,20 +626,16 @@ class TwitchMixin(core.Cog):
             )
         )
 
-    @twitch_filter_game_whitelist.command(name="add")
+    @twitch_filter_game_whitelist.command(
+        name="add", examples=['ninja "League of Legends" "Fortnite" "Dota 2"']
+    )
     async def twitch_filter_game_whitelist_add(
         self,
         ctx: core.Context,
         user: TwitchSubscriptionConverter,
         *games: TwitchGameConverter(),
     ):
-        _(
-            """Adds games to the whitelist
-        
-        Example
-        - twitch filter game whitelist add ninja "League of Legends" "Fortnite" "Dota 2"
-        """
-        )
+        _("""Adds games to the whitelist""")
         game_ids = [game.id for game in games]
         await ctx.db.twitch_subs.update_one(
             {"topic": str(user.topic), "guilds.id": ctx.guild.id},
@@ -681,16 +652,11 @@ class TwitchMixin(core.Cog):
             )
         )
 
-    @twitch_filter_game_whitelist.command(name="clear")
+    @twitch_filter_game_whitelist.command(name="clear", examples=["ninja"])
     async def twitch_filter_game_whitelist_clear(
         self, ctx: core.Context, user: TwitchSubscriptionConverter
     ):
-        _(
-            """Clears the whitelist
-        
-        Example
-        - twitch filter game whitelist clear ninja"""
-        )
+        _("""Clears the whitelist""")
         await ctx.db.twitch_subs.update_one(
             {"topic": str(user.topic), "guilds.id": ctx.guild.id},
             {"$set": {"guilds.$.filter.game.whitelist": BWList().dict()}},
@@ -699,20 +665,16 @@ class TwitchMixin(core.Cog):
             _("Whitelist cleared successfully for {0}.").format(user.user.display_name)
         )
 
-    @twitch_filter_game_whitelist.command(name="remove")
+    @twitch_filter_game_whitelist.command(
+        name="remove", examples=['ninja "League of Legends" "Fortnite" "Dota 2"']
+    )
     async def twitch_filter_game_whitelist_remove(
         self,
         ctx: core.Context,
         user: TwitchSubscriptionConverter,
         *games: TwitchGameConverter(),
     ):
-        _(
-            """Removes games from the whitelist
-
-        Example
-        - twitch filter game whitelist remove ninja "League of Legends" "Fortnite" "Dota 2"
-        """
-        )
+        _("""Removes games from the whitelist""")
         game_ids = [game.id for game in games]
         await ctx.db.twitch_subs.update_one(
             {"topic": str(user.topic), "guilds.id": ctx.guild.id},
@@ -729,7 +691,10 @@ class TwitchMixin(core.Cog):
         )
 
     @twitch_filter_game.group(
-        name="blacklist", aliases=["bl"], invoke_without_command=True
+        name="blacklist",
+        aliases=["bl"],
+        invoke_without_command=True,
+        examples=["ninja"],
     )
     async def twitch_filter_game_blacklist(
         self, ctx: core.Context, user: TwitchSubscriptionConverter
@@ -760,16 +725,11 @@ class TwitchMixin(core.Cog):
             return await ctx.inform(_("Blacklist is empty."))
         await ctx.send(embed=embed)
 
-    @twitch_filter_game_blacklist.command(name="enable")
+    @twitch_filter_game_blacklist.command(name="enable", examples=["ninja"])
     async def twitch_filter_game_blacklist_enable(
         self, ctx: core.Context, user: TwitchSubscriptionConverter
     ):
-        _(
-            """Enables game filter blacklisting
-
-        Example
-        - twitch filter game blacklist enable ninja"""
-        )
+        _("""Enables game filter blacklisting""")
         await ctx.db.twitch_subs.update_one(
             {"topic": str(user.topic), "guilds.id": ctx.guild.id},
             {"$set": {"guilds.$.filter.game.blacklist.enabled": True}},
@@ -780,16 +740,11 @@ class TwitchMixin(core.Cog):
             )
         )
 
-    @twitch_filter_game_blacklist.command(name="disable")
+    @twitch_filter_game_blacklist.command(name="disable", examples=["ninja"])
     async def twitch_filter_game_blacklist_disable(
         self, ctx: core.Context, user: TwitchSubscriptionConverter
     ):
-        _(
-            """Disables game filter blacklisting
-
-        Example
-        - twitch filter game blacklist disable ninja"""
-        )
+        _("""Disables game filter blacklisting""")
         await ctx.db.twitch_subs.update_one(
             {"topic": str(user.topic), "guilds.id": ctx.guild.id},
             {"$set": {"guilds.$.filter.game.blacklist.enabled": False}},
@@ -800,20 +755,16 @@ class TwitchMixin(core.Cog):
             )
         )
 
-    @twitch_filter_game_blacklist.command(name="add")
+    @twitch_filter_game_blacklist.command(
+        name="add", examples=['ninja "League of Legends" "Fortnite" "Dota 2"']
+    )
     async def twitch_filter_game_blacklist_add(
         self,
         ctx: core.Context,
         user: TwitchSubscriptionConverter,
         *games: TwitchGameConverter(),
     ):
-        _(
-            """Adds games to the blacklist
-
-        Example
-        - twitch filter game blacklist add ninja "League of Legends" "Fortnite" "Dota 2"
-        """
-        )
+        _("""Adds games to the blacklist""")
         game_ids = [game.id for game in games]
         await ctx.db.twitch_subs.update_one(
             {"topic": str(user.topic), "guilds.id": ctx.guild.id},
@@ -830,16 +781,11 @@ class TwitchMixin(core.Cog):
             )
         )
 
-    @twitch_filter_game_blacklist.command(name="clear")
+    @twitch_filter_game_blacklist.command(name="clear", examples=["ninja"])
     async def twitch_filter_game_blacklist_clear(
         self, ctx: core.Context, user: TwitchSubscriptionConverter
     ):
-        _(
-            """Clears the blacklist
-
-        Example
-        - twitch filter game blacklist clear ninja"""
-        )
+        _("""Clears the blacklist""")
         await ctx.db.twitch_subs.update_one(
             {"topic": str(user.topic), "guilds.id": ctx.guild.id},
             {"$set": {"guilds.$.filter.game.blacklist": BWList().dict()}},
@@ -848,20 +794,16 @@ class TwitchMixin(core.Cog):
             _("Blacklist cleared successfully for {0}.").format(user.user.display_name)
         )
 
-    @twitch_filter_game_blacklist.command(name="remove")
+    @twitch_filter_game_blacklist.command(
+        name="remove", examples=['ninja "League of Legends" "Fortnite" "Dota 2"']
+    )
     async def twitch_filter_game_blacklist_remove(
         self,
         ctx: core.Context,
         user: TwitchSubscriptionConverter,
         *games: TwitchGameConverter(),
     ):
-        _(
-            """Removes games from the blacklist
-
-        Example
-        - twitch filter game blacklist remove ninja "League of Legends" "Fortnite" "Dota 2"
-        """
-        )
+        _("""Removes games from the blacklist""")
         game_ids = [game.id for game in games]
         await ctx.db.twitch_subs.update_one(
             {"topic": str(user.topic), "guilds.id": ctx.guild.id},
@@ -886,16 +828,11 @@ class TwitchMixin(core.Cog):
     async def twitch_filter_title_whitelist(self, ctx: core.Context):
         _("""Title filter whitelist""")
 
-    @twitch_filter_title_whitelist.command(name="enable")
+    @twitch_filter_title_whitelist.command(name="enable", examples=["ninja"])
     async def twitch_filter_title_whitelist_enable(
         self, ctx: core.Context, user: TwitchSubscriptionConverter
     ):
-        _(
-            """Enables title filter whitelisting
-
-        Example
-        - twitch filter title whitelist enable ninja"""
-        )
+        _("""Enables title filter whitelisting""")
         await ctx.db.twitch_subs.update_one(
             {"topic": str(user.topic), "guilds.id": ctx.guild.id},
             {"$set": {"guilds.$.filter.title.whitelist.enabled": True}},
@@ -906,16 +843,11 @@ class TwitchMixin(core.Cog):
             )
         )
 
-    @twitch_filter_title_whitelist.command(name="disable")
+    @twitch_filter_title_whitelist.command(name="disable", examples=["ninja"])
     async def twitch_filter_title_whitelist_disable(
         self, ctx: core.Context, user: TwitchSubscriptionConverter
     ):
-        _(
-            """Disables title filter whitelisting
-
-        Example
-        - twitch filter title whitelist disable ninja"""
-        )
+        _("""Disables title filter whitelisting""")
         await ctx.db.twitch_subs.update_one(
             {"topic": str(user.topic), "guilds.id": ctx.guild.id},
             {"$set": {"guilds.$.filter.title.whitelist.enabled": False}},
@@ -926,7 +858,9 @@ class TwitchMixin(core.Cog):
             )
         )
 
-    @twitch_filter_title_whitelist.command(name="add")
+    @twitch_filter_title_whitelist.command(
+        name="add", examples=[_("ninja giveaway"), _("ninja .+giveaway.*")]
+    )
     async def twitch_filter_title_whitelist_add(
         self,
         ctx: core.Context,
@@ -937,11 +871,7 @@ class TwitchMixin(core.Cog):
         _(
             """Adds title to the whitelist
             
-        Regex is allowed.
-
-        Examples
-        - twitch filter title whitelist add ninja giveaway
-        - twitch filter title whitelist add ninja .+giveaway.*"""
+        Regex is allowed."""
         )
         await ctx.db.twitch_subs.update_one(
             {"topic": str(user.topic), "guilds.id": ctx.guild.id},
@@ -951,16 +881,11 @@ class TwitchMixin(core.Cog):
             _("The title is whitelisted for {0}.").format(user.user.display_name)
         )
 
-    @twitch_filter_title_whitelist.command(name="clear")
+    @twitch_filter_title_whitelist.command(name="clear", examples=["ninja"])
     async def twitch_filter_title_whitelist_clear(
         self, ctx: core.Context, user: TwitchSubscriptionConverter
     ):
-        _(
-            """Clears the whitelist
-
-        Example
-        - twitch filter title whitelist clear ninja"""
-        )
+        _("""Clears the whitelist""")
         await ctx.db.twitch_subs.update_one(
             {"topic": str(user.topic), "guilds.id": ctx.guild.id},
             {"$set": {"guilds.$.filter.title.whitelist": BWList().dict()}},
@@ -969,7 +894,9 @@ class TwitchMixin(core.Cog):
             _("Whitelist cleared successfully for {0}.").format(user.user.display_name)
         )
 
-    @twitch_filter_title_whitelist.command(name="remove")
+    @twitch_filter_title_whitelist.command(
+        name="remove", examples=[_("ninja giveaway"), _("ninja .+giveaway.*")]
+    )
     async def twitch_filter_title_whitelist_remove(
         self,
         ctx: core.Context,
@@ -977,13 +904,7 @@ class TwitchMixin(core.Cog):
         *,
         title: commands.clean_content(),
     ):
-        _(
-            """Removes title from the whitelist
-
-        Examples
-        - twitch filter title whitelist remove ninja giveaway
-        - twitch filter title whitelist remove ninja .+giveaway.*"""
-        )
+        _("""Removes title from the whitelist""")
         await ctx.db.twitch_subs.update_one(
             {"topic": str(user.topic), "guilds.id": ctx.guild.id},
             {"$pull": {"guilds.$.filter.title.whitelist.items": title}},
@@ -998,16 +919,11 @@ class TwitchMixin(core.Cog):
     async def twitch_filter_title_blacklist(self, ctx: core.Context):
         _("""Title filter blacklist""")
 
-    @twitch_filter_title_blacklist.command(name="enable")
+    @twitch_filter_title_blacklist.command(name="enable", examples=["ninja"])
     async def twitch_filter_title_blacklist_enable(
         self, ctx: core.Context, user: TwitchSubscriptionConverter
     ):
-        _(
-            """Enables title filter blacklisting
-
-        Example
-        - twitch filter title blacklist enable ninja"""
-        )
+        _("""Enables title filter blacklisting""")
         await ctx.db.twitch_subs.update_one(
             {"topic": str(user.topic), "guilds.id": ctx.guild.id},
             {"$set": {"guilds.$.filter.title.blacklist.enabled": True}},
@@ -1018,16 +934,11 @@ class TwitchMixin(core.Cog):
             )
         )
 
-    @twitch_filter_title_blacklist.command(name="disable")
+    @twitch_filter_title_blacklist.command(name="disable", examples=["ninja"])
     async def twitch_filter_title_blacklist_disable(
         self, ctx: core.Context, user: TwitchSubscriptionConverter
     ):
-        _(
-            """Disables title filter blacklisting
-
-        Example
-        - twitch filter title blacklist disable ninja"""
-        )
+        _("""Disables title filter blacklisting""")
         await ctx.db.twitch_subs.update_one(
             {"topic": str(user.topic), "guilds.id": ctx.guild.id},
             {"$set": {"guilds.$.filter.title.blacklist.enabled": False}},
@@ -1038,7 +949,9 @@ class TwitchMixin(core.Cog):
             )
         )
 
-    @twitch_filter_title_blacklist.command(name="add")
+    @twitch_filter_title_blacklist.command(
+        name="add", examples=[_("ninja giveaway"), _("ninja .+giveaway.*")]
+    )
     async def twitch_filter_title_blacklist_add(
         self,
         ctx: core.Context,
@@ -1049,11 +962,7 @@ class TwitchMixin(core.Cog):
         _(
             """Adds title to the blacklist
 
-        Regex is allowed.
-
-        Examples
-        - twitch filter title blacklist add ninja giveaway
-        - twitch filter title blacklist add ninja .+giveaway.*"""
+        Regex is allowed."""
         )
         await ctx.db.twitch_subs.update_one(
             {"topic": str(user.topic), "guilds.id": ctx.guild.id},
@@ -1063,16 +972,11 @@ class TwitchMixin(core.Cog):
             _("The title is blacklisted for {0}.").format(user.user.display_name)
         )
 
-    @twitch_filter_title_blacklist.command(name="clear")
+    @twitch_filter_title_blacklist.command(name="clear", examples=["ninja"])
     async def twitch_filter_title_blacklist_clear(
         self, ctx: core.Context, user: TwitchSubscriptionConverter
     ):
-        _(
-            """Clears the blacklist
-
-        Example
-        - twitch filter title blacklist clear ninja"""
-        )
+        _("""Clears the blacklist""")
         await ctx.db.twitch_subs.update_one(
             {"topic": str(user.topic), "guilds.id": ctx.guild.id},
             {"$set": {"guilds.$.filter.title.blacklist": BWList().dict()}},
@@ -1081,7 +985,9 @@ class TwitchMixin(core.Cog):
             _("Blacklist cleared successfully for {0}.").format(user.user.display_name)
         )
 
-    @twitch_filter_title_blacklist.command(name="remove")
+    @twitch_filter_title_blacklist.command(
+        name="remove", examples=[_("ninja giveaway"), _("ninja .+giveaway.*")]
+    )
     async def twitch_filter_title_blacklist_remove(
         self,
         ctx: core.Context,
@@ -1089,13 +995,7 @@ class TwitchMixin(core.Cog):
         *,
         title: commands.clean_content(),
     ):
-        _(
-            """Removes title from the blacklist
-
-        Examples
-        - twitch filter title blacklist remove ninja giveaway
-        - twitch filter title blacklist remove ninja .+giveaway.*"""
-        )
+        _("""Removes title from the blacklist""")
         await ctx.db.twitch_subs.update_one(
             {"topic": str(user.topic), "guilds.id": ctx.guild.id},
             {"$pull": {"guilds.$.filter.title.blacklist.items": title}},
@@ -1115,19 +1015,14 @@ class TwitchMixin(core.Cog):
 
         await ctx.send_help()
 
-    @twitch_set.command(name="channel")
+    @twitch_set.command(name="channel", examples=[_("ninja #TextChannel")])
     async def twitch_set_channel(
         self,
         ctx: core.Context,
         user: TwitchSubscriptionConverter(),
         channel: discord.TextChannel,
     ):
-        _(
-            """Sets alert channel for specified user
-
-        Example
-        - twitch set channel ninja #TextChannel"""
-        )
+        _("""Sets alert channel for specified user""")
         if not channel.permissions_for(ctx.guild.me).send_messages:
             return await ctx.inform(_("I can't send messages in this channel."))
 
@@ -1139,7 +1034,9 @@ class TwitchMixin(core.Cog):
             _("Alert channel set for {0}.").format(user.user.display_name)
         )
 
-    @twitch_set.command(name="offline.message")
+    @twitch_set.command(
+        name="offline.message", examples=[_("ninja {{name}} if offline")]
+    )
     async def twitch_set_offline_message(
         self,
         ctx: core.Context,
@@ -1153,12 +1050,9 @@ class TwitchMixin(core.Cog):
         Markdown is allowed.
 
         Replacements
-        {{link}} - stream link
-        {{name}} - streamer name
-        {{views}} - user's views count
-
-        Example
-        - twitch set offline.message ninja {{name}} if offline."""
+        `{{link}}` - stream link
+        `{{name}}` - streamer name
+        `{{views}}` - user's views count"""
         )
         await ctx.db.twitch_subs.update_one(
             {"topic": str(user.topic), "guilds.id": ctx.guild.id},
@@ -1168,7 +1062,10 @@ class TwitchMixin(core.Cog):
             _("Alert offline message set for {0}.").format(user.user.display_name)
         )
 
-    @twitch_set.command(name="message")
+    @twitch_set.command(
+        name="message",
+        examples=[_('ninja {{name}} began broadcasting "{{game}}". Link: {{link}}')],
+    )
     async def twitch_set_message(
         self,
         ctx: core.Context,
@@ -1182,16 +1079,12 @@ class TwitchMixin(core.Cog):
         Markdown is allowed.
 
         Replacements
-        {{link}} - stream link
-        {{name}} - streamer name
-        {{title}} - stream title
-        {{game}} - game name
-        {{viewers}} - viewers count
-        {{views}} - user's views count
-
-        Example
-        - twitch set message ninja {{name}} began broadcasting "{{game}}". Link: {{link}}
-        """
+        `{{link}}` - stream link
+        `{{name}}` - streamer name
+        `{{title}}` - stream title
+        `{{game}}` - game name
+        `{{viewers}}` - viewers count
+        `{{views}}` - user's views count"""
         )
         await ctx.db.twitch_subs.update_one(
             {"topic": str(user.topic), "guilds.id": ctx.guild.id},
@@ -1209,7 +1102,7 @@ class TwitchMixin(core.Cog):
 
         await ctx.send_help()
 
-    @twitch_set_mention.command(name="everyone")
+    @twitch_set_mention.command(name="everyone", examples=["ninja"])
     async def twitch_set_mention_everyone(
         self, ctx: core.Context, user: TwitchSubscriptionConverter
     ):
@@ -1231,7 +1124,7 @@ class TwitchMixin(core.Cog):
             _("Alerts will mention `@everyone` for {0}.").format(user.user.display_name)
         )
 
-    @twitch_set_mention.command(name="here")
+    @twitch_set_mention.command(name="here", examples=["ninja"])
     async def twitch_set_mention_here(
         self, ctx: core.Context, user: TwitchSubscriptionConverter
     ):
@@ -1253,7 +1146,7 @@ class TwitchMixin(core.Cog):
             _("Alerts will mention `here` for {0}.").format(user.user.display_name)
         )
 
-    @twitch_set_mention.command(name="enable")
+    @twitch_set_mention.command(name="enable", examples=["ninja"])
     async def twitch_set_mention_enable(
         self, ctx: core.Context, user: TwitchSubscriptionConverter
     ):
@@ -1271,7 +1164,7 @@ class TwitchMixin(core.Cog):
             _("Alert mentions enabled for {0}.").format(user.user.display_name)
         )
 
-    @twitch_set_mention.command(name="disable")
+    @twitch_set_mention.command(name="disable", examples=["ninja"])
     async def twitch_set_mention_disable(
         self, ctx: core.Context, user: TwitchSubscriptionConverter
     ):
@@ -1289,7 +1182,7 @@ class TwitchMixin(core.Cog):
             _("Alert mentions disabled for {0}.").format(user.user.display_name)
         )
 
-    @twitch_set_mention.command(name="inherit")
+    @twitch_set_mention.command(name="inherit", examples=["ninja"])
     async def twitch_set_mention_inherit(
         self, ctx: core.Context, user: TwitchSubscriptionConverter
     ):

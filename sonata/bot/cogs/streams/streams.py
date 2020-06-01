@@ -49,14 +49,9 @@ class Streams(
 
         await ctx.send_help()
 
-    @alerts_set.command(name="channel")
+    @alerts_set.command(name="channel", examples=[_("#TextChannel")])
     async def alerts_set_channel(self, ctx: core.Context, channel: discord.TextChannel):
-        _(
-            """Sets default alert channel
-        
-        Example
-        - alerts set channel #TextChannel"""
-        )
+        _("""Sets default alert channel""")
         if not channel.permissions_for(ctx.guild.me).send_messages:
             return await ctx.inform(_("I can't send messages in this channel."))
         await ctx.db.guilds.update_one(
@@ -64,8 +59,8 @@ class Streams(
         )
         await ctx.inform(_("Alerts channel set."))
 
-    @alerts_set.command(name="offline.message")
-    async def alerts_set_close_message(
+    @alerts_set.command(name="offline.message", examples=[_("{{name}} if offline")])
+    async def alerts_set_offline_message(
         self, ctx: core.Context, *, message: commands.clean_content()
     ):
         _(
@@ -74,19 +69,19 @@ class Streams(
         Markdown is allowed.
 
         Replacements
-        {{link}} - stream link
-        {{name}} - streamer name
-        {{views}} - user's views count
-
-        Example
-        - alerts set offline.message {{name}} if offline."""
+        `{{link}}` - stream link
+        `{{name}}` - streamer name
+        `{{views}}` - user's views count"""
         )
         await ctx.db.guilds.update_one(
             {"id": ctx.guild.id}, {"$set": {"alerts.close_message": message}}
         )
         await ctx.inform(_("Alerts offline message set."))
 
-    @alerts_set.command(name="message")
+    @alerts_set.command(
+        name="message",
+        examples=[_('{{name}} began broadcasting "{{game}}". Link: {{link}}')],
+    )
     async def alerts_set_message(
         self, ctx: core.Context, *, message: commands.clean_content()
     ):
@@ -96,15 +91,12 @@ class Streams(
         Markdown is allowed.
         
         Replacements
-        {{link}} - stream link
-        {{name}} - streamer name
-        {{title}} - stream title
-        {{game}} - game name
-        {{viewers}} - viewers count
-        {{views}} - user's views count
-        
-        Example
-        - alerts set message {{name}} began broadcasting "{{game}}". Link: {{link}}"""
+        `{{link}}` - stream link
+        `{{name}}` - streamer name
+        `{{title}}` - stream title
+        `{{game}}` - game name
+        `{{viewers}}` - viewers count
+        `{{views}}` - user's views count"""
         )
         await ctx.db.guilds.update_one(
             {"id": ctx.guild.id}, {"$set": {"alerts.message": message}}

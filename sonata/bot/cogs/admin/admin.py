@@ -1,3 +1,5 @@
+import re
+
 import discord
 from babel import Locale
 from discord.ext import commands
@@ -65,11 +67,13 @@ class Admin(
         if channel is None:
             return
 
-        msg = (
-            greeting["message"]
-            .replace("[member]", member.display_name)
-            .replace("[mention]", member.mention)
-        )
+        replacements = [
+            (r"{{\s*member\s*}}", member.display_name),
+            (r"{{\s*mention\s*}}", member.mention),
+        ]
+        msg = greeting["message"]
+        for old, new in replacements:
+            msg = re.sub(old, new, msg, flags=re.I)
         await channel.send(msg)
 
     # CHANNELS SETTINGS. PREMIUM ONLY
@@ -82,7 +86,9 @@ class Admin(
             return
         await ctx.send_help()
 
-    @channel.command(name="locale")
+    @channel.command(
+        name="locale", examples=[_("#TextChannel"), _("#TextChannel en_US")]
+    )
     async def channel_locale(
         self,
         ctx: core.Context,
@@ -197,7 +203,9 @@ class Admin(
             return await ctx.inform(_("Blacklist is empty."))
         await ctx.send(embed=embed)
 
-    @guild_blacklist.command(name="add")
+    @guild_blacklist.command(
+        name="add", examples=[_("#TextChannel"), _("#TextChannel #AnotherTextChannel")]
+    )
     async def guild_blacklist_add(
         self, ctx: core.Context, channels: commands.Greedy[discord.TextChannel]
     ):
@@ -232,7 +240,10 @@ class Admin(
         )
         await ctx.inform(_("Blacklist enabled."))
 
-    @guild_blacklist.command(name="remove")
+    @guild_blacklist.command(
+        name="remove",
+        examples=[_("#TextChannel"), _("#TextChannel #AnotherTextChannel")],
+    )
     async def guild_blacklist_remove(
         self, ctx: core.Context, channels: commands.Greedy[discord.TextChannel]
     ):
@@ -287,7 +298,7 @@ class Admin(
             return
         await ctx.send_help()
 
-    @guild_cog.command(name="enable")
+    @guild_cog.command(name="enable", examples=["Utils"])
     async def guild_cog_enable(self, ctx: core.Context, cog: str):
         _("""Enables cog in the guild""")
         result = await ctx.db.guilds.update_one(
@@ -298,7 +309,7 @@ class Admin(
         else:
             await ctx.inform(_("Cog `{0}` enabled.").format(cog))
 
-    @guild_cog.command(name="disable")
+    @guild_cog.command(name="disable", examples=["Utils"])
     async def guild_cog_disable(self, ctx: core.Context, cog: str):
         _("""Disables cog in the guild""")
         if cog not in self.sonata.config["bot"].cogs:
@@ -325,7 +336,7 @@ class Admin(
             return
         await ctx.send_help()
 
-    @guild_command.command(name="enable")
+    @guild_command.command(name="enable", examples=["coin"])
     async def guild_command_enable(self, ctx: core.Context, *, command: to_lower):
         _("""Enables command in the guild""")
         result = await ctx.db.guilds.update_one(
@@ -336,7 +347,7 @@ class Admin(
         else:
             await ctx.inform(_("Command `{0}` enabled.").format(command))
 
-    @guild_command.command(name="disable")
+    @guild_command.command(name="disable", examples=["coin"])
     async def guild_command_disable(self, ctx: core.Context, *, command: to_lower):
         _("""Disables command in the guild""")
         cmd = self.sonata.get_command(command)
@@ -385,7 +396,9 @@ class Admin(
         )
         await ctx.inform(_("Welcome message is disabled."))
 
-    @guild_greeting.command(name="set")
+    @guild_greeting.command(
+        name="set", examples=[_("#TextChannel Hi, {{member}}! Welcome to our guild!")]
+    )
     async def guild_greeting_set(
         self,
         ctx: core.Context,
@@ -396,9 +409,9 @@ class Admin(
         _(
             """Sets welcome message
 
-        Use [member] to display the member name in the message or [mention] to @mention.
-        Example:
-        - guild greeting set #channel Hi, [member]! Welcome to our guild!"""
+        Use {{member}} to display the member name in the message or {{mention}} to 
+        @mention.
+        """
         )
         if not channel.permissions_for(ctx.guild.me).send_messages:
             return await ctx.inform(_("I can't send messages in this channel."))
@@ -411,7 +424,7 @@ class Admin(
         )
         await ctx.inform(_("Welcome message set."))
 
-    @guild.command(name="locale")
+    @guild.command(name="locale", examples=["en_US"])
     async def guild_locale(self, ctx: core.Context, locale: validate_locale = None):
         _("""Set guild locale""")
         if locale is None:
@@ -433,7 +446,9 @@ class Admin(
             )
         )
 
-    @guild.group(name="modlog", invoke_without_command=True)
+    @guild.group(
+        name="modlog", invoke_without_command=True, examples=[_("#TextChannel")]
+    )
     async def guild_modlog(self, ctx: core.Context, channel: discord.TextChannel):
         _("""Set modlog channel""")
         if not channel.permissions_for(ctx.guild.me).send_messages:
@@ -450,7 +465,7 @@ class Admin(
         await ctx.db.guilds.update_one({"id": ctx.guild.id}, {"$set": {"modlog": None}})
         await ctx.inform(_("Modlog channel reset."))
 
-    @guild.command(name="prefix")
+    @guild.command(name="prefix", examples=["!"])
     async def guild_prefix(self, ctx: core.Context, prefix: str = None):
         _(
             """Set guild prefix
@@ -558,19 +573,21 @@ class Admin(
             _("Admin roles: {0}.").format(", ".join([str(role) for role in roles]))
         )
 
-    @guild_role_admin.command(name="add")
+    @guild_role_admin.command(
+        name="add",
+        examples=[
+            _("@Admin"),
+            _("@MiniAdmin @Admin @BotManager"),
+            _("705363996747759657 Admin"),
+        ],
+    )
     async def guild_role_admin_add(
         self, ctx: core.Context, roles: commands.Greedy[discord.Role]
     ):
         _(
             """Add roles to admin role list
             
-        You can specify roles using the ID, mention, or name of the role.
-        
-        Examples:
-        - guild role admin add @Admin
-        - guild role admin add @MiniAdmin @Admin @BotManager
-        - guild role admin add 705363996747759657 Admin"""
+        You can specify roles using the ID, mention, or name of the role."""
         )
         if not roles:
             return await ctx.inform(_("You must specify at least one role."))
@@ -580,19 +597,21 @@ class Admin(
         )
         await ctx.inform(_("Roles successfully added."))
 
-    @guild_role_admin.command(name="remove")
+    @guild_role_admin.command(
+        name="remove",
+        examples=[
+            _("@Admin"),
+            _("@MiniAdmin @Admin @BotManager"),
+            _("705363996747759657 Admin"),
+        ],
+    )
     async def guild_role_admin_remove(
         self, ctx: core.Context, roles: commands.Greedy[discord.Role]
     ):
         _(
             """Removes roles from admin role list
         
-        You can specify roles using the ID, mention, or name of the role.
-        
-        Examples:
-        - guild role admin remove @Admin
-        - guild role admin remove @MiniAdmin @Admin @BotManager
-        - guild role admin remove 705363996747759657 Admin"""
+        You can specify roles using the ID, mention, or name of the role."""
         )
         if not roles:
             return await ctx.inform(_("You must specify at least one role."))
@@ -627,19 +646,17 @@ class Admin(
             _("Mod roles: {0}.").format(", ".join([str(role) for role in roles]))
         )
 
-    @guild_role_mod.command(name="add")
+    @guild_role_mod.command(
+        name="add",
+        examples=[_("@Mod"), _("@MiniMod @Mod"), _("705363996747759657 Mod"),],
+    )
     async def guild_role_mod_add(
         self, ctx: core.Context, roles: commands.Greedy[discord.Role]
     ):
         _(
             """Add roles to mod role list
 
-        You can specify roles using the ID, mention, or name of the role.
-
-        Examples:
-        - guild role mod add @Mod
-        - guild role mod add @MiniMod @Mod
-        - guild role mod add 705363996747759657 Mod"""
+        You can specify roles using the ID, mention, or name of the role."""
         )
         if not roles:
             return await ctx.inform(_("You must specify at least one role."))
@@ -649,7 +666,10 @@ class Admin(
         )
         await ctx.inform(_("Roles successfully added."))
 
-    @guild_role_mod.command(name="remove")
+    @guild_role_mod.command(
+        name="remove",
+        examples=[_("@Mod"), _("@MiniMod @Mod"), _("705363996747759657 Mod"),],
+    )
     async def guild_role_mod_remove(
         self, ctx: core.Context, roles: commands.Greedy[discord.Role]
     ):
@@ -695,7 +715,9 @@ class Admin(
             return await ctx.inform(_("Whitelist is empty."))
         await ctx.send(embed=embed)
 
-    @guild_whitelist.command(name="add")
+    @guild_whitelist.command(
+        name="add", examples=[_("#TextChannel"), _("#TextChannel #AnotherTextChannel")],
+    )
     async def guild_whitelist_add(
         self, ctx: core.Context, channels: commands.Greedy[discord.TextChannel]
     ):
@@ -730,7 +752,10 @@ class Admin(
         )
         await ctx.inform(_("Whitelist enabled."))
 
-    @guild_whitelist.command(name="remove")
+    @guild_whitelist.command(
+        name="remove",
+        examples=[_("#TextChannel"), _("#TextChannel #AnotherTextChannel")],
+    )
     async def guild_whitelist_remove(
         self, ctx: core.Context, channels: commands.Greedy[discord.TextChannel]
     ):

@@ -77,7 +77,7 @@ class Utils(
         )
         return embed
 
-    @core.command()
+    @core.command(examples=[_("@Member")])
     async def avatar(
         self, ctx: core.Context, member: Optional[discord.Member] = None,
     ):
@@ -90,7 +90,9 @@ class Utils(
         embed.set_image(url=member.avatar_url)
         await ctx.send(embed=embed)
 
-    @core.command(aliases=["calc"])
+    @core.command(
+        aliases=["calc"], examples=["2^6", "2**6", "8*8", "-(4 * (2^2 + 4) + 32)"]
+    )
     async def calculate(self, ctx: core.Context, *, expression: MathExpression()):
         _(
             """Calculates an expression
@@ -107,17 +109,7 @@ class Utils(
         ```
         
         There is a restriction on the power operation. \
-        None of the operands should be greater than 100.
-        
-        Examples
-        ```
-        2^6 = 64
-        2**6 = 64
-        8*8 = 64
-        -(4 * (2^2 + 4) + 32) = -64
-        ```
-        
-        """
+        None of the operands should be greater than 100."""
         )
         await ctx.inform(_("Result: {0}").format(expression.normalize()))
 
@@ -129,7 +121,9 @@ class Utils(
             csv_file = (await response.content.read()).decode("utf-8")
         return list(csv.DictReader(StringIO(csv_file), skipinitialspace=True))
 
-    @core.command(aliases=["virus"])
+    @core.group(
+        aliases=["virus"], examples=["US", "Russia"], invoke_without_command=True
+    )
     async def covid(self, ctx: core.Context, *, country: to_lower = None):
         _("""Shows COVID-19 pandemic statistics""")
         data = await self.get_covid_data()
@@ -197,7 +191,7 @@ class Utils(
         async with self.sonata.session.get(WEATHER_URL, params=params) as resp:
             return await resp.json() if resp.status == 200 else None
 
-    @core.command(aliases=["w"])
+    @core.command(aliases=["w"], examples=[_("London")])
     @commands.cooldown(1, 1, type=BucketType.guild)
     async def weather(self, ctx: core.Context, locality: str):
         _(

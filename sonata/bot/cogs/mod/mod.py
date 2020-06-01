@@ -150,20 +150,19 @@ class Mod(
         except discord.Forbidden:
             pass
 
-    @core.command()
+    @core.command(
+        examples=[
+            _("@Member flood"),
+            _("Member#1234 spam"),
+            _("239686604271124481 bad words"),
+        ]
+    )
     @commands.bot_has_permissions(kick_members=True)
     @commands.check_any(commands.has_permissions(kick_members=True), core.mod_only())
     async def kick(
         self, ctx: core.Context, member: ModeratedMember(), *, reason: clean_content(),
     ):
-        _(
-            """Kick member from the guild
-        
-        Examples:
-        - kick @Member flood
-        - kick Member#1234 spam
-        - kick 239686604271124481 bad words"""
-        )
+        _("""Kick member from the guild""")
         await member.kick(reason=reason)
         try:
             await ctx.message.delete()
@@ -171,7 +170,14 @@ class Mod(
             await ctx.send(_("Member kicked: {0}").format(str(member)))
         await self.create_modlog_case(ctx, member, discord.AuditLogAction.kick, reason)
 
-    @core.group(invoke_without_command=True)
+    @core.group(
+        invoke_without_command=True,
+        examples=[
+            _("@User flood"),
+            _("User#1234 1 spam"),
+            _("239686604271124481 7 bad words"),
+        ],
+    )
     @commands.bot_has_permissions(ban_members=True)
     @commands.check_any(commands.has_permissions(ban_members=True), core.mod_only())
     async def ban(
@@ -186,12 +192,7 @@ class Mod(
             """Ban user in the guild
         
         You can specify number of days worth of messages to delete from the user in the \
-        guild. The minimum is 0 and the maximum is 7. Defaults to 0.
-        
-        Examples:
-        - ban @User flood
-        - ban User#1234 1 spam
-        - ban 239686604271124481 7 bad words"""
+        guild. The minimum is 0 and the maximum is 7. Defaults to 0."""
         )
         await ctx.guild.ban(member, delete_message_days=delete_days, reason=reason)
         try:
@@ -200,7 +201,14 @@ class Mod(
             await ctx.send(_("User banned: {0}").format(str(member)))
         await self.create_modlog_case(ctx, member, discord.AuditLogAction.ban, reason)
 
-    @ban.command(name="temp")
+    @ban.command(
+        name="temp",
+        examples=[
+            _("@User 60 flood"),
+            _("User#1234 1800 1 spam"),
+            _("239686604271124481 10 7 bad words"),
+        ],
+    )
     @commands.bot_has_permissions(manage_messages=True)
     @commands.check_any(commands.has_permissions(manage_messages=True), core.mod_only())
     async def ban_temp(
@@ -216,12 +224,7 @@ class Mod(
             """Temporarily ban user in the guild
 
         You can specify number of days worth of messages to delete from the user in the \
-        guild. The minimum is 0 and the maximum is 7. Defaults to 0.
-
-        Examples:
-        - ban temp @User 60 flood
-        - ban temp User#1234 1800 1 spam
-        - ban temp 239686604271124481 10 7 bad words"""
+        guild. The minimum is 0 and the maximum is 7. Defaults to 0."""
         )
         await ctx.guild.ban(member, delete_message_days=delete_days, reason=reason)
         try:
@@ -236,17 +239,14 @@ class Mod(
             expires_at=ctx.message.created_at + timedelta(seconds=delta_seconds),
         )
 
-    @core.command()
+    @core.command(examples=[_("239686604271124481 amnesty")])
     @commands.bot_has_permissions(ban_members=True)
     @commands.check_any(commands.has_permissions(ban_members=True), core.mod_only())
     async def unban(self, ctx: core.Context, user: int, *, reason: clean_content()):
         _(
             """Unban user in the guild
             
-        You must provide a user ID.
-        
-        Examples:
-        - unban 239686604271124481 amnesty"""
+        You must provide a user ID."""
         )
         bans = await ctx.guild.bans()
         user = discord.utils.get(bans, user__id=user)
@@ -259,7 +259,15 @@ class Mod(
             await ctx.send(_("User unbanned: {0}").format(str(user)))
         await self.create_modlog_case(ctx, user, discord.AuditLogAction.unban, reason)
 
-    @core.group(aliases=["clear"], invoke_without_command=True)
+    @core.group(
+        aliases=["clear"],
+        invoke_without_command=True,
+        examples=[
+            _("10 flood"),
+            _("20 706903341934051489 spam"),
+            _("100 <message url> raid"),
+        ],
+    )
     @commands.bot_has_permissions(manage_messages=True)
     @commands.check_any(commands.has_permissions(manage_messages=True), core.mod_only())
     async def purge(
@@ -274,16 +282,13 @@ class Mod(
             """Purges messages in the channel
         
         You can specify message before which to start purging. The message must be in \
-        the same channel.
-        
-        Examples:
-        - purge 10 flood
-        - purge 20 706903341934051489 spam
-        - purge 100 <message url> raid"""
+        the same channel."""
         )
         await self.purge_channel(ctx, limit, before, reason)
 
-    @purge.command(name="bot")
+    @purge.command(
+        name="bot", examples=[_("100 cleaning"), _("10 706903341934051489 cleaning")]
+    )
     @commands.bot_has_permissions(manage_messages=True)
     @commands.check_any(commands.has_permissions(manage_messages=True), core.mod_only())
     async def purge_bot(
@@ -299,20 +304,20 @@ class Mod(
             ctx, limit, before, reason, check=lambda m: m.author == ctx.guild.me
         )
 
-    @core.group(invoke_without_command=True)
+    @core.group(
+        invoke_without_command=True,
+        examples=[
+            _("@User flood"),
+            _("User#1234 spam"),
+            _("239686604271124481 bad words"),
+        ],
+    )
     @commands.bot_has_permissions(manage_roles=True)
     @commands.check_any(commands.has_permissions(manage_roles=True), core.mod_only())
     async def mute(
         self, ctx: core.Context, member: ModeratedMember(), *, reason: clean_content()
     ):
-        _(
-            """Mute member in the guild
-
-        Examples:
-        - mute @User flood
-        - mute User#1234 1 spam
-        - mute 239686604271124481 7 bad words"""
-        )
+        _("""Mutes member in the guild""")
         with ctx.typing():
             aws = [
                 self.mute_channel(channel, member, reason)
@@ -327,7 +332,14 @@ class Mod(
             ctx, member, discord.AuditLogAction.overwrite_create, reason
         )
 
-    @mute.command(name="temp")
+    @mute.command(
+        name="temp",
+        examples=[
+            _("@User 60 flood"),
+            _("User#1234 1800 spam"),
+            _("239686604271124481 7 bad words"),
+        ],
+    )
     @commands.bot_has_permissions(manage_messages=True)
     @commands.check_any(commands.has_permissions(manage_messages=True), core.mod_only())
     async def mute_temp(
@@ -338,14 +350,7 @@ class Mod(
         *,
         reason: clean_content(),
     ):
-        _(
-            """Temporarily mute member in the guild
-
-        Examples:
-        - mute temp @User 60 flood
-        - mute temp User#1234 1800 1 spam
-        - mute temp 239686604271124481 10 7 bad words"""
-        )
+        _("""Temporarily mute member in the guild""")
         with ctx.typing():
             aws = [
                 self.mute_channel(channel, member, reason)
@@ -364,20 +369,19 @@ class Mod(
             expires_at=ctx.message.created_at + timedelta(seconds=delta_seconds),
         )
 
-    @core.command()
+    @core.command(
+        examples=[
+            _("@User apologized"),
+            _("User#1234 amnesty"),
+            _("239686604271124481 expired"),
+        ]
+    )
     @commands.bot_has_permissions(manage_roles=True)
     @commands.check_any(commands.has_permissions(manage_roles=True), core.mod_only())
     async def unmute(
         self, ctx: core.Context, member: ModeratedMember(), *, reason: clean_content()
     ):
-        _(
-            """Unmute member in the guild
-
-        Examples:
-        - unmute @User apologized
-        - unmute User#1234 1 amnesty
-        - unmute 239686604271124481 7 expired"""
-        )
+        _("""Unmute member in the guild""")
         with ctx.typing():
             aws = []
             for channel in ctx.guild.channels:

@@ -259,7 +259,9 @@ class Modlog(core.Cog):
         )
         self.sonata.dispatch("modlog_case_expire", case)
 
-    @core.group(usage="<id>", invoke_without_command=True)
+    @core.group(
+        usage="<id>", invoke_without_command=True, examples=["717068675059810376"]
+    )
     @core.mod_only()
     @commands.check(modlog_enabled)
     async def case(self, ctx: core.Context, case: ModlogCaseConverter()):
@@ -267,7 +269,9 @@ class Modlog(core.Cog):
         embed = await self.make_case_embed(case)
         await ctx.send(embed=embed)
 
-    @case.command(name="edit", usage="<id> <reason>")
+    @case.command(
+        name="edit", usage="<id> <reason>", examples=[_("717068675059810376 flood")]
+    )
     @core.mod_only()
     @commands.check(modlog_enabled)
     async def case_edit(

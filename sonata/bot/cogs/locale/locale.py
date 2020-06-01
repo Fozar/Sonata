@@ -10,6 +10,13 @@ from sonata.bot.utils.converters import validate_locale, locale_to_flag
 from sonata.bot.utils.misc import make_locale_list
 
 
+def admin_or_dm(ctx: core.Context):
+    if ctx.guild is not None and not ctx.author.guild_permissions.administrator:
+        raise commands.PrivateMessageOnly()
+
+    return True
+
+
 class Locale(
     core.Cog,
     description=_(
@@ -21,7 +28,8 @@ class Locale(
     def __init__(self, sonata: core.Sonata):
         self.sonata = sonata
 
-    @core.command()
+    @core.command(examples=["en_US"])
+    @commands.check(admin_or_dm)
     async def locale(self, ctx: core.Context, locale: validate_locale = None):
         _("""Set locale""")
         if ctx.guild:

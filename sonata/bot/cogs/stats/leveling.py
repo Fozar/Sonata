@@ -92,12 +92,15 @@ class Leveling(core.Cog):
         if lvl == next_lvl:
             await self.lvl_up(message, exp, lvl)
 
-    @core.group(invoke_without_command=True)
+    @core.group(invoke_without_command=True, examples=[_("@Member"), "15"])
     @commands.guild_only()
     async def rank(
         self, ctx: core.Context, member: Union[discord.Member, int] = None,
     ):  # TODO: Check if 1st msg
-        _("""Shows your guild rank""")
+        _("""Shows member rank
+        
+        If the member is not specified, then shows your rank. You can also find out who \
+        is in a particular place by specifying a number.""")
         if ctx.invoked_subcommand is not None:
             return
         if member is None:

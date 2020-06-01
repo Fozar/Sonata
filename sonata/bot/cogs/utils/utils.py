@@ -1,14 +1,14 @@
 import csv
 from datetime import datetime, timedelta
 from io import StringIO
-from typing import Optional
+from typing import Optional, Any
 
 import discord
 from aiocache import cached
 from aiocache.serializers import PickleSerializer
 from babel.dates import format_datetime
 from dateutil import parser
-from discord.ext import commands
+from discord.ext import commands, menus
 from discord.ext.commands import BucketType
 
 from sonata.bot import core
@@ -17,6 +17,18 @@ from sonata.bot.utils.paginator import CloseMenu
 
 WEATHER_URL = "http://api.openweathermap.org/data/2.5/weather"
 OW_ICON_URL = "https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/icons/logo_60x60.png"
+
+
+class CovidCountries(menus.ListPageSource):
+    def __init__(self, data, title: str, colour: discord.Colour, *, per_page):
+        super().__init__(data, per_page=per_page)
+        self.title = title
+        self.colour = colour
+
+    async def format_page(self, menu: menus.MenuPages, page: Any):
+        embed = discord.Embed(title=self.title, colour=self.colour)
+        embed.description = "\n".join(page)
+        return embed
 
 
 class Utils(
@@ -174,6 +186,16 @@ class Utils(
 
         message = await ctx.send(embed=embed)
         await message.add_reaction(self.sonata.emoji("monkaSoap"))
+
+    @covid.command(name="list")
+    async def covid_list(self, ctx: core.Context):
+        data = await self.get_covid_data()
+        countries = list(sorted([r.get("Country_Region") for r in data]))
+        pages = menus.MenuPages(
+            CovidCountries(countries, _("Countries"), self.colour, per_page=10),
+            clear_reactions_after=True,
+        )
+        await pages.start(ctx)
 
     @cached(
         ttl=300,

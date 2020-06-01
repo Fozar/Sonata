@@ -7,7 +7,7 @@ from sonata.bot.utils import i18n
 
 class Command(commands.Command):
     def __init__(self, func, **kwargs):
-        self._examples = kwargs.get('examples')
+        self._examples = kwargs.get("examples")
         self.raw_doc = getattr(func, "__doc__", None)
         super().__init__(func, **kwargs)
 
@@ -24,7 +24,7 @@ class Command(commands.Command):
 
     @property
     def examples(self):
-        return list(map(_, self._examples))
+        return list(map(_, self._examples or []))
 
     @examples.setter
     def examples(self, value):
@@ -62,7 +62,9 @@ class Group(Command, commands.Group):
             "help": self.help,
             "brief": self.short_doc,
             "cog": self.cog_name,
-            "commands": [c.to_dict() for c in sorted(self.commands, key=lambda c: c.name)]
+            "commands": [
+                c.to_dict() for c in sorted(self.commands, key=lambda c: c.name)
+            ],
         }
 
     def command(self, *args, **kwargs):

@@ -176,7 +176,7 @@ class Tags(
         while await cursor.fetch_next:
             yield cursor.next_object()
 
-    @core.group(invoke_without_command=True)
+    @core.group(invoke_without_command=True, examples=[_("download link")])
     @commands.guild_only()
     async def tag(self, ctx: core.Context, *, name: TagName() = None):
         _(
@@ -205,7 +205,11 @@ class Tags(
         except IndexError:
             await ctx.inform(_("Tag `{0}` not found.").format(name))
 
-    @tag.command(name="add", aliases=["create"])
+    @tag.command(
+        name="add",
+        aliases=["create"],
+        examples=[_('"download link" https://example.com/download')],
+    )
     @commands.guild_only()
     async def tag_add(
         self, ctx: core.Context, name: TagName(), *, content: commands.clean_content()
@@ -231,7 +235,7 @@ class Tags(
         await ctx.db.tags.insert_one(tag)
         await ctx.inform(_("Tag `{0}` successfully created.").format(name))
 
-    @tag.command(name="alias")
+    @tag.command(name="alias", examples=[_('"download link" version list')])
     @commands.guild_only()
     async def tag_alias(self, ctx: core.Context, name: TagName(), *, alias: TagName()):
         _(
@@ -286,7 +290,7 @@ class Tags(
         except IndexError:
             await ctx.inform(_("No tags."))
 
-    @tag.command(name="delete", aliases=["remove"])
+    @tag.command(name="delete", aliases=["remove"], examples=[_("download link")])
     @commands.guild_only()
     async def tag_delete(self, ctx: core.Context, *, name: TagName()):
         _("""Deletes your tag or alias""")
@@ -316,7 +320,10 @@ class Tags(
             else:
                 await ctx.inform(_("You are not the owner of this tag."))
 
-    @tag.command(name="edit")
+    @tag.command(
+        name="edit",
+        examples=[_('"download link" Download: https://example.com/download')],
+    )
     @commands.guild_only()
     async def tag_edit(
         self,
@@ -346,7 +353,7 @@ class Tags(
         )
         await ctx.inform(_("Tag content changed."))
 
-    @tag.command(name="info")
+    @tag.command(name="info", examples=[_("download link")])
     @commands.guild_only()
     async def tag_info(self, ctx: core.Context, name: TagName()):
         _("""Displays tag information""")
@@ -374,7 +381,7 @@ class Tags(
             embed.set_author(name=_("Owner not found"))
         await ctx.send(embed=embed)
 
-    @tag.command(name="list")
+    @tag.command(name="list", examples=[_("@Member")])
     @commands.guild_only()
     async def tag_list(self, ctx: core.Context, member: discord.Member = None):
         _(
@@ -401,7 +408,9 @@ class Tags(
         except IndexError:
             await ctx.inform(_("No tags."))
 
-    @tag.command(name="pass", aliases=["transfer"])
+    @tag.command(
+        name="pass", aliases=["transfer"], examples=[_("@Member download link")]
+    )
     @commands.guild_only()
     async def tag_pass(
         self, ctx: core.Context, member: discord.Member, *, name: TagName()
@@ -424,7 +433,7 @@ class Tags(
         )
         await ctx.inform(_("Tag owner changed."))
 
-    @tag.command(name="raw")
+    @tag.command(name="raw", examples=[_("download link")])
     @commands.guild_only()
     async def tag_raw(self, ctx: core.Context, *, name: TagName()):
         _(
@@ -438,7 +447,7 @@ class Tags(
 
         return await ctx.send(discord.utils.escape_markdown(tag["content"]))
 
-    @tag.command(name="search")
+    @tag.command(name="search", examples=[_("download"), _("link"), _("version")])
     @commands.guild_only()
     async def tag_search(self, ctx: core.Context, *, query: str):
         _(

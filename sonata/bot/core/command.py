@@ -10,6 +10,25 @@ class Command(commands.Command):
         self.raw_doc = getattr(func, "__doc__", None)
         super().__init__(func, **kwargs)
 
+    def to_dict(self):
+        return {
+            "name": self.name,
+            "qualified_name": self.qualified_name,
+            "aliases": self.aliases,
+            "signature": self.signature,
+            "help": self.help,
+            "brief": self.short_doc,
+            "cog": self.cog_name,
+        }
+
+    @property
+    def examples(self):
+        return list(map(_, self._examples))
+
+    @examples.setter
+    def examples(self, value):
+        self._examples = value
+
     @property
     def brief(self):
         """Applies locale when getting"""
@@ -33,6 +52,18 @@ class Command(commands.Command):
 
 
 class Group(Command, commands.Group):
+    def to_dict(self):
+        return {
+            "name": self.name,
+            "qualified_name": self.qualified_name,
+            "aliases": self.aliases,
+            "signature": self.signature,
+            "help": self.help,
+            "brief": self.short_doc,
+            "cog": self.cog_name,
+            "commands": [c.to_dict() for c in sorted(self.commands, key=lambda c: c.name)]
+        }
+
     def command(self, *args, **kwargs):
         """A shortcut decorator that invokes :func:`.command` and adds it to
         the internal command list via :meth:`~.GroupMixin.add_command`.

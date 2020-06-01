@@ -12,6 +12,13 @@ class CogMeta(commands.CogMeta):
 
 
 class Cog(commands.Cog, metaclass=CogMeta):
+    def to_dict(self):
+        return {
+            "qualified_name": self.qualified_name,
+            "description": self.description,
+            "commands": [c.to_dict() for c in self.get_commands()]
+        }
+
     @property
     def colour(self):
         if hasattr(self, "__cog_colour__") and isinstance(

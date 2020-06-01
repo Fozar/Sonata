@@ -83,7 +83,9 @@ class Emoji(
         ).dict()
         await self.sonata.db.emoji_stats.insert_one(emoji_stats)
 
-    @core.group(invoke_without_command=True)
+    @core.group(
+        invoke_without_command=True, examples=["😃"]
+    )
     async def emoji(
         self, ctx: core.Context, emoji: Union[discord.Emoji, discord.PartialEmoji, str]
     ):

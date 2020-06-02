@@ -350,7 +350,7 @@ class Mod(
         *,
         reason: clean_content(),
     ):
-        _("""Temporarily mute member in the guild""")
+        _("""Temporarily mutes member in the guild""")
         with ctx.typing():
             aws = [
                 self.mute_channel(channel, member, reason)
@@ -381,7 +381,7 @@ class Mod(
     async def unmute(
         self, ctx: core.Context, member: ModeratedMember(), *, reason: clean_content()
     ):
-        _("""Unmute member in the guild""")
+        _("""Unmutes member in the guild""")
         with ctx.typing():
             aws = []
             for channel in ctx.guild.channels:

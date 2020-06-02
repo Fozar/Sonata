@@ -53,18 +53,18 @@ class Stats(
 
         if message.guild:
             await self.update_guild_stats(message)
-        await self.update_user_stats(message)
+            await self.update_user_stats(message)
 
     @core.Cog.listener()
     async def on_command(self, ctx: core.Context):
         await ctx.db.commands.update_one(
             {"name": ctx.command.qualified_name}, {"$inc": {"invocation_counter": 1}}
         )
-        await ctx.db.user_stats.update_one(
-            {"guild_id": ctx.guild.id, "user_id": ctx.author.id},
-            {"$inc": {"commands_invoked": 1}},
-        )
         if ctx.guild:
+            await ctx.db.user_stats.update_one(
+                {"guild_id": ctx.guild.id, "user_id": ctx.author.id},
+                {"$inc": {"commands_invoked": 1}},
+            )
             date = ctx.message.created_at.replace(
                 hour=0, minute=0, second=0, microsecond=0
             )

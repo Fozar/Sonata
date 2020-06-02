@@ -37,11 +37,11 @@ class General(
 
     @core.group(
         invoke_without_command=True,
-        examples=_(
+        examples=[_(
             "Amazingly varies depending on the interlocutor. One day I can be the "
             "kindest and brightest person on the planet, on another curse everything "
             "around. I can talk on absolutely any topic."
-        ),
+        )],
     )
     async def about(self, ctx: core.Context, *, about: commands.clean_content() = None):
         _("""Fills in "About" field in the profile info""")

@@ -405,12 +405,12 @@ class Admin(
         ctx: core.Context,
         channel: discord.TextChannel,
         *,
-        message: clean_content()
+        message: clean_content(),
     ):
         _(
             """Sets welcome message
 
-        Use {{member}} to display the member name in the message or {{mention}} to 
+        Use {{member}} to display the member name in the message or {{mention}} to \
         @mention.
         """
         )

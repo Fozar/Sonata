@@ -78,7 +78,7 @@ class TwitchSubscriptionConverter(commands.Converter):
         return self
 
 
-class TwitchMixin(core.Cog):
+class TwitchMixin(core.Cog):  # TODO: При выходе из гильдии отменять подписки
     twitch_colour = discord.Colour(0x6441A4)
 
     def __init__(self, sonata: core.Sonata):

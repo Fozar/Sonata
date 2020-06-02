@@ -102,9 +102,9 @@ class Fun(
             + str(self.sonata.emoji("coin"))
         )
 
-    @core.command(examples=[_("coffee tea juice"), _("love, doesn't love")])
+    @core.command(examples=[_("coffee tea juice"), _("love \"doesn't love\"")])
     async def choose(self, ctx: core.Context, *options: commands.clean_content()):
-        _("""Selects one of the options.""")
+        _("""Selects one of the options""")
         choice = random.choice(options)
         await ctx.send(f"{ctx.author.mention}, {choice.strip()}")
 

@@ -50,6 +50,7 @@ class Locale(
             {"id": ctx.author.id}, {"$set": {"locale": locale}}
         )
         ctx.locale = locale
+        await self.sonata.cache.delete(f"locale_{ctx.author.id}")
         await ctx.inform(
             _("The user locale is set to {flag} `{locale}`.").format(
                 flag=locale_to_flag(locale), locale=locale

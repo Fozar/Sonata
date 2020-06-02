@@ -126,6 +126,7 @@ class Admin(
             )
         if channel == ctx.channel:
             ctx.locale = locale
+        await self.sonata.cache.delete(f"locale_{channel.id}")
         await ctx.inform(
             _("The channel locale is set to {flag} `{locale}`.").format(
                 flag=locale_to_flag(locale), locale=locale,
@@ -440,6 +441,10 @@ class Admin(
             {"id": ctx.guild.id}, {"$set": {"locale": locale}}
         )
         ctx.locale = locale
+        for channel in filter(
+            lambda ch: isinstance(ch, discord.TextChannel), ctx.guild.channels
+        ):
+            await self.sonata.cache.delete(f"locale_{channel.id}")
         await ctx.inform(
             _("The guild locale is set to {flag} `{locale}`.").format(
                 flag=locale_to_flag(locale), locale=locale,

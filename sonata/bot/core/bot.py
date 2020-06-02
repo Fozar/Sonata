@@ -254,19 +254,20 @@ class Sonata(commands.Bot):
     # Methods
 
     @cached(
-        ttl=5, serializer=PickleSerializer(),
+        ttl=60 * 5,
+        serializer=PickleSerializer(),
+        key_builder=lambda f, bot, ch: f"locale_{ch.id}",
     )
     async def define_locale(
-        self, obj: Union[discord.Message, Context, discord.TextChannel]
+        self, messageable: Union[discord.TextChannel, discord.User]
     ):
-        if obj.guild:
-            channel = obj.channel if hasattr(obj, "channel") else obj
+        if isinstance(messageable, discord.TextChannel):
             guild = await self.db.guilds.find_one(
-                {"id": obj.guild.id},
+                {"id": messageable.guild.id},
                 {
                     "locale": True,
                     "premium": True,
-                    "channels": {"$elemMatch": {"id": channel.id}},
+                    "channels": {"$elemMatch": {"id": messageable.id}},
                 },
             )
             if guild["premium"] and "channels" in guild:
@@ -274,7 +275,9 @@ class Sonata(commands.Bot):
 
             return guild["locale"]
         else:
-            user = await self.db.users.find_one({"id": obj.author.id}, {"locale": True})
+            user = await self.db.users.find_one(
+                {"id": messageable.id}, {"locale": True}
+            )
             return user["locale"]
 
     async def ya_define_locale(self, text: str, hint: List[str] = None):
@@ -355,7 +358,10 @@ class Sonata(commands.Bot):
             await message.delete(delay=1.0)
 
     async def set_locale(self, msg: discord.Message):
-        self.locale = await self.define_locale(msg)
+        channel = msg.channel
+        self.locale = await self.define_locale(
+            channel if isinstance(channel, discord.TextChannel) else channel.recipient
+        )
 
     async def guild_blacklist_check(self, message: discord.Message):
         """Return True if channel blacklisted or blacklist is disabled"""
@@ -388,7 +394,7 @@ class Sonata(commands.Bot):
         return True
 
     @cached(
-        ttl=5,
+        ttl=2,
         serializer=PickleSerializer(),
         key_builder=lambda f, b, m: f"{f.__name__}_{m.id}",
     )

@@ -19,7 +19,7 @@ class Command(commands.Command):
             "signature": self.signature,
             "examples": self.examples,
             "help": self.help,
-            "brief": self.short_doc,
+            "full_parent_name": self.full_parent_name,
             "cog": self.cog_name,
         }
 
@@ -55,19 +55,13 @@ class Command(commands.Command):
 
 class Group(Command, commands.Group):
     def to_dict(self):
-        return {
-            "name": self.name,
-            "qualified_name": self.qualified_name,
-            "aliases": self.aliases,
-            "signature": self.signature,
-            "examples": self.examples,
-            "help": self.help,
-            "brief": self.short_doc,
-            "cog": self.cog_name,
-            "commands": [
-                c.to_dict() for c in sorted(self.commands, key=lambda c: c.name)
-            ],
-        }
+        d = super().to_dict()
+        d["commands"] = [
+            c.to_dict()
+            for c in sorted(self.commands, key=lambda c: c.name)
+            if c.enabled and not c.hidden
+        ]
+        return d
 
     def command(self, *args, **kwargs):
         """A shortcut decorator that invokes :func:`.command` and adds it to

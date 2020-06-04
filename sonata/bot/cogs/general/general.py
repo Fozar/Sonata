@@ -37,11 +37,13 @@ class General(
 
     @core.group(
         invoke_without_command=True,
-        examples=[_(
-            "Amazingly varies depending on the interlocutor. One day I can be the "
-            "kindest and brightest person on the planet, on another curse everything "
-            "around. I can talk on absolutely any topic."
-        )],
+        examples=[
+            _(
+                "Amazingly varies depending on the interlocutor. One day I can be the "
+                "kindest and brightest person on the planet, on another curse everything "
+                "around. I can talk on absolutely any topic."
+            )
+        ],
     )
     async def about(self, ctx: core.Context, *, about: commands.clean_content() = None):
         _("""Fills in "About" field in the profile info""")
@@ -121,10 +123,13 @@ class General(
             ),
             _("Language support"): ", ".join(make_locale_list(display_name=True)),
             _("Useful links"): _(
+                "[Website]({website})\n"
                 "[Invite the bot to your server]({invite})\n"
-                "[Vote for the bot]({vote})"
+                "[Vote for the bot]({vote})",
             ).format(
-                invite=ctx.bot.invite, vote=f"https://top.gg/bot/{ctx.bot.user.id}"
+                website="https://sonata.fun/",
+                invite=ctx.bot.invite,
+                vote=f"https://top.gg/bot/{ctx.bot.user.id}",
             ),
         }
         for name, value in fields.items():

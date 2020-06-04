@@ -66,7 +66,7 @@ class Locale(
             _("Available locales: {0}.").format(", ".join(make_locale_list()))
         )
 
-    @locales.command(name="update")
+    @locales.command(name="update", hidden=True)
     @commands.is_owner()
     async def locales_update(self, ctx: core.Context):
         i18n.update_translations()

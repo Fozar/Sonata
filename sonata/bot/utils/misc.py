@@ -1,3 +1,4 @@
+import re
 from decimal import Decimal
 from typing import Union
 
@@ -5,6 +6,12 @@ from babel import Locale
 
 from . import i18n
 from .converters import locale_to_flag
+
+
+def lang_to_locale(lang: str):
+    r = re.compile(lang + r"_\w{2}")
+    locale = next(filter(r.match, list(i18n.LOCALES)), None)
+    return locale
 
 
 def make_locale_list(flag=True, display_name=False):

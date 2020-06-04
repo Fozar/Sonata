@@ -88,7 +88,7 @@ class Fun(
         ]
         return random.choice(responses)
 
-    @core.command(aliases=["8ball", "q"], examples=_("donate to the developer?"))
+    @core.command(aliases=["8ball", "q"], examples=[_("donate to the developer?")])
     async def question(self, ctx: core.Context):
         _("""Answers the question""")
         await ctx.send(f"{ctx.author.mention}, {self.random_magic_ball_response()}")

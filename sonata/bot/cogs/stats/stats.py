@@ -10,6 +10,7 @@ from discord.ext import commands
 from sonata.bot import core
 from sonata.bot.cogs.stats.leveling import Leveling
 from sonata.bot.utils import i18n
+from sonata.bot.utils.misc import lang_to_locale
 from sonata.db.models import Command, DailyStats, Guild, UserStats, User
 
 
@@ -124,9 +125,7 @@ class Stats(
             language = await self.sonata.ya_define_locale(
                 ". ".join(msgs), [loc[:2] for loc in hint]
             )
-            r = re.compile(language + r"_\w{2}")
-            locale = next(filter(r.match, hint), None)
-            return locale
+            return lang_to_locale(language)
 
         return None
 

@@ -78,7 +78,7 @@ class TwitchSubscriptionConverter(commands.Converter):
         return self
 
 
-class TwitchMixin(core.Cog):  # TODO: При выходе из гильдии отменять подписки
+class TwitchMixin(core.Cog):
     twitch_colour = discord.Colour(0x6441A4)
 
     def __init__(self, sonata: core.Sonata):
@@ -93,6 +93,12 @@ class TwitchMixin(core.Cog):  # TODO: При выходе из гильдии о
         self._task.cancel()
 
     # Events
+
+    @core.Cog.listener()
+    async def on_guild_remove(self, guild: discord.Guild):
+        await self.sonata.db.twitch_subs.update_many(
+            {"guilds.id": guild.id}, {"$pull": {"guilds": {"id": guild.id}}}
+        )
 
     @core.Cog.listener()
     async def on_subscription_verify(self, topic: str, mode: str):

@@ -16,7 +16,11 @@ class Cog(commands.Cog, metaclass=CogMeta):
         return {
             "qualified_name": self.qualified_name,
             "description": self.description,
-            "commands": [c.to_dict() for c in self.get_commands()]
+            "commands": [
+                c.to_dict()
+                for c in sorted(self.get_commands(), key=lambda c: c.name)
+                if c.enabled and not c.hidden
+            ],
         }
 
     @property

@@ -102,29 +102,33 @@ class Fun(
             + str(self.sonata.emoji("coin"))
         )
 
-    @core.command(examples=[_("coffee tea juice"), _("love \"doesn't love\"")])
+    @core.command(examples=[_("coffee tea juice"), _('love "doesn\'t love"')])
     async def choose(self, ctx: core.Context, *options: commands.clean_content()):
         _("""Selects one of the options""")
         choice = random.choice(options)
         await ctx.send(f"{ctx.author.mention}, {choice.strip()}")
 
     @core.command(
-        examples=[
-            _("5 - rolls 5 dice with 6 faces"),
-            _("d54 - rolls 1 dice with 54 faces"),
-            _("2d8 - rolls 2 dice with 8 faces"),
-            _(
-                "+10 + 2d10 - rolls 1 dice with 6 faces and adds 10 to the result, then "
-                "rolls 2 dice with 10 faces and adds to the result."
-            ),
-        ]
+        aliases=["dice"],
+        usage="[x][dy][+z] [+ [x][dy][+z]]...",
+        examples=["5", "d54", "2d8", "+10 + 2d10"],
     )
     async def roll(self, ctx: core.Context, *, expression: str = ""):
         _(
             """Rolls the dice
-
-        Template: 1d6+0 + 1d6+0 + ..."""
-        )  # TODO: Объяснить принцип в описании
+            
+        Template: 1d6+0
+            
+        Classic dice from D&D. The most common designation that came to D&D is \
+        `(x)d(y)+(z)` (sometimes "translated" as `(x)to(y)+(z)`). `Throwing \
+        (x)d(y)+(z)` means that you need to throw (x) times a dice with (y) edges, \
+        add the results and add (z). If any of the numbers is not specified, the \
+        default value from the template will be used. For example, `3d6` means the sum \
+        of the values drawn on three hexagonal cubes, and `2d10+5` - on two \
+        decahedrons, plus five. You can also throw several combinations at once and get \
+        the total result. To do this, split the combinations with " + " (plus with \
+        spaces)."""
+        )
         exps = expression.split(" + ")
         result = 0
         for exp in exps:

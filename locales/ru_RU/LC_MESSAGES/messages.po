@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-06-02 15:53+0700\n"
-"PO-Revision-Date: 2020-06-02 15:59+0700\n"
+"POT-Creation-Date: 2020-06-04 23:04+0700\n"
+"PO-Revision-Date: 2020-06-04 23:09+0700\n"
 "Last-Translator: \n"
 "Language: ru_RU\n"
 "Language-Team: ru_RU <LL@li.org>\n"
@@ -303,8 +303,8 @@ msgid ""
 msgstr ""
 "Устанавливает приветственное сообщение\n"
 "\n"
-"        Используй [member], чтобы отобразить имя участника в сообщении или "
-"[mention], чтобы @упомянуть.\n"
+"        Используй {{member}}, чтобы отобразить имя участника в сообщении или "
+"{{mention}}, чтобы @упомянуть.\n"
 "        "
 
 #: sonata/bot/cogs/admin/admin.py:418 sonata/bot/cogs/admin/admin.py:460
@@ -784,49 +784,49 @@ msgstr "любит \"не любит\""
 msgid "Selects one of the options"
 msgstr "Выбирает один из вариантов"
 
-#: sonata/bot/cogs/fun/fun.py:113
-msgid "5 - rolls 5 dice with 6 faces"
-msgstr "5 - бросит 5 костей с 6 гранями"
-
-#: sonata/bot/cogs/fun/fun.py:114
-msgid "d54 - rolls 1 dice with 54 faces"
-msgstr "d54 - бросит 1 кость с 54 гранями"
-
-#: sonata/bot/cogs/fun/fun.py:115
-msgid "2d8 - rolls 2 dice with 8 faces"
-msgstr "2d8 - бросит 2 кости с 8 гранями"
-
-#: sonata/bot/cogs/fun/fun.py:116
-msgid ""
-"+10 + 2d10 - rolls 1 dice with 6 faces and adds 10 to the result, then rolls 2 "
-"dice with 10 faces and adds to the result."
-msgstr ""
-"+10 + 2d10 - бросит 1 кость с 6 гранями и прибавит к результату 10, затем "
-"бросит 2 кости с 10 гранями и прибавит к результату."
-
-#: sonata/bot/cogs/fun/fun.py:123
+#: sonata/bot/cogs/fun/fun.py:117
 msgid ""
 "Rolls the dice\n"
-"\n"
-"        Template: 1d6+0 + 1d6+0 + ..."
+"            \n"
+"        Template: 1d6+0\n"
+"            \n"
+"        Classic dice from D&D. The most common designation that came to D&D "
+"is         `(x)d(y)+(z)` (sometimes \"translated\" as `(x)to(y)+(z)`). "
+"`Throwing         (x)d(y)+(z)` means that you need to throw (x) times a dice "
+"with (y) edges,         add the results and add (z). If any of the numbers is "
+"not specified, the         default value from the template will be used. For "
+"example, `3d6` means the sum         of the values drawn on three hexagonal "
+"cubes, and `2d10+5` - on two         decahedrons, plus five. You can also throw "
+"several combinations at once and get         the total result. To do this, "
+"split the combinations with \" + \" (plus with         spaces)."
 msgstr ""
-"Кидает кости\n"
-"\n"
-"        Шаблон: 1d6+0 + 1d6+0 + ..."
+"Бросает кости\n"
+"            \n"
+"        Шаблон: 1d6+0\n"
+"            \n"
+"       Классические кости из D&D. Самым распространенным обозначением, "
+"пришедшим в D&D, является `(x)d(y)+(z)` (иногда \"переводимый\" как "
+"`(x)к(y)+(z)`). `Бросок (x)d(y)+(z)` означает, что надо бросить (x) раз дайс с "
+"(y) гранями, сложить результаты и прибавить (z). Если какое-то из чисел не "
+"указано, будет использовано значение по умолчанию из шаблона. Например, `3d6` "
+"означает сумму значений, выпавших на трёх шестигранных кубиках, а `2d10+5` - на "
+"двух десятигранниках, плюс пять. Вы также можете бросить сразу несколько "
+"комбинаций и получить суммарный результат. Для этого разделите комбинации с "
+"помощью \" + \" (плюс с пробелами)."
 
-#: sonata/bot/cogs/fun/fun.py:136
+#: sonata/bot/cogs/fun/fun.py:140
 msgid "Invalid expression format."
 msgstr "Неверный формат выражения."
 
-#: sonata/bot/cogs/fun/fun.py:161
+#: sonata/bot/cogs/fun/fun.py:165
 msgid "Finds a random cat image"
 msgstr "Находит случайное изображение кошки"
 
-#: sonata/bot/cogs/fun/fun.py:168
+#: sonata/bot/cogs/fun/fun.py:172
 msgid "No cat found "
 msgstr "Не нашла ни одного котика "
 
-#: sonata/bot/cogs/fun/fun.py:177
+#: sonata/bot/cogs/fun/fun.py:181
 msgid ""
 "Finds a random dog image\n"
 "        \n"
@@ -838,63 +838,63 @@ msgstr ""
 "        Ты также можешь указать породу собаки.\n"
 "        "
 
-#: sonata/bot/cogs/fun/fun.py:188
+#: sonata/bot/cogs/fun/fun.py:192
 msgid "Breed list"
 msgstr "Список пород"
 
-#: sonata/bot/cogs/fun/fun.py:194 sonata/bot/cogs/fun/fun.py:207
-#: sonata/bot/cogs/fun/fun.py:220 sonata/bot/cogs/fun/fun.py:233
-#: sonata/bot/cogs/fun/fun.py:254 sonata/bot/cogs/general/general.py:134
+#: sonata/bot/cogs/fun/fun.py:198 sonata/bot/cogs/fun/fun.py:211
+#: sonata/bot/cogs/fun/fun.py:224 sonata/bot/cogs/fun/fun.py:237
+#: sonata/bot/cogs/fun/fun.py:258 sonata/bot/cogs/general/general.py:134
 #: sonata/bot/cogs/stats/leveling.py:95 sonata/bot/cogs/tags/tags.py:384
 #: sonata/bot/cogs/utils/utils.py:92
 msgid "@Member"
 msgstr "@Участник"
 
-#: sonata/bot/cogs/fun/fun.py:197
+#: sonata/bot/cogs/fun/fun.py:201
 msgid "Choke a guild member"
 msgstr "Душить участника гильдии"
 
-#: sonata/bot/cogs/fun/fun.py:199
+#: sonata/bot/cogs/fun/fun.py:203
 msgid "*{author} chokes {target}* "
 msgstr "*{author} душит {target}* "
 
-#: sonata/bot/cogs/fun/fun.py:210
+#: sonata/bot/cogs/fun/fun.py:214
 msgid "Hug a guild member"
 msgstr "Обнять участника гильдии"
 
-#: sonata/bot/cogs/fun/fun.py:212
+#: sonata/bot/cogs/fun/fun.py:216
 msgid "*{author} hugs {target}* "
 msgstr "*{author} обнимает {target}* "
 
-#: sonata/bot/cogs/fun/fun.py:223
+#: sonata/bot/cogs/fun/fun.py:227
 msgid "Hit a guild member"
 msgstr "Ударить участника гильдии"
 
-#: sonata/bot/cogs/fun/fun.py:225
+#: sonata/bot/cogs/fun/fun.py:229
 msgid "*{author} hits {target}* "
 msgstr "*{author} бьет {target}* "
 
-#: sonata/bot/cogs/fun/fun.py:236
+#: sonata/bot/cogs/fun/fun.py:240
 msgid "Kiss a guild member"
 msgstr "Поцеловать участника гильдии"
 
-#: sonata/bot/cogs/fun/fun.py:238
+#: sonata/bot/cogs/fun/fun.py:242
 msgid "*{author} kisses {target}* "
 msgstr "*{author} целует {target}* "
 
-#: sonata/bot/cogs/fun/fun.py:246
+#: sonata/bot/cogs/fun/fun.py:250
 msgid "reflects on the eternal"
 msgstr "думает о вечном"
 
-#: sonata/bot/cogs/fun/fun.py:249
+#: sonata/bot/cogs/fun/fun.py:253
 msgid "Perform a 3rd person action"
 msgstr "Выполнить действие от 3-го лица"
 
-#: sonata/bot/cogs/fun/fun.py:257
+#: sonata/bot/cogs/fun/fun.py:261
 msgid "Wink at guild member"
 msgstr "Подмигнуть участнику гильдии"
 
-#: sonata/bot/cogs/fun/fun.py:259
+#: sonata/bot/cogs/fun/fun.py:263
 msgid "*{author} winks at {target}* "
 msgstr "*{author} подмигивает {target}* "
 
@@ -1780,7 +1780,7 @@ msgstr "Показывает таблицу лидеров гильдии"
 msgid "Guild Leaderboard"
 msgstr "Таблица лидеров гильдии"
 
-#: sonata/bot/cogs/stats/stats.py:18
+#: sonata/bot/cogs/stats/stats.py:19
 msgid "The module is responsible for general statistics and level system."
 msgstr "Модуль отвечает за общую статистку и уровневую систему."
 
@@ -3004,3 +3004,28 @@ msgstr ""
 "Соната - это многофункциональный бот-полиглот. Бот имеет множество модулей для "
 "развлечения участников, модерирования, предоставления полезной информации и "
 "утилит и многое другое."
+
+#~ msgid "5 - rolls 5 dice with 6 faces"
+#~ msgstr "5 - бросит 5 костей с 6 гранями"
+
+#~ msgid "d54 - rolls 1 dice with 54 faces"
+#~ msgstr "d54 - бросит 1 кость с 54 гранями"
+
+#~ msgid "2d8 - rolls 2 dice with 8 faces"
+#~ msgstr "2d8 - бросит 2 кости с 8 гранями"
+
+#~ msgid ""
+#~ "+10 + 2d10 - rolls 1 dice with 6 faces and adds 10 to the result, then rolls "
+#~ "2 dice with 10 faces and adds to the result."
+#~ msgstr ""
+#~ "+10 + 2d10 - бросит 1 кость с 6 гранями и прибавит к результату 10, затем "
+#~ "бросит 2 кости с 10 гранями и прибавит к результату."
+
+#~ msgid ""
+#~ "Rolls the dice\n"
+#~ "\n"
+#~ "        Template: 1d6+0 + 1d6+0 + ..."
+#~ msgstr ""
+#~ "Кидает кости\n"
+#~ "\n"
+#~ "        Шаблон: 1d6+0 + 1d6+0 + ..."

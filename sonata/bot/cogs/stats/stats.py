@@ -149,6 +149,8 @@ class Stats(
         await self.sonata.db.guilds.update_one(
             {"id": guild.id}, {"$currentDate": {"left": True}}
         )
+        for member in guild.members:
+            await self.on_member_remove(member)
 
     @core.Cog.listener()
     async def on_guild_update(self, before: discord.Guild, after: discord.Guild):

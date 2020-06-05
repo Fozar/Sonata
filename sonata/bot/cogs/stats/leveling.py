@@ -96,41 +96,45 @@ class Leveling(core.Cog):
     @commands.guild_only()
     async def rank(
         self, ctx: core.Context, member: Union[discord.Member, int] = None,
-    ):  # TODO: Check if 1st msg
-        _("""Shows member rank
+    ):
+        _(
+            """Shows member rank
         
         If the member is not specified, then shows your rank. You can also find out who \
-        is in a particular place by specifying a number.""")
+        is in a particular place by specifying a number."""
+        )
         if ctx.invoked_subcommand is not None:
             return
         if member is None:
             member = ctx.author
-        if isinstance(member, int):
-            rank = member
-            cursor = (
-                ctx.db.user_stats.find(
-                    {"guild_id": ctx.guild.id},
-                    {"user_id": True, "exp": True, "lvl": True},
-                    sort=[("exp", -1)],
+        try:
+            if isinstance(member, int):
+                rank = member
+                cursor = (
+                    ctx.db.user_stats.find(
+                        {"guild_id": ctx.guild.id},
+                        {"user_id": True, "exp": True, "lvl": True},
+                        sort=[("exp", -1)],
+                    )
+                    .skip(rank - 1)
+                    .limit(1)
                 )
-                .skip(rank - 1)
-                .limit(1)
-            )
-            user = cursor.next_object() if await cursor.fetch_next else None
-            if user:
-                member = ctx.guild.get_member(
-                    user["user_id"]
-                ) or await ctx.guild.fetch_member(user["user_id"])
-        else:
-            user = await ctx.db.user_stats.find_one(
-                {"guild_id": ctx.guild.id, "user_id": member.id},
-                {"exp": True, "lvl": True},
-            )
-            rank = await ctx.db.user_stats.count_documents(
-                {"guild_id": ctx.guild.id, "exp": {"$gte": user["exp"]}}
-            )
-        if not user:
+                user = cursor.next_object() if await cursor.fetch_next else None
+                if user:
+                    member = ctx.guild.get_member(
+                        user["user_id"]
+                    ) or await ctx.guild.fetch_member(user["user_id"])
+            else:
+                user = await ctx.db.user_stats.find_one(
+                    {"guild_id": ctx.guild.id, "user_id": member.id},
+                    {"exp": True, "lvl": True},
+                )
+                rank = await ctx.db.user_stats.count_documents(
+                    {"guild_id": ctx.guild.id, "exp": {"$gte": user["exp"]}}
+                )
+        except (KeyError, discord.HTTPException):
             return await ctx.inform(_("Member not found."))
+
         embed = discord.Embed(colour=self.colour, title=member.display_name)
         embed.add_field(name=_("Level"), value=str(user["lvl"]))
         embed.add_field(

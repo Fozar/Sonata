@@ -3,6 +3,7 @@ from typing import FrozenSet
 
 class BotConfig:
     discord_token: str = None
+    client_secret: str = None
     dbl_token: str = None
     sdc_token: str = None
     owner_id: int = 149722383165423616

@@ -18,6 +18,7 @@ async def init_config(app):
         else:
             print("DEBUG MODE")
             BotConfig.discord_token = data["Bot"]["test_token"]
+        BotConfig.client_secret = data["Bot"]["client_secret"]
         for key, value in data["Twitch"].items():
             setattr(TwitchConfig, key, value)
         for key, value in data["Api"].items():

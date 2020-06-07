@@ -25,13 +25,19 @@ class General(
     @core.Cog.listener()
     async def on_guild_post(self):
         bot = self.sonata
+        guild_count = len(bot.guilds)
         data = FormData(
-            {"servers": str(len(bot.guilds)), "shards": str(bot.shard_count or 1)}
+            {"servers": str(guild_count), "shards": str(bot.shard_count or 1)}
         )
         await bot.session.post(
             f"https://api.server-discord.com/v2/bots/{bot.user.id}/stats",
             headers={"Authorization": "SDC " + bot.config["bot"].sdc_token},
             data=data,
+        )
+        await bot.session.post(
+            f"https://discord.bots.gg/api/v1/bots/{bot.user.id}/stats",
+            headers={"Authorization": bot.config["bot"].dbg_token},
+            json={"guildCount": guild_count},
         )
         bot.logger.info("Server count posted successfully")
 

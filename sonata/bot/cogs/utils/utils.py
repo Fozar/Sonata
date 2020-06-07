@@ -151,9 +151,9 @@ class Utils(
             if row is None:
                 return await ctx.inform(_("Country not found."))
             confirmed, deaths, recovered, last_update = (
-                int(float(row.get("Confirmed"))),
-                int(float(row.get("Deaths"))),
-                int(float(row.get("Recovered"))),
+                int(float(row.get("Confirmed") or 0)),
+                int(float(row.get("Deaths") or 0)),
+                int(float(row.get("Recovered") or 0)),
                 parser.parse(row.get("Last_Update")),
             )
             embed.title += f" - {row.get('Country_Region')}"
@@ -163,15 +163,15 @@ class Utils(
             for row in data:
                 for key, value in row.items():
                     if key == "Confirmed":
-                        confirmed += int(float(value))
+                        confirmed += int(float(value or 0))
                     elif key == "Deaths":
-                        deaths += int(float(value))
+                        deaths += int(float(value or 0))
                     elif key == "Last_Update":
                         value = parser.parse(value)
                         if last_update is None or value > last_update:
                             last_update = value
                     elif key == "Recovered":
-                        recovered += int(float(value))
+                        recovered += int(float(value or 0))
             embed.title += _(" - World")
         closed = deaths + recovered
         active = confirmed - closed

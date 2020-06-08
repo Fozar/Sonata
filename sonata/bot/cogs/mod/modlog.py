@@ -1,6 +1,6 @@
 import asyncio
 from datetime import datetime, timedelta
-from typing import Union
+from typing import Union, Optional
 
 import discord
 from discord.ext import commands
@@ -175,7 +175,7 @@ class Modlog(core.Cog):
         ctx: core.Context,
         target,
         action,
-        reason: str,
+        reason: Optional[str],
         expires_at: datetime = None,
     ):
         created_at = datetime.utcnow()

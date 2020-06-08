@@ -193,6 +193,14 @@ class Sonata(commands.Bot):
             f"Channels: ```{', '.join(map(str, guild.channels))}```"
         )
 
+    async def on_guild_remove(self, guild: discord.Guild):
+        await self.log_channel.send(
+            f"Guild removed: {guild.name}.\n'"
+            f"ID: {guild.id}.\n"
+            f"Owner: {guild.owner}\n"
+            f"Members: {guild.member_count}"
+        )
+
     async def on_command_error(
         self, ctx: Context, exc
     ):  # TODO: Add check error handler

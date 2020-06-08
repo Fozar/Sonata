@@ -23,7 +23,7 @@ class Filter(BaseModel):
 class SubscriptionAlertConfig(BaseAlertConfig):
     enabled: bool = True
     id: int
-    message_id: int = None
+    message_id: str = None
     mention: CustomMention = CustomMention()
     filter: Filter = Filter()
 

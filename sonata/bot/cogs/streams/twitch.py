@@ -1,8 +1,11 @@
 import asyncio
+import logging
+import os
 import re
 import weakref
 from contextlib import suppress
 from datetime import timedelta, datetime
+from logging import handlers
 from typing import Optional
 
 import discord
@@ -82,6 +85,7 @@ class TwitchMixin(core.Cog):
     twitch_colour = discord.Colour(0x6441A4)
 
     def __init__(self, sonata: core.Sonata):
+        self.logger = self.setup_logging()
         self.sonata = sonata
         self.twitch = sonata.twitch_client
         self._locks = weakref.WeakValueDictionary()
@@ -91,6 +95,33 @@ class TwitchMixin(core.Cog):
 
     def cog_unload(self):
         self._task.cancel()
+
+    @staticmethod
+    def setup_logging():
+        stream_handler = logging.StreamHandler()
+        stream_handler.setFormatter(
+            logging.Formatter(
+                "%(asctime)s [%(levelname)s] - %(filename)s - %(message)s"
+            )
+        )
+        stream_handler.setLevel(logging.INFO)
+        file_handler = handlers.TimedRotatingFileHandler(
+            filename=os.getcwd() + "/logs/discord/twitch.log",
+            when="midnight",
+            encoding="utf-8",
+            backupCount=1,
+        )
+        file_handler.setFormatter(
+            logging.Formatter(
+                "%(asctime)s [%(levelname)s] - %(filename)s - %(message)s"
+            )
+        )
+        file_handler.setLevel(logging.DEBUG)
+        logger = logging.getLogger("twitch")
+        logger.setLevel(logging.INFO)
+        logger.addHandler(stream_handler)
+        logger.addHandler(file_handler)
+        return logger
 
     # Events
 
@@ -349,6 +380,10 @@ class TwitchMixin(core.Cog):
     async def extend_subscription(
         self, sub_status: TwitchSubscriptionStatus, lease_seconds: int = 864000
     ):
+        self.logger.info(
+            f"Attempt to renew subscription. Login: {sub_status.login}. "
+            f"Topic: {sub_status.topic}"
+        )
         try:
             topic = twitch.StreamChanged.from_uri(sub_status.topic)
             subscription = self.twitch.create_subscription(
@@ -362,25 +397,41 @@ class TwitchMixin(core.Cog):
             await self.sonata.db.twitch_subs.update_one(
                 {"topic": sub_status.topic}, {"$set": {"expires_at": expires_at}},
             )
+            self.logger.info(
+                f"Subscription renewed. Login: {sub_status.login}. "
+                f"Topic: {sub_status.topic}"
+            )
             return True
-        except twitch.HTTPException:
+        except twitch.HTTPException as e:
             await self.sonata.db.twitch_subs.update_one(
                 {"topic": sub_status.topic}, {"$set": {"verified": False}},
+            )
+            self.logger.warning(
+                f"Failed to renew subscription. Login: {sub_status.login}. "
+                f"Topic: {sub_status.topic}. Response status: {e.response}. "
+                f"Response data: {e.data}"
             )
             return False
 
     async def get_active_sub(self, *, days=10):
         cursor = self.sonata.db.twitch_subs.find(
             {
-                "verified": True,
+                "guilds": {"$exists": True, "$ne": []},
                 "expires_at": {"$lte": datetime.utcnow() + timedelta(days=days)},
             },
+            {"_id": False},
             sort=[("expires_at", 1)],
         )
         if await cursor.fetch_next:
             sub_status = cursor.next_object()
-            return TwitchSubscriptionStatus(**sub_status)
+            status = TwitchSubscriptionStatus(**sub_status)
+            self.logger.info(
+                f"Got active subscription. Login: {sub_status['login']}. "
+                f"Topic: {sub_status['topic']}."
+            )
+            return status
         else:
+            self.logger.info("No active subscriptions.")
             return None
 
     async def wait_for_active_subs(self, *, days=10):
@@ -391,6 +442,7 @@ class TwitchMixin(core.Cog):
 
         self._have_data.clear()
         self._next_sub = None
+        self.logger.info("Wait for active subscriptions.")
         await self._have_data.wait()
         return await self.get_active_sub(days=days)
 
@@ -401,9 +453,13 @@ class TwitchMixin(core.Cog):
                 now = datetime.utcnow()
                 if sub_status.expires_at >= now:
                     to_sleep = (sub_status.expires_at - now).total_seconds()
-                    await asyncio.sleep(to_sleep)
+                    self.logger.info(
+                        f"Wait {to_sleep} second before subscription expires "
+                        f"({sub_status.expires_at})"
+                    )
+                    if to_sleep >= 0:
+                        await asyncio.sleep(to_sleep)
 
-                await asyncio.sleep(30)
                 await self.extend_subscription(sub_status)
         except asyncio.CancelledError:
             raise

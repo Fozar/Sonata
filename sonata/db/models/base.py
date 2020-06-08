@@ -29,14 +29,14 @@ class DiscordConfigModel(CreatedAtMixin, DiscordModel):
 
 class Mention(BaseModel):
     enabled: bool = False
-    value: str = None
+    value: Optional[str] = None
 
 
 class BaseAlertConfig(BaseModel):
     enabled: bool = False
-    message: str = None
-    close_message: str = None
-    channel: int = None
+    message: Optional[str] = None
+    close_message: Optional[str] = None
+    channel: Optional[int] = None
     mention: Mention = Mention()
 
 

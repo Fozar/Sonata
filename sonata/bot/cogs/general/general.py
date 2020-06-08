@@ -34,11 +34,6 @@ class General(
             headers={"Authorization": "SDC " + bot.config["bot"].sdc_token},
             data=data,
         )
-        await bot.session.post(
-            f"https://discord.bots.gg/api/v1/bots/{bot.user.id}/stats",
-            headers={"Authorization": bot.config["bot"].dbg_token},
-            json={"guildCount": guild_count},
-        )
         bot.logger.info("Server count posted successfully")
 
     @core.group(

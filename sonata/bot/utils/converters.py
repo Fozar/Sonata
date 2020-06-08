@@ -118,6 +118,7 @@ class MathExpression(commands.Converter):
             ast.Pow: self.power,
             ast.USub: op.neg,
             ast.UAdd: op.pos,
+            ast.Mod: op.mod
         }
         self.timeout = timeout
 

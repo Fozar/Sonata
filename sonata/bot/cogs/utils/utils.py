@@ -116,6 +116,7 @@ class Utils(
         Multiply (a*b)
         Divide (a/b)
         Power (a**b or a^b)
+        Modulo (a%b)
         Unary plus (+a)
         Unary minus (-a)
         ```

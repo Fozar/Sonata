@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-06-04 23:27+0700\n"
-"PO-Revision-Date: 2020-06-04 23:28+0700\n"
+"POT-Creation-Date: 2020-06-08 19:23+0700\n"
+"PO-Revision-Date: 2020-06-08 19:23+0700\n"
 "Last-Translator: \n"
 "Language: ru_RU\n"
 "Language-Team: ru_RU <LL@li.org>\n"
@@ -99,7 +99,7 @@ msgstr ""
 "        Бот не будет отвечать на команды в каналах из черного списка."
 
 #: sonata/bot/cogs/admin/admin.py:193 sonata/bot/cogs/admin/admin.py:204
-#: sonata/bot/cogs/streams/twitch.py:731
+#: sonata/bot/cogs/streams/twitch.py:787
 msgid "Blacklist is empty."
 msgstr "Черный список пуст."
 
@@ -124,8 +124,8 @@ msgstr "Добавляет каналы в черный список"
 msgid "Channels successfully added to blacklist."
 msgstr "Каналы успешно добавлены в черный список."
 
-#: sonata/bot/cogs/admin/admin.py:222 sonata/bot/cogs/streams/twitch.py:794
-#: sonata/bot/cogs/streams/twitch.py:985
+#: sonata/bot/cogs/admin/admin.py:222 sonata/bot/cogs/streams/twitch.py:850
+#: sonata/bot/cogs/streams/twitch.py:1041
 msgid "Clears the blacklist"
 msgstr "Очищает черный список"
 
@@ -308,7 +308,7 @@ msgstr ""
 "        "
 
 #: sonata/bot/cogs/admin/admin.py:418 sonata/bot/cogs/admin/admin.py:460
-#: sonata/bot/cogs/streams/streams.py:56 sonata/bot/cogs/streams/twitch.py:1033
+#: sonata/bot/cogs/streams/streams.py:56 sonata/bot/cogs/streams/twitch.py:1089
 msgid "I can't send messages in this channel."
 msgstr "Я не могу отправлять сообщения в этот канал."
 
@@ -547,7 +547,7 @@ msgstr ""
 "        Бот будет отвечать на команды только в каналах из белого списка."
 
 #: sonata/bot/cogs/admin/admin.py:709 sonata/bot/cogs/admin/admin.py:720
-#: sonata/bot/cogs/streams/twitch.py:602
+#: sonata/bot/cogs/streams/twitch.py:658
 msgid "Whitelist is empty."
 msgstr "Белый список пуст."
 
@@ -563,8 +563,8 @@ msgstr "Добавляет каналы в белый список"
 msgid "Channels successfully added to whitelist."
 msgstr "Каналы успешно добавлены в белый список."
 
-#: sonata/bot/cogs/admin/admin.py:738 sonata/bot/cogs/streams/twitch.py:665
-#: sonata/bot/cogs/streams/twitch.py:894
+#: sonata/bot/cogs/admin/admin.py:738 sonata/bot/cogs/streams/twitch.py:721
+#: sonata/bot/cogs/streams/twitch.py:950
 msgid "Clears the whitelist"
 msgstr "Очищает белый список"
 
@@ -844,9 +844,9 @@ msgstr "Список пород"
 
 #: sonata/bot/cogs/fun/fun.py:198 sonata/bot/cogs/fun/fun.py:211
 #: sonata/bot/cogs/fun/fun.py:224 sonata/bot/cogs/fun/fun.py:237
-#: sonata/bot/cogs/fun/fun.py:258 sonata/bot/cogs/general/general.py:139
-#: sonata/bot/cogs/stats/leveling.py:95 sonata/bot/cogs/tags/tags.py:384
-#: sonata/bot/cogs/utils/utils.py:92
+#: sonata/bot/cogs/fun/fun.py:258 sonata/bot/cogs/general/general.py:145
+#: sonata/bot/cogs/mod/mod.py:155 sonata/bot/cogs/stats/leveling.py:95
+#: sonata/bot/cogs/tags/tags.py:384 sonata/bot/cogs/utils/utils.py:92
 msgid "@Member"
 msgstr "@Участник"
 
@@ -906,7 +906,7 @@ msgstr "Начинает игровую сессию"
 msgid "General commands and information."
 msgstr "Основные команды и информация."
 
-#: sonata/bot/cogs/general/general.py:41
+#: sonata/bot/cogs/general/general.py:47
 msgid ""
 "Amazingly varies depending on the interlocutor. One day I can be the kindest "
 "and brightest person on the planet, on another curse everything around. I can "
@@ -916,15 +916,15 @@ msgstr ""
 "добрым и светлым человеком на планете, в другой проклинать всё вокруг. Могу "
 "поговорить на абсолютно любые темы."
 
-#: sonata/bot/cogs/general/general.py:49
+#: sonata/bot/cogs/general/general.py:55
 msgid "Fills in \"About\" field in the profile info"
 msgstr "Заполняет поле \"о себе\" в профиле"
 
-#: sonata/bot/cogs/general/general.py:56
+#: sonata/bot/cogs/general/general.py:62
 msgid "The field is not filled."
 msgstr "Поле не заполнено."
 
-#: sonata/bot/cogs/general/general.py:58
+#: sonata/bot/cogs/general/general.py:64
 msgid ""
 "This command allows you to fill in the `About` field, which will be displayed "
 "in the user profile. Current value:\n"
@@ -934,59 +934,59 @@ msgstr ""
 "профиле пользователя. Текущее значение:\n"
 "`{0}`"
 
-#: sonata/bot/cogs/general/general.py:65
+#: sonata/bot/cogs/general/general.py:71
 msgid "The field length cannot be less than 20 characters."
 msgstr "Длина поля не может быть меньше 20 символов."
 
-#: sonata/bot/cogs/general/general.py:68
+#: sonata/bot/cogs/general/general.py:74
 msgid "The field length cannot be greater than 2000 characters."
 msgstr "Длина поля не может быть больше 2000 символов."
 
-#: sonata/bot/cogs/general/general.py:74
+#: sonata/bot/cogs/general/general.py:80
 msgid "The `About` field is set."
 msgstr "Поле `о себе` установлено."
 
-#: sonata/bot/cogs/general/general.py:78
+#: sonata/bot/cogs/general/general.py:84
 msgid "Clears \"About\" field in profile info."
 msgstr "Очищает поле \"о себе\" в профиле."
 
-#: sonata/bot/cogs/general/general.py:80
+#: sonata/bot/cogs/general/general.py:86
 msgid "The `About` field is cleared."
 msgstr "Поле `о себе` очищено."
 
-#: sonata/bot/cogs/general/general.py:84
+#: sonata/bot/cogs/general/general.py:90
 msgid "Returns an invitation link"
 msgstr "Возвращает ссылку-приглашение"
 
-#: sonata/bot/cogs/general/general.py:86
+#: sonata/bot/cogs/general/general.py:92
 msgid "You can invite me at this link"
 msgstr "Ты можешь пригласить меня по этой ссылке"
 
-#: sonata/bot/cogs/general/general.py:94
+#: sonata/bot/cogs/general/general.py:100
 msgid "Shows information about me"
 msgstr "Показывает информацию обо мне"
 
-#: sonata/bot/cogs/general/general.py:96
+#: sonata/bot/cogs/general/general.py:102
 msgid "Sonata Info"
 msgstr "Информация о Сонате"
 
-#: sonata/bot/cogs/general/general.py:103 sonata/bot/cogs/general/general.py:149
+#: sonata/bot/cogs/general/general.py:109 sonata/bot/cogs/general/general.py:155
 msgid "Name"
 msgstr "Имя"
 
-#: sonata/bot/cogs/general/general.py:104
+#: sonata/bot/cogs/general/general.py:110
 msgid "API wrapper"
 msgstr "API оболочка"
 
-#: sonata/bot/cogs/general/general.py:107
+#: sonata/bot/cogs/general/general.py:113
 msgid "Developer"
 msgstr "Разработчик"
 
-#: sonata/bot/cogs/general/general.py:112 sonata/bot/cogs/general/general.py:158
+#: sonata/bot/cogs/general/general.py:118 sonata/bot/cogs/general/general.py:164
 msgid "Status"
 msgstr "Статус"
 
-#: sonata/bot/cogs/general/general.py:112
+#: sonata/bot/cogs/general/general.py:118
 msgid ""
 "**Last restart**: {launch_time}\n"
 "**Online**: {online}\n"
@@ -996,15 +996,15 @@ msgstr ""
 "**Онлайн**: {online}\n"
 "**Обслуживается**: {guilds} гильдий и {members} участников."
 
-#: sonata/bot/cogs/general/general.py:124
+#: sonata/bot/cogs/general/general.py:130
 msgid "Language support"
 msgstr "Поддержка языков"
 
-#: sonata/bot/cogs/general/general.py:125
+#: sonata/bot/cogs/general/general.py:131
 msgid "Useful links"
 msgstr "Полезные ссылки"
 
-#: sonata/bot/cogs/general/general.py:125
+#: sonata/bot/cogs/general/general.py:131
 msgid ""
 "[Website]({website})\n"
 "[Invite the bot to your server]({invite})\n"
@@ -1014,79 +1014,79 @@ msgstr ""
 "[Пригласить бота на свой сервер]({invite})\n"
 "[Проголосовать за бота]({vote})"
 
-#: sonata/bot/cogs/general/general.py:145
+#: sonata/bot/cogs/general/general.py:151
 msgid "{0} Info"
 msgstr "Информация о {0}"
 
-#: sonata/bot/cogs/general/general.py:152
+#: sonata/bot/cogs/general/general.py:158
 msgid "Online"
 msgstr "В сети"
 
-#: sonata/bot/cogs/general/general.py:153
+#: sonata/bot/cogs/general/general.py:159
 msgid "Offline"
 msgstr "Не в сети"
 
-#: sonata/bot/cogs/general/general.py:154
+#: sonata/bot/cogs/general/general.py:160
 msgid "Idle"
 msgstr "Не активен"
 
-#: sonata/bot/cogs/general/general.py:156
+#: sonata/bot/cogs/general/general.py:162
 msgid "Do Not Disturb"
 msgstr "Не беспокоить"
 
-#: sonata/bot/cogs/general/general.py:161
+#: sonata/bot/cogs/general/general.py:167
 msgid "Playing"
 msgstr "Играет в"
 
-#: sonata/bot/cogs/general/general.py:163
+#: sonata/bot/cogs/general/general.py:169
 msgid "Streaming"
 msgstr "Стримит"
 
-#: sonata/bot/cogs/general/general.py:165
+#: sonata/bot/cogs/general/general.py:171
 msgid "Listening"
 msgstr "Слушает"
 
-#: sonata/bot/cogs/general/general.py:167 sonata/bot/cogs/general/general.py:170
+#: sonata/bot/cogs/general/general.py:173 sonata/bot/cogs/general/general.py:176
 msgid "Activity"
 msgstr "Активность"
 
-#: sonata/bot/cogs/general/general.py:172
+#: sonata/bot/cogs/general/general.py:178
 msgid "Joined the guild"
 msgstr "Дата присоединения к гильдии"
 
-#: sonata/bot/cogs/general/general.py:175
+#: sonata/bot/cogs/general/general.py:181
 msgid "Registration date"
 msgstr "Дата регистрации"
 
-#: sonata/bot/cogs/general/general.py:179
+#: sonata/bot/cogs/general/general.py:185
 msgid "Summary"
 msgstr "Общая информация"
 
-#: sonata/bot/cogs/general/general.py:198
+#: sonata/bot/cogs/general/general.py:204
 msgid "Statistics has been running since"
 msgstr "Статистика ведется с"
 
-#: sonata/bot/cogs/general/general.py:201
+#: sonata/bot/cogs/general/general.py:207
 msgid "Total messages"
 msgstr "Всего сообщений"
 
-#: sonata/bot/cogs/general/general.py:202
+#: sonata/bot/cogs/general/general.py:208
 msgid "Commands invoked"
 msgstr "Использовано команд"
 
-#: sonata/bot/cogs/general/general.py:203 sonata/bot/cogs/stats/leveling.py:135
+#: sonata/bot/cogs/general/general.py:209 sonata/bot/cogs/stats/leveling.py:143
 msgid "Level"
 msgstr "Уровень"
 
-#: sonata/bot/cogs/general/general.py:204 sonata/bot/cogs/stats/leveling.py:137
+#: sonata/bot/cogs/general/general.py:210 sonata/bot/cogs/stats/leveling.py:145
 msgid "Experience"
 msgstr "Опыт"
 
-#: sonata/bot/cogs/general/general.py:209
+#: sonata/bot/cogs/general/general.py:215
 msgid "Guild rank"
 msgstr "Ранг (гильдия)"
 
-#: sonata/bot/cogs/general/general.py:214
+#: sonata/bot/cogs/general/general.py:220
 msgid ""
 "\n"
 "`Statistics counts only messages visible to the bot`"
@@ -1094,19 +1094,19 @@ msgstr ""
 "\n"
 "`Статистика учитывает только сообщения, видимые для бота`"
 
-#: sonata/bot/cogs/general/general.py:215
+#: sonata/bot/cogs/general/general.py:221
 msgid "Statistics"
 msgstr "Статистика"
 
-#: sonata/bot/cogs/general/general.py:219
+#: sonata/bot/cogs/general/general.py:225
 msgid "The coin command constantly responds with an eagle."
 msgstr "Команда \"coin\" постоянно отвечает \"орел\"."
 
-#: sonata/bot/cogs/general/general.py:221
+#: sonata/bot/cogs/general/general.py:227
 msgid "Sends a bug report to the bot owner"
 msgstr "Отправляет отчет об ошибке владельцу бота"
 
-#: sonata/bot/cogs/general/general.py:245
+#: sonata/bot/cogs/general/general.py:251
 msgid "Vote for the bot"
 msgstr "Проголосовать за бота"
 
@@ -1159,10 +1159,6 @@ msgstr "Время истекло"
 msgid "`Before` message must be in the same channel."
 msgstr "Сообщение \"до\" должно быть в том же канале."
 
-#: sonata/bot/cogs/mod/mod.py:155
-msgid "@Member flood"
-msgstr "@Участник флуд"
-
 #: sonata/bot/cogs/mod/mod.py:156
 msgid "Member#1234 spam"
 msgstr "Участник#1234 спам"
@@ -1180,8 +1176,9 @@ msgid "Member kicked: {0}"
 msgstr "Участник выгнан: {0}"
 
 #: sonata/bot/cogs/mod/mod.py:176 sonata/bot/cogs/mod/mod.py:310
-msgid "@User flood"
-msgstr "@Пользователь флуд"
+#: sonata/bot/cogs/mod/mod.py:374
+msgid "@User"
+msgstr "@Пользователь"
 
 #: sonata/bot/cogs/mod/mod.py:177
 msgid "User#1234 1 spam"
@@ -1208,8 +1205,8 @@ msgid "User banned: {0}"
 msgstr "Пользователь забанен: {0}"
 
 #: sonata/bot/cogs/mod/mod.py:207 sonata/bot/cogs/mod/mod.py:338
-msgid "@User 60 flood"
-msgstr "@Пользователь 60 флуд"
+msgid "@User 60"
+msgstr "@Пользователь 60"
 
 #: sonata/bot/cogs/mod/mod.py:208
 msgid "User#1234 1800 1 spam"
@@ -1253,10 +1250,6 @@ msgstr "Пользователь не забанен."
 msgid "User unbanned: {0}"
 msgstr "Пользователь разбанен: {0}"
 
-#: sonata/bot/cogs/mod/mod.py:266
-msgid "10 flood"
-msgstr "10 флуд"
-
 #: sonata/bot/cogs/mod/mod.py:267
 msgid "20 706903341934051489 spam"
 msgstr "20 706903341934051489 спам"
@@ -1276,10 +1269,6 @@ msgstr ""
 "        \n"
 "        Вы можете указать сообщения до которого начать чистку. Сообщение должно "
 "быть в этом же канале."
-
-#: sonata/bot/cogs/mod/mod.py:290
-msgid "100 cleaning"
-msgstr "100 чистка"
 
 #: sonata/bot/cogs/mod/mod.py:290
 msgid "10 706903341934051489 cleaning"
@@ -1308,10 +1297,6 @@ msgstr "Пользователь#1234 1800 спам"
 #: sonata/bot/cogs/mod/mod.py:353
 msgid "Temporarily mutes member in the guild"
 msgstr "Временно мутит участника в гильдии"
-
-#: sonata/bot/cogs/mod/mod.py:374
-msgid "@User apologized"
-msgstr "@Пользователь извинился"
 
 #: sonata/bot/cogs/mod/mod.py:375
 msgid "User#1234 amnesty"
@@ -1738,47 +1723,51 @@ msgstr ""
 "        Если участник не указан, то показывает твой ранг. Также ты можешь "
 "узнать кто находится на конкретном месте, указав число."
 
-#: sonata/bot/cogs/stats/leveling.py:133
+#: sonata/bot/cogs/stats/leveling.py:112
+msgid "This member is a bot."
+msgstr "Этот участник - бот."
+
+#: sonata/bot/cogs/stats/leveling.py:140
 msgid "Member not found."
 msgstr "Участник не найден."
 
-#: sonata/bot/cogs/stats/leveling.py:142
+#: sonata/bot/cogs/stats/leveling.py:150
 msgid "Rank"
 msgstr "Ранг"
 
-#: sonata/bot/cogs/stats/leveling.py:149
+#: sonata/bot/cogs/stats/leveling.py:157
 msgid "Disables/Enables auto-message when leveling up"
 msgstr "Отключает/включает автосообщение при повышении уровня"
 
-#: sonata/bot/cogs/stats/leveling.py:158
+#: sonata/bot/cogs/stats/leveling.py:166
 msgid "Enables auto-message when leveling up"
 msgstr "Включает автосообщение при повышении уровня"
 
-#: sonata/bot/cogs/stats/leveling.py:164
+#: sonata/bot/cogs/stats/leveling.py:172
 msgid "Auto-message when leveling up is already enabled."
 msgstr "Автосообщение при повышении уровня уже включено."
 
-#: sonata/bot/cogs/stats/leveling.py:166
+#: sonata/bot/cogs/stats/leveling.py:174
 msgid "Auto-message when leveling up is enabled."
 msgstr "Автосообщение при повышении уровня включено."
 
-#: sonata/bot/cogs/stats/leveling.py:171
+#: sonata/bot/cogs/stats/leveling.py:179
 msgid "Disables auto-message when leveling up"
 msgstr "Отключает автосообщение при повышении уровня"
 
-#: sonata/bot/cogs/stats/leveling.py:177
+#: sonata/bot/cogs/stats/leveling.py:185
 msgid "Auto-message when leveling up is already disabled."
 msgstr "Автосообщение при повышении уровня уже отключено."
 
-#: sonata/bot/cogs/stats/leveling.py:179
+#: sonata/bot/cogs/stats/leveling.py:187
 msgid "Auto-message when leveling up is disabled."
 msgstr "Автосообщение при повышении уровня отключено."
 
-#: sonata/bot/cogs/stats/leveling.py:184
+#: sonata/bot/cogs/stats/leveling.py:192
 msgid "Shows guild leaderboard"
 msgstr "Показывает таблицу лидеров гильдии"
 
-#: sonata/bot/cogs/stats/leveling.py:209
+#: sonata/bot/cogs/stats/leveling.py:217
 msgid "Guild Leaderboard"
 msgstr "Таблица лидеров гильдии"
 
@@ -1936,63 +1925,63 @@ msgstr "Отключает упоминания в оповещениях"
 msgid "Alert mentions disabled."
 msgstr "Упоминания в оповещениях отключены."
 
-#: sonata/bot/cogs/streams/twitch.py:44
+#: sonata/bot/cogs/streams/twitch.py:47
 msgid "Twitch game {0} is not found."
 msgstr "Игра {0} не найдена в Twitch."
 
-#: sonata/bot/cogs/streams/twitch.py:58
+#: sonata/bot/cogs/streams/twitch.py:61
 msgid "Twitch user {0} is not found."
 msgstr "Пользователь {0} не найден в Twitch."
 
-#: sonata/bot/cogs/streams/twitch.py:76
+#: sonata/bot/cogs/streams/twitch.py:79
 msgid "User {0} is not tracked in this guild."
 msgstr "Пользователь {0} не отслеживается в этой гильдии."
 
-#: sonata/bot/cogs/streams/twitch.py:233
+#: sonata/bot/cogs/streams/twitch.py:264
 msgid "Stream is offline"
 msgstr "Стрим не в сети"
 
-#: sonata/bot/cogs/streams/twitch.py:338
+#: sonata/bot/cogs/streams/twitch.py:369
 msgid "Game"
 msgstr "Игра"
 
-#: sonata/bot/cogs/streams/twitch.py:339
+#: sonata/bot/cogs/streams/twitch.py:370
 msgid "Viewers"
 msgstr "Зрители"
 
-#: sonata/bot/cogs/streams/twitch.py:340
+#: sonata/bot/cogs/streams/twitch.py:371
 msgid "Views"
 msgstr "Просмотры"
 
-#: sonata/bot/cogs/streams/twitch.py:431
+#: sonata/bot/cogs/streams/twitch.py:487
 msgid "Twitch alerts"
 msgstr "Оповещения Twitch"
 
-#: sonata/bot/cogs/streams/twitch.py:440
+#: sonata/bot/cogs/streams/twitch.py:496
 msgid "Tracked users"
 msgstr "Отслеживаемые пользователи"
 
-#: sonata/bot/cogs/streams/twitch.py:446
+#: sonata/bot/cogs/streams/twitch.py:502
 msgid "Adds the user to the list of tracked streamers"
 msgstr "Добавляет пользователя в список отслеживаемых стримеров"
 
-#: sonata/bot/cogs/streams/twitch.py:473
+#: sonata/bot/cogs/streams/twitch.py:529
 msgid "An error occurred while subscribing."
 msgstr "Произошла ошибка при подписке."
 
-#: sonata/bot/cogs/streams/twitch.py:481
+#: sonata/bot/cogs/streams/twitch.py:537
 msgid "User {0} is now tracked in this guild."
 msgstr "Пользователь {0} теперь отслеживается в этой гильдии."
 
-#: sonata/bot/cogs/streams/twitch.py:491
+#: sonata/bot/cogs/streams/twitch.py:547
 msgid "Clears the list of tracked streamers"
 msgstr "Очищает список отслеживаемых стримеров"
 
-#: sonata/bot/cogs/streams/twitch.py:495
+#: sonata/bot/cogs/streams/twitch.py:551
 msgid "The list of tracked users in this guild has been cleared."
 msgstr "Список отслеживаемых пользователей в этой гильдии был очищен."
 
-#: sonata/bot/cogs/streams/twitch.py:500
+#: sonata/bot/cogs/streams/twitch.py:556
 msgid ""
 "Removes a user from the list of tracked streamers\n"
 "        \n"
@@ -2003,27 +1992,27 @@ msgstr ""
 "        Это также сбрасывает все нестандартные настройки, связанные с этим "
 "пользователем."
 
-#: sonata/bot/cogs/streams/twitch.py:510
+#: sonata/bot/cogs/streams/twitch.py:566
 msgid "User {0} is no longer being tracked in this guild."
 msgstr "Пользователь {0} больше не отслеживается в этой гильдии."
 
-#: sonata/bot/cogs/streams/twitch.py:521
+#: sonata/bot/cogs/streams/twitch.py:577
 msgid "Disables alerts from the specified streamer"
 msgstr "Отключает оповещения от указанного стримера"
 
-#: sonata/bot/cogs/streams/twitch.py:527
+#: sonata/bot/cogs/streams/twitch.py:583
 msgid "Alerts from {0} are disabled."
 msgstr "Оповещения от {0} отключены."
 
-#: sonata/bot/cogs/streams/twitch.py:534
+#: sonata/bot/cogs/streams/twitch.py:590
 msgid "Enables alerts from the specified streamer"
 msgstr "Включает оповещения от указанного стримера"
 
-#: sonata/bot/cogs/streams/twitch.py:540
+#: sonata/bot/cogs/streams/twitch.py:596
 msgid "Alerts from {0} are enabled."
 msgstr "Оповещения от {0} включены."
 
-#: sonata/bot/cogs/streams/twitch.py:547
+#: sonata/bot/cogs/streams/twitch.py:603
 msgid ""
 "Filtering settings\n"
 "        \n"
@@ -2033,7 +2022,7 @@ msgstr ""
 "        \n"
 "        Оповещение будет опубликовано, только если пройдет проверки фильтрации."
 
-#: sonata/bot/cogs/streams/twitch.py:559
+#: sonata/bot/cogs/streams/twitch.py:615
 msgid ""
 "Game filter\n"
 "        \n"
@@ -2045,23 +2034,23 @@ msgstr ""
 "        Тебе нужно указывать игры точно так же, как они указаны в Twitch.\n"
 "        "
 
-#: sonata/bot/cogs/streams/twitch.py:579
+#: sonata/bot/cogs/streams/twitch.py:635
 msgid "Game filter whitelist"
 msgstr "Белый список игрового фильтра"
 
-#: sonata/bot/cogs/streams/twitch.py:589
+#: sonata/bot/cogs/streams/twitch.py:645
 msgid "Game filter whitelist - {0}"
 msgstr "Белый список игрового фильтра - {0}"
 
-#: sonata/bot/cogs/streams/twitch.py:592
+#: sonata/bot/cogs/streams/twitch.py:648
 msgid "Whitelist is **enabled**."
 msgstr "Белый список **включен**."
 
-#: sonata/bot/cogs/streams/twitch.py:594
+#: sonata/bot/cogs/streams/twitch.py:650
 msgid "Whitelist is **disabled**."
 msgstr "Белый список **отключен**."
 
-#: sonata/bot/cogs/streams/twitch.py:600 sonata/bot/cogs/streams/twitch.py:729
+#: sonata/bot/cogs/streams/twitch.py:656 sonata/bot/cogs/streams/twitch.py:785
 msgid ""
 "\n"
 "**Games**\n"
@@ -2069,170 +2058,170 @@ msgstr ""
 "\n"
 "**Игры**:\n"
 
-#: sonata/bot/cogs/streams/twitch.py:609
+#: sonata/bot/cogs/streams/twitch.py:665
 msgid "Enables game filter whitelisting"
 msgstr "Включает белый список игрового фильтра"
 
-#: sonata/bot/cogs/streams/twitch.py:615
+#: sonata/bot/cogs/streams/twitch.py:671
 msgid "Game filter whitelist is enabled for {0}."
 msgstr "Белый список игрового фильтра включен для {0}."
 
-#: sonata/bot/cogs/streams/twitch.py:624
+#: sonata/bot/cogs/streams/twitch.py:680
 msgid "Disables game filter whitelisting"
 msgstr "Отключает белый список игрового фильтра"
 
-#: sonata/bot/cogs/streams/twitch.py:630
+#: sonata/bot/cogs/streams/twitch.py:686
 msgid "Game filter whitelist is disabled for {0}."
 msgstr "Белый список игрового фильтра отключен для {0}."
 
-#: sonata/bot/cogs/streams/twitch.py:644
+#: sonata/bot/cogs/streams/twitch.py:700
 msgid "Adds games to the whitelist"
 msgstr "Добавляет игры в белый список"
 
-#: sonata/bot/cogs/streams/twitch.py:655
+#: sonata/bot/cogs/streams/twitch.py:711
 msgid "The following games have been whitelisted for {user}: {games}"
 msgstr "Следующие игры добавлены в белый список для {user}: {games}"
 
-#: sonata/bot/cogs/streams/twitch.py:671 sonata/bot/cogs/streams/twitch.py:900
+#: sonata/bot/cogs/streams/twitch.py:727 sonata/bot/cogs/streams/twitch.py:956
 msgid "Whitelist cleared successfully for {0}."
 msgstr "Белый список успешно очищен для {0}."
 
-#: sonata/bot/cogs/streams/twitch.py:683
+#: sonata/bot/cogs/streams/twitch.py:739
 msgid "Removes games from the whitelist"
 msgstr "Удаляет игры из белого списка"
 
-#: sonata/bot/cogs/streams/twitch.py:690
+#: sonata/bot/cogs/streams/twitch.py:746
 msgid ""
 "The following games have been removed from the whitelist for {user}: {games}"
 msgstr "Следующие игры удалены из белого списка для {user}: {games}"
 
-#: sonata/bot/cogs/streams/twitch.py:708
+#: sonata/bot/cogs/streams/twitch.py:764
 msgid "Game filter blacklist"
 msgstr "Черный список игрового фильтра"
 
-#: sonata/bot/cogs/streams/twitch.py:718
+#: sonata/bot/cogs/streams/twitch.py:774
 msgid "Game filter blacklist - {0}"
 msgstr "Черный список игрового фильтра - {0}"
 
-#: sonata/bot/cogs/streams/twitch.py:721
+#: sonata/bot/cogs/streams/twitch.py:777
 msgid "Blacklist is **enabled**."
 msgstr "Черный список **включен**."
 
-#: sonata/bot/cogs/streams/twitch.py:723
+#: sonata/bot/cogs/streams/twitch.py:779
 msgid "Blacklist is **disabled**."
 msgstr "Черный список **отключен**."
 
-#: sonata/bot/cogs/streams/twitch.py:738
+#: sonata/bot/cogs/streams/twitch.py:794
 msgid "Enables game filter blacklisting"
 msgstr "Включает черный список игрового фильтра"
 
-#: sonata/bot/cogs/streams/twitch.py:744
+#: sonata/bot/cogs/streams/twitch.py:800
 msgid "Game filter blacklist is enabled for {0}."
 msgstr "Черный список игрового фильтра включен для {0}."
 
-#: sonata/bot/cogs/streams/twitch.py:753
+#: sonata/bot/cogs/streams/twitch.py:809
 msgid "Disables game filter blacklisting"
 msgstr "Отключает черный список игрового фильтра"
 
-#: sonata/bot/cogs/streams/twitch.py:759
+#: sonata/bot/cogs/streams/twitch.py:815
 msgid "Game filter blacklist is disabled for {0}."
 msgstr "Черный список игрового фильтра отключен для {0}."
 
-#: sonata/bot/cogs/streams/twitch.py:773
+#: sonata/bot/cogs/streams/twitch.py:829
 msgid "Adds games to the blacklist"
 msgstr "Добавляет игры в черный список"
 
-#: sonata/bot/cogs/streams/twitch.py:784
+#: sonata/bot/cogs/streams/twitch.py:840
 msgid "The following games have been blacklisted for {user}: {games}"
 msgstr "Следующие игры добавлены в черный список для {user}: {games}"
 
-#: sonata/bot/cogs/streams/twitch.py:800 sonata/bot/cogs/streams/twitch.py:991
+#: sonata/bot/cogs/streams/twitch.py:856 sonata/bot/cogs/streams/twitch.py:1047
 msgid "Blacklist cleared successfully for {0}."
 msgstr "Черный список успешно очищен для {0}."
 
-#: sonata/bot/cogs/streams/twitch.py:812
+#: sonata/bot/cogs/streams/twitch.py:868
 msgid "Removes games from the blacklist"
 msgstr "Удаляет игры из черного списка"
 
-#: sonata/bot/cogs/streams/twitch.py:819
+#: sonata/bot/cogs/streams/twitch.py:875
 msgid ""
 "The following games have been removed from the blacklist for {user}: {games}"
 msgstr "Следующие игры удалены из черного списка для {user}: {games}"
 
-#: sonata/bot/cogs/streams/twitch.py:831
+#: sonata/bot/cogs/streams/twitch.py:887
 msgid "Title filter"
 msgstr "Фильтр по заголовкам"
 
-#: sonata/bot/cogs/streams/twitch.py:835
+#: sonata/bot/cogs/streams/twitch.py:891
 msgid "Title filter whitelist"
 msgstr "Белый список фильтра по заголовкам"
 
-#: sonata/bot/cogs/streams/twitch.py:841
+#: sonata/bot/cogs/streams/twitch.py:897
 msgid "Enables title filter whitelisting"
 msgstr "Включает белый список фильтра по заголовкам"
 
-#: sonata/bot/cogs/streams/twitch.py:847
+#: sonata/bot/cogs/streams/twitch.py:903
 msgid "Title filter whitelist is enabled for {0}."
 msgstr "Белый список фильтра по заголовкам включен для {0}."
 
-#: sonata/bot/cogs/streams/twitch.py:856
+#: sonata/bot/cogs/streams/twitch.py:912
 msgid "Disables title filter whitelisting"
 msgstr "Отключает белый список фильтра по заголовкам"
 
-#: sonata/bot/cogs/streams/twitch.py:862
+#: sonata/bot/cogs/streams/twitch.py:918
 msgid "Title filter whitelist is disabled for {0}."
 msgstr "Белый список фильтра по заголовкам отключен для {0}."
 
-#: sonata/bot/cogs/streams/twitch.py:868 sonata/bot/cogs/streams/twitch.py:904
-#: sonata/bot/cogs/streams/twitch.py:959 sonata/bot/cogs/streams/twitch.py:995
+#: sonata/bot/cogs/streams/twitch.py:924 sonata/bot/cogs/streams/twitch.py:960
+#: sonata/bot/cogs/streams/twitch.py:1015 sonata/bot/cogs/streams/twitch.py:1051
 msgid "ninja giveaway"
 msgstr "ninja розыгрыш"
 
-#: sonata/bot/cogs/streams/twitch.py:868 sonata/bot/cogs/streams/twitch.py:904
-#: sonata/bot/cogs/streams/twitch.py:959 sonata/bot/cogs/streams/twitch.py:995
+#: sonata/bot/cogs/streams/twitch.py:924 sonata/bot/cogs/streams/twitch.py:960
+#: sonata/bot/cogs/streams/twitch.py:1015 sonata/bot/cogs/streams/twitch.py:1051
 msgid "ninja .+giveaway.*"
 msgstr "ninja .+розыгрыш.*"
 
-#: sonata/bot/cogs/streams/twitch.py:877
+#: sonata/bot/cogs/streams/twitch.py:933
 msgid ""
 "Adds title to the whitelist\n"
 "            \n"
 "        Regex is allowed."
 msgstr "Добавляет заголовок в белый список"
 
-#: sonata/bot/cogs/streams/twitch.py:887
+#: sonata/bot/cogs/streams/twitch.py:943
 msgid "The title is whitelisted for {0}."
 msgstr "Заголовок добавлен в белый список для {0}."
 
-#: sonata/bot/cogs/streams/twitch.py:913
+#: sonata/bot/cogs/streams/twitch.py:969
 msgid "Removes title from the whitelist"
 msgstr "Удаляет заголовок из белого списка"
 
-#: sonata/bot/cogs/streams/twitch.py:919
+#: sonata/bot/cogs/streams/twitch.py:975
 msgid "The title removed from whitelist for {0}."
 msgstr "Заголовок удален из белого списка для {0}."
 
-#: sonata/bot/cogs/streams/twitch.py:926
+#: sonata/bot/cogs/streams/twitch.py:982
 msgid "Title filter blacklist"
 msgstr "Черный список фильтра по заголовкам"
 
-#: sonata/bot/cogs/streams/twitch.py:932
+#: sonata/bot/cogs/streams/twitch.py:988
 msgid "Enables title filter blacklisting"
 msgstr "Включает черный список фильтра по заголовкам"
 
-#: sonata/bot/cogs/streams/twitch.py:938
+#: sonata/bot/cogs/streams/twitch.py:994
 msgid "Title filter blacklist is enabled for {0}."
 msgstr "Черный список фильтра по заголовкам включен для {0}."
 
-#: sonata/bot/cogs/streams/twitch.py:947
+#: sonata/bot/cogs/streams/twitch.py:1003
 msgid "Disables title filter blacklisting"
 msgstr "Отключает черный список фильтра по заголовкам"
 
-#: sonata/bot/cogs/streams/twitch.py:953
+#: sonata/bot/cogs/streams/twitch.py:1009
 msgid "Title filter blacklist is disabled for {0}."
 msgstr "Черный список фильтра по заголовкам отключен для {0}."
 
-#: sonata/bot/cogs/streams/twitch.py:968
+#: sonata/bot/cogs/streams/twitch.py:1024
 msgid ""
 "Adds title to the blacklist\n"
 "\n"
@@ -2242,39 +2231,39 @@ msgstr ""
 "\n"
 "        Regex разрешен."
 
-#: sonata/bot/cogs/streams/twitch.py:978
+#: sonata/bot/cogs/streams/twitch.py:1034
 msgid "The title is blacklisted for {0}."
 msgstr "Заголовок добавлен в черный список для {0}."
 
-#: sonata/bot/cogs/streams/twitch.py:1004
+#: sonata/bot/cogs/streams/twitch.py:1060
 msgid "Removes title from the blacklist"
 msgstr "Удаляет заголовок из черного списка"
 
-#: sonata/bot/cogs/streams/twitch.py:1010
+#: sonata/bot/cogs/streams/twitch.py:1066
 msgid "The title removed from blacklist for {0}."
 msgstr "Заголовок удален из черного списка для {0}."
 
-#: sonata/bot/cogs/streams/twitch.py:1018
+#: sonata/bot/cogs/streams/twitch.py:1074
 msgid "Sets alert settings for specified user"
 msgstr "Устанавливает настройки оповещений для указанного пользователя"
 
-#: sonata/bot/cogs/streams/twitch.py:1024
+#: sonata/bot/cogs/streams/twitch.py:1080
 msgid "ninja #TextChannel"
 msgstr "ninja #ТекстовыйКанал"
 
-#: sonata/bot/cogs/streams/twitch.py:1031
+#: sonata/bot/cogs/streams/twitch.py:1087
 msgid "Sets alert channel for specified user"
 msgstr "Устанавливает канал для оповещений для указанного пользователя"
 
-#: sonata/bot/cogs/streams/twitch.py:1040
+#: sonata/bot/cogs/streams/twitch.py:1096
 msgid "Alert channel set for {0}."
 msgstr "Канал для оповещений установлен для {0}."
 
-#: sonata/bot/cogs/streams/twitch.py:1044
+#: sonata/bot/cogs/streams/twitch.py:1100
 msgid "ninja {{name}} if offline"
 msgstr "ninja {{name}} не в сети"
 
-#: sonata/bot/cogs/streams/twitch.py:1053
+#: sonata/bot/cogs/streams/twitch.py:1109
 msgid ""
 "Sets offline alert message for specified user\n"
 "\n"
@@ -2294,15 +2283,15 @@ msgstr ""
 "        `{{name}}` - имя стримера\n"
 "        `{{views}}` - количество просмотров пользователя"
 
-#: sonata/bot/cogs/streams/twitch.py:1068
+#: sonata/bot/cogs/streams/twitch.py:1124
 msgid "Alert offline message set for {0}."
 msgstr "Оффлайн-сообщение в оповещении установлено для {0}."
 
-#: sonata/bot/cogs/streams/twitch.py:1073
+#: sonata/bot/cogs/streams/twitch.py:1129
 msgid "ninja {{name}} began broadcasting \"{{game}}\". Link: {{link}}"
 msgstr "ninja {{name}} начал трансляцию \"{{game}}\". Ссылка: {{link}}"
 
-#: sonata/bot/cogs/streams/twitch.py:1082
+#: sonata/bot/cogs/streams/twitch.py:1138
 msgid ""
 "Sets alert message for specified user\n"
 "\n"
@@ -2328,15 +2317,15 @@ msgstr ""
 "        `{{viewers}}` - количество зрителей\n"
 "        `{{views}}` - количество просмотров пользователя"
 
-#: sonata/bot/cogs/streams/twitch.py:1100
+#: sonata/bot/cogs/streams/twitch.py:1156
 msgid "Alert message set for {0}."
 msgstr "Сообщение в оповещении установлено для {0}."
 
-#: sonata/bot/cogs/streams/twitch.py:1105
+#: sonata/bot/cogs/streams/twitch.py:1161
 msgid "Toggles alert mentions for specified user"
 msgstr "Переключает упоминания в оповещениях для указанного пользователя"
 
-#: sonata/bot/cogs/streams/twitch.py:1115
+#: sonata/bot/cogs/streams/twitch.py:1171
 msgid ""
 "Sets alert mentions to `@everyone` for specified user\n"
 "\n"
@@ -2347,11 +2336,11 @@ msgstr ""
 "        \n"
 "        Бот должен иметь право упоминания everyone."
 
-#: sonata/bot/cogs/streams/twitch.py:1130
+#: sonata/bot/cogs/streams/twitch.py:1186
 msgid "Alerts will mention `@everyone` for {0}."
 msgstr "Оповещения будут упоминать `@everyone` для {0}."
 
-#: sonata/bot/cogs/streams/twitch.py:1137
+#: sonata/bot/cogs/streams/twitch.py:1193
 msgid ""
 "Sets alert mentions to `@here` for specified user\n"
 "\n"
@@ -2361,31 +2350,31 @@ msgstr ""
 "        \n"
 "        Бот должен иметь право упоминания everyone."
 
-#: sonata/bot/cogs/streams/twitch.py:1152
+#: sonata/bot/cogs/streams/twitch.py:1208
 msgid "Alerts will mention `here` for {0}."
 msgstr "Оповещения будут упоминать `@here` для {0}."
 
-#: sonata/bot/cogs/streams/twitch.py:1159
+#: sonata/bot/cogs/streams/twitch.py:1215
 msgid "Enables alert mentions for specified user"
 msgstr "Включает упоминания в оповещениях для указанного пользователя"
 
-#: sonata/bot/cogs/streams/twitch.py:1170
+#: sonata/bot/cogs/streams/twitch.py:1226
 msgid "Alert mentions enabled for {0}."
 msgstr "Упоминания в оповещениях включены для {0}."
 
-#: sonata/bot/cogs/streams/twitch.py:1177
+#: sonata/bot/cogs/streams/twitch.py:1233
 msgid "Disables alert mentions for specified user"
 msgstr "Отключает упоминания в оповещениях для указанного пользователя"
 
-#: sonata/bot/cogs/streams/twitch.py:1188
+#: sonata/bot/cogs/streams/twitch.py:1244
 msgid "Alert mentions disabled for {0}."
 msgstr "Упоминания в оповещениях отключены для {0}."
 
-#: sonata/bot/cogs/streams/twitch.py:1195
+#: sonata/bot/cogs/streams/twitch.py:1251
 msgid "Inherits mentions settings from default settings"
 msgstr "Наследует настройки упоминаний из настроек по умолчанию"
 
-#: sonata/bot/cogs/streams/twitch.py:1201
+#: sonata/bot/cogs/streams/twitch.py:1257
 msgid "Mention settings inherited from default settings for {0}."
 msgstr "Настройки упоминаний унаследованы из настроек по умолчанию для {0}."
 
@@ -2997,7 +2986,7 @@ msgstr "Максимальная разница во времени: {0}"
 msgid "Missing argument before or after the time."
 msgstr "Отсутствует аргумент до или после времени."
 
-#: sonata/config/settings.py:9
+#: sonata/config/settings.py:11
 msgid ""
 "Sonata is a multi-functional polyglot bot. The bot has many modules for "
 "entertaining members, moderation, providing useful information and utilities "
@@ -3038,3 +3027,21 @@ msgstr ""
 #~ msgstr ""
 #~ "[Пригласить бота на свой сервер]({invite})\n"
 #~ "[Проголосовать за бота]({vote})"
+
+#~ msgid "@Member flood"
+#~ msgstr "@Участник флуд"
+
+#~ msgid "@User flood"
+#~ msgstr "@Пользователь флуд"
+
+#~ msgid "@User 60 flood"
+#~ msgstr "@Пользователь 60 флуд"
+
+#~ msgid "10 flood"
+#~ msgstr "10 флуд"
+
+#~ msgid "100 cleaning"
+#~ msgstr "100 чистка"
+
+#~ msgid "@User apologized"
+#~ msgstr "@Пользователь извинился"

@@ -107,6 +107,10 @@ class Leveling(core.Cog):
             return
         if member is None:
             member = ctx.author
+        else:
+            if member.bot:
+                return await ctx.inform(_("This member is a bot."))
+
         try:
             if isinstance(member, int):
                 rank = member
@@ -132,7 +136,7 @@ class Leveling(core.Cog):
                 rank = await ctx.db.user_stats.count_documents(
                     {"guild_id": ctx.guild.id, "exp": {"$gte": user["exp"]}}
                 )
-        except (KeyError, discord.HTTPException):
+        except (TypeError, KeyError, discord.HTTPException):
             return await ctx.inform(_("Member not found."))
 
         embed = discord.Embed(colour=self.colour, title=member.display_name)

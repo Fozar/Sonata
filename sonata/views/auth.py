@@ -65,6 +65,8 @@ class AuthCallback(web.View, CorsViewMixin):
             if r.status != 200:
                 raise web.HTTPBadRequest
             oauth = await r.json()
+        if "error" in oauth:
+            raise web.HTTPBadRequest(reason=oauth["error"])
         async with bot.session.get(
             "https://discord.com/api/users/@me",
             headers={"Authorization": f"Bearer {oauth['access_token']}"},

@@ -23,12 +23,16 @@ class DBAuthorizationPolicy(AbstractAuthorizationPolicy):
         if not await cursor.fetch_next:
             return False
 
-        if permission == "premium":
+        if context:
             cursor = self.db.guilds.find(
-                {"id": context, "owner_id": int(identity), "premium": True},
-                {"id": True},
+                {"id": context, "owner_id": int(identity)}, {"premium": True},
             )
             if not await cursor.fetch_next:
+                return False
+
+            guild_conf = cursor.next_object()
+
+            if permission == "premium" and not guild_conf["premium"]:
                 return False
 
         return True

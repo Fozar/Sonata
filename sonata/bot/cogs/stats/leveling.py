@@ -102,7 +102,7 @@ class Leveling(core.Cog):
         
         If the member is not specified, then shows your rank. You can also find out who \
         is in a particular place by specifying a number."""
-        )
+        )  # TODO: Переписать
         if ctx.invoked_subcommand is not None:
             return
         if member is None:

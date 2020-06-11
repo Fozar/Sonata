@@ -6,7 +6,7 @@ from aiohttp_session_mongo import MongoStorage
 from motor import motor_asyncio as motorio
 
 from sonata.db.logging import setup_logger
-from sonata.db.models.db_auth import DBAuthorizationPolicy
+from sonata.db.db_auth import DBAuthorizationPolicy
 
 
 async def close_mongo(app):

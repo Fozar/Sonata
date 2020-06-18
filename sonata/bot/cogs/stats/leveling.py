@@ -63,14 +63,14 @@ class Leveling(core.Cog):
         guild = await self.sonata.db.guilds.find_one(
             {"id": message.guild.id}, {"auto_lvl_msg": True}
         )
-        if guild.get("auto_lvl_msg", True):
+        if guild["auto_lvl_msg"]:
             user = await self.sonata.db.user_stats.find_one(
                 {"guild_id": message.guild.id, "user_id": message.author.id},
                 {"auto_lvl_msg": True},
             )
             send_msg = user.get("auto_lvl_msg", True)
         else:
-            send_msg = guild.get("auto_lvl_msg")
+            send_msg = guild["auto_lvl_msg"]
 
         if send_msg:
             await self.sonata.set_locale(message)

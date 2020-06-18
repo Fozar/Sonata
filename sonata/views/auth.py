@@ -3,7 +3,7 @@ from urllib.parse import urlencode, quote
 
 from aiohttp import web, FormData
 from aiohttp_cors import CorsViewMixin
-from aiohttp_security import remember, is_anonymous
+from aiohttp_security import remember, is_anonymous, forget
 from aiohttp_session import get_session
 from yarl import URL
 
@@ -91,3 +91,16 @@ class AuthCallback(web.View, CorsViewMixin):
         )
         await remember(self.request, response, user["id"])
         return response
+
+
+class AuthLogout(web.View, CorsViewMixin):
+    async def get(self):
+        uri = self.request.url.with_query(None)
+        callback_redirect = self.request.query.get("redirect")
+        response = web.HTTPFound(uri.origin().with_path(callback_redirect or "/"))
+        if await is_anonymous(self.request):
+            raise response
+
+        await forget(self.request, response)
+
+        raise response

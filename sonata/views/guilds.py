@@ -32,8 +32,11 @@ class Guilds(web.View, CorsViewMixin):
 
 class Guild(web.View, CorsViewMixin):
     async def get(self):
-        user_id = int(await check_authorized(self.request))
-        guild_id = int(self.request.match_info["id"])
+        try:
+            user_id = int(await check_authorized(self.request))
+            guild_id = int(self.request.match_info["id"])
+        except TypeError:
+            raise web.HTTPBadRequest
         bot = self.request.app.get("bot")
         guild = await check_guild(bot, guild_id)
         if guild.owner.id != user_id:
@@ -43,14 +46,25 @@ class Guild(web.View, CorsViewMixin):
         )
         if not guild_conf:
             raise web.HTTPNotFound
+        guild_conf.update(
+            {
+                "channel_count": len(guild.channels),
+                "member_count": guild.member_count,
+                "role_count": len(guild.roles),
+                "avatar": str(guild.icon_url),
+            }
+        )
 
         return web.json_response(text=json.dumps(guild_conf, default=date_converter))
 
 
 class GuildStats(web.View, CorsViewMixin):
     async def get(self):
-        user_id = int(await check_authorized(self.request))
-        guild_id = int(self.request.match_info["id"])
+        try:
+            user_id = int(await check_authorized(self.request))
+            guild_id = int(self.request.match_info["id"])
+        except TypeError:
+            raise web.HTTPBadRequest
         bot = self.request.app.get("bot")
         guild = await check_guild(bot, guild_id)
         if guild.owner.id != user_id:
@@ -73,8 +87,11 @@ class GuildStats(web.View, CorsViewMixin):
 
 class GuildEmojis(web.View, CorsViewMixin):
     async def get(self):
-        user_id = int(await check_authorized(self.request))
-        guild_id = int(self.request.match_info["id"])
+        try:
+            user_id = int(await check_authorized(self.request))
+            guild_id = int(self.request.match_info["id"])
+        except TypeError:
+            raise web.HTTPBadRequest
         bot = self.request.app.get("bot")
         guild = await check_guild(bot, guild_id)
         if guild.owner.id != user_id:
@@ -88,7 +105,7 @@ class GuildEmojis(web.View, CorsViewMixin):
         )
         emojis_stats = await cursor.to_list(None)
         for e in emojis_stats:
-            e.update({"name": bot.get_emoji(e['id']).name})
+            e.update({"name": bot.get_emoji(e["id"]).name})
         if not emojis:
             raise web.HTTPNotFound
 

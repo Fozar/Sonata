@@ -11,10 +11,9 @@ from yarl import URL
 class Auth(web.View, CorsViewMixin):
     async def get(self):
         uri = self.request.url.with_query(None)
+        callback_redirect = self.request.query.get("redirect")
         if not await is_anonymous(self.request):
-            raise web.HTTPFound(
-                uri.origin().with_path(self.request.query.get("redirect") or "/")
-            )
+            raise web.HTTPFound(uri.origin().with_path(callback_redirect or "/"))
 
         if not self.request.app["debug"]:
             uri = uri.with_scheme("https")
@@ -25,7 +24,6 @@ class Auth(web.View, CorsViewMixin):
             "redirect_uri": f"{uri}/callback",
             "prompt": "none",
         }
-        callback_redirect = self.request.query.get("redirect")
         if callback_redirect:
             query["state"] = base64.b64encode(callback_redirect.encode("utf-8")).decode(
                 "utf-8"
@@ -82,7 +80,7 @@ class AuthCallback(web.View, CorsViewMixin):
         )
         response = web.Response(
             text=(
-                "<html><script type=\"text/javascript\">"
+                '<html><script type="text/javascript">'
                 "window.localStorage.setItem('LoggedIn', true);\n"
                 f"window.location.href = '{redirect}';\n"
                 "</script></html>"

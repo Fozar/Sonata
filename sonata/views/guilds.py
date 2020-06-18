@@ -4,8 +4,9 @@ import time
 
 import discord
 from aiohttp import web
-from aiohttp_cors import CorsViewMixin
 from aiohttp_security import check_authorized
+
+from .view import View
 
 
 def date_converter(o):
@@ -13,36 +14,39 @@ def date_converter(o):
         return int(time.mktime(o.timetuple()))
 
 
-async def check_guild(bot, guild_id) -> discord.Guild:
-    try:
-        return bot.get_guild(guild_id) or await bot.fetch_guild(guild_id)
-    except discord.Forbidden:
-        raise web.HTTPForbidden
-    except discord.HTTPException:
-        raise web.HTTPInternalServerError
-
-
-class Guilds(web.View, CorsViewMixin):
+class Guilds(View):
     async def get(self):
-        bot = self.request.app.get("bot")
-        guilds = len(bot.guilds) if bot else 0
-        members = len(bot.users) if bot else 0
-        return web.json_response({"guilds": guilds, "members": members})
+        return web.json_response(
+            {"guilds": len(self.bot.guilds), "members": len(self.bot.users)}
+        )
 
 
-class Guild(web.View, CorsViewMixin):
-    async def get(self):
+class GuildBase(View):
+    async def check_perms(self):
         try:
             user_id = int(await check_authorized(self.request))
             guild_id = int(self.request.match_info["id"])
         except TypeError:
             raise web.HTTPBadRequest
-        bot = self.request.app.get("bot")
-        guild = await check_guild(bot, guild_id)
-        if guild.owner.id != user_id:
+        try:
+            guild = self.bot.get_guild(guild_id) or await self.bot.fetch_guild(guild_id)
+            user = guild.get_member(user_id) or await guild.fetch_member(user_id)
+        except discord.Forbidden:
             raise web.HTTPForbidden
-        guild_conf = await bot.db.guilds.find_one(
-            {"id": guild_id}, {"_id": False, "last_message_at": False, "left": False},
+        except discord.HTTPException:
+            raise web.HTTPInternalServerError
+
+        if not await self.bot.is_admin(user):
+            raise web.HTTPForbidden
+
+        return user, guild
+
+
+class Guild(GuildBase):
+    async def get(self):
+        user, guild = await self.check_perms()
+        guild_conf = await self.bot.db.guilds.find_one(
+            {"id": guild.id}, {"_id": False, "last_message_at": False, "left": False},
         )
         if not guild_conf:
             raise web.HTTPNotFound
@@ -58,20 +62,11 @@ class Guild(web.View, CorsViewMixin):
         return web.json_response(text=json.dumps(guild_conf, default=date_converter))
 
 
-class GuildStats(web.View, CorsViewMixin):
+class GuildStats(GuildBase):
     async def get(self):
-        try:
-            user_id = int(await check_authorized(self.request))
-            guild_id = int(self.request.match_info["id"])
-        except TypeError:
-            raise web.HTTPBadRequest
-        bot = self.request.app.get("bot")
-        guild = await check_guild(bot, guild_id)
-        if guild.owner.id != user_id:
-            raise web.HTTPForbidden
-
-        cursor = bot.db.daily_stats.find(
-            {"guild_id": guild_id},
+        user, guild = await self.check_perms()
+        cursor = self.bot.db.daily_stats.find(
+            {"guild_id": guild.id},
             {"_id": False, "guild_id": False},
             sort=[("date", -1)],
         )
@@ -81,53 +76,34 @@ class GuildStats(web.View, CorsViewMixin):
             raise web.HTTPNotFound
 
         return web.json_response(
-            text=json.dumps({"id": guild_id, "stats": stats}, default=date_converter)
+            text=json.dumps({"id": guild.id, "stats": stats}, default=date_converter)
         )
 
 
-class GuildEmojis(web.View, CorsViewMixin):
+class GuildEmojis(GuildBase):
     async def get(self):
-        try:
-            user_id = int(await check_authorized(self.request))
-            guild_id = int(self.request.match_info["id"])
-        except TypeError:
-            raise web.HTTPBadRequest
-        bot = self.request.app.get("bot")
-        guild = await check_guild(bot, guild_id)
-        if guild.owner.id != user_id:
-            raise web.HTTPForbidden
-
-        emojis = filter(lambda e: e.guild_id == guild_id, bot.emojis)
-        cursor = bot.db.emoji_stats.find(
+        user, guild = await self.check_perms()
+        emojis = filter(lambda e: e.guild_id == guild.id, self.bot.emojis)
+        cursor = self.bot.db.emoji_stats.find(
             {"id": {"$in": [e.id for e in emojis]}},
             {"_id": False, "total": True, "id": True},
             sort=[("total", -1)],
         )
         emojis_stats = await cursor.to_list(None)
         for e in emojis_stats:
-            e.update({"name": bot.get_emoji(e["id"]).name})
+            e.update({"name": self.bot.get_emoji(e["id"]).name})
         if not emojis:
             raise web.HTTPNotFound
 
-        return web.json_response({"id": guild_id, "emojis": emojis_stats})
+        return web.json_response({"id": guild.id, "emojis": emojis_stats})
 
 
-class GuildMembers(web.View, CorsViewMixin):
+class GuildMembers(GuildBase):
     async def get(self):
-        try:
-            user_id = int(await check_authorized(self.request))
-            guild_id = int(self.request.match_info["id"])
-        except TypeError:
-            raise web.HTTPBadRequest
-
-        bot = self.request.app.get("bot")
-        guild = await check_guild(bot, guild_id)
-        if guild.owner.id != user_id:
-            raise web.HTTPForbidden
-
+        user, guild = await self.check_perms()
         limit = min(int(self.request.query.get("limit", "0")), 100)
-        cursor = bot.db.user_stats.find(
-            {"guild_id": guild_id},
+        cursor = self.bot.db.user_stats.find(
+            {"guild_id": guild.id},
             {
                 "_id": False,
                 "guild_id": False,
@@ -140,7 +116,7 @@ class GuildMembers(web.View, CorsViewMixin):
         )
         member_stats = await cursor.to_list(None)
         for member_s in member_stats:
-            member = await bot.db.users.find_one(
+            member = await self.bot.db.users.find_one(
                 {"id": member_s["user_id"]}, {"_id": False, "name": True}
             )
             if not member:
@@ -159,6 +135,6 @@ class GuildMembers(web.View, CorsViewMixin):
             member_s["name"] = member_name
         return web.json_response(
             text=json.dumps(
-                {"id": guild_id, "members": member_stats}, ensure_ascii=False
+                {"id": guild.id, "members": member_stats}, ensure_ascii=False
             )
         )

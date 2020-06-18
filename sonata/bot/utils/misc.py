@@ -24,6 +24,17 @@ def make_locale_list(flag=True, display_name=False):
     return locales
 
 
+def map_locale():
+    return [
+        {
+            "locale": locale,
+            "display_name": Locale.parse(locale, sep="_").display_name,
+            "flag": locale_to_flag(locale),
+        }
+        for locale in i18n.LOCALES
+    ]
+
+
 def chunks(lst, n):
     """Yield successive n-sized chunks from lst."""
     for i in range(0, len(lst), n):

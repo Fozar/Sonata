@@ -29,23 +29,8 @@ class Admin(
     async def cog_check(self, ctx: core.Context):
         if not ctx.guild:
             return False
-        if ctx.author.guild_permissions.administrator or await self.sonata.is_owner(
-            ctx.author
-        ):
-            return True
-        guild = await ctx.db.guilds.find_one(
-            {"id": ctx.guild.id}, {"admin_roles": True}
-        )
-        if (
-            guild
-            and guild.get("admin_roles")
-            and discord.utils.find(
-                lambda role: role.id in guild["admin_roles"], ctx.author.roles
-            )
-            is not None
-        ):
-            return True
-        return False
+
+        return await self.sonata.is_admin(ctx.author)
 
     # Events
 

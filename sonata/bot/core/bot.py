@@ -322,6 +322,23 @@ class Sonata(commands.Bot):
         if isinstance(search_term, str):
             return discord.utils.get(self.emojis, name=search_term)
 
+    async def is_admin(self, member: discord.Member):
+        if member.guild_permissions.administrator or await self.is_owner(member):
+            return True
+        guild = await self.db.guilds.find_one(
+            {"id": member.guild.id}, {"admin_roles": True}
+        )
+        if (
+            guild
+            and "admin_roles" in guild
+            and discord.utils.find(
+                lambda role: role.id in guild["admin_roles"], member.roles
+            )
+            is not None
+        ):
+            return True
+        return False
+
     async def process_commands(self, message: discord.Message):
         await self.set_locale(message)
         ctx = await self.get_context(message, cls=Context)

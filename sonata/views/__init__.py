@@ -1,4 +1,5 @@
 from .cogs import CogList, Cog
+from .commands import CommandSearch
 from .guilds import Guilds, Guild, GuildStats, GuildEmojis, GuildMembers, GuildChannels
 from .auth import Auth, AuthCallback, AuthLogout
 from .locales import Locales
@@ -16,6 +17,7 @@ async def init_views(app):
     cors.add(app.router.add_route("*", r"/users/@me", UserMe))
     cors.add(app.router.add_route("*", "/cogs", CogList))
     cors.add(app.router.add_route("*", r"/cogs/{name}", Cog))
+    cors.add(app.router.add_route("*", r"/commands/search", CommandSearch))
     cors.add(app.router.add_route("*", "/auth", Auth))
     cors.add(app.router.add_route("*", "/auth/callback", AuthCallback))
     cors.add(app.router.add_route("*", "/auth/logout", AuthLogout))

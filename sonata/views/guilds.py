@@ -144,14 +144,12 @@ class GuildMembers(GuildBase):
 class GuildChannels(GuildBase):
     @staticmethod
     def to_dict(channel: Union[discord.TextChannel, discord.VoiceChannel],):
-
-        ch = {
+        return {
             "id": channel.id,
             "name": channel.name,
             "type": str(channel.type),
             "bot_permissions": dict(channel.permissions_for(channel.guild.me)),
         }
-        return ch
 
     async def get(self):
         user, guild = await self.check_perms()

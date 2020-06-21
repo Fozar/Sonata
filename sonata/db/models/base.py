@@ -24,7 +24,7 @@ class DiscordModel(BaseModel):
 
 class DiscordConfigModel(CreatedAtMixin, DiscordModel):
     locale: str = "en_US"
-    custom_prefix: Optional[str] = None
+    custom_prefix: Optional[str] = "!"
 
 
 class Mention(BaseModel):

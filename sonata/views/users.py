@@ -2,18 +2,18 @@ import json
 
 import discord
 from aiohttp import web
-from aiohttp_cors import CorsViewMixin
 from aiohttp_security import check_authorized
 
+from sonata.views.view import View
 
-class UserMe(web.View, CorsViewMixin):
+
+class UserMe(View):
     async def get(self):
         try:
             user_id = int(await check_authorized(self.request))
         except TypeError:
             raise web.HTTPBadRequest
-        bot = self.request.app.get("bot")
-        user = await bot.db.users.find_one(
+        user = await self.bot.db.users.find_one(
             {"id": user_id}, {"_id": False, "created_at": False}
         )
         if not user:
@@ -21,20 +21,14 @@ class UserMe(web.View, CorsViewMixin):
 
         guilds = []
         for guild_id in user["guilds"]:
-            guild = await bot.db.guilds.find_one(
-                {"id": guild_id}, {"_id": False, "name": True, "owner_id": True}
-            )
-            if not guild:
-                try:
-                    guild = bot.get_guild(guild_id) or await bot.fetch_guild(guild_id)
-                except discord.HTTPException:
-                    continue
-                else:
-                    guild_name = guild.name
-                    is_owner = user_id == guild.owner_id
+            try:
+                guild = self.bot.get_guild(guild_id) or await self.bot.fetch_guild(guild_id)
+                member = guild.get_member(user_id) or await guild.fetch_member(user_id)
+            except discord.HTTPException:
+                continue
             else:
-                guild_name = guild["name"]
-                is_owner = user_id == guild["owner_id"]
+                guild_name = guild.name
+                is_owner = await self.bot.is_admin(member)
             guilds.append({"id": guild_id, "name": guild_name, "is_owner": is_owner})
         user["guilds"] = guilds
 

@@ -1,6 +1,7 @@
 import datetime as dt
 import json
 import time
+from typing import Union
 
 import discord
 from aiohttp import web
@@ -137,4 +138,31 @@ class GuildMembers(GuildBase):
             text=json.dumps(
                 {"id": guild.id, "members": member_stats}, ensure_ascii=False
             )
+        )
+
+
+class GuildChannels(GuildBase):
+    @staticmethod
+    def to_dict(channel: Union[discord.TextChannel, discord.VoiceChannel],):
+
+        ch = {
+            "id": channel.id,
+            "name": channel.name,
+            "type": str(channel.type),
+            "bot_permissions": dict(channel.permissions_for(channel.guild.me)),
+        }
+        return ch
+
+    async def get(self):
+        user, guild = await self.check_perms()
+        result = []
+        for category, channels in guild.by_category():
+            if category:
+                category = {"id": category.id, "name": category.name}
+            else:
+                category = {"id": None, "name": None}
+            category["channels"] = list(map(self.to_dict, channels))
+            result.append(category)
+        return web.json_response(
+            text=json.dumps({"id": guild.id, "channels": result}, ensure_ascii=False)
         )

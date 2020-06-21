@@ -164,3 +164,23 @@ class GuildChannels(GuildBase):
         return web.json_response(
             text=json.dumps({"id": guild.id, "channels": result}, ensure_ascii=False)
         )
+
+
+class GuildRoles(GuildBase):
+    @staticmethod
+    def to_dict(role: discord.Role):
+        return {
+            "id": role.id,
+            "name": role.name,
+            "position": role.position,
+            "mentionable": role.mentionable,
+            "color": str(role.color),
+            "permissions": dict(role.permissions),
+        }
+
+    async def get(self):
+        user, guild = await self.check_perms()
+        roles = list(map(self.to_dict, guild.roles))
+        return web.json_response(
+            text=json.dumps({"id": guild.id, "roles": roles}, ensure_ascii=False)
+        )

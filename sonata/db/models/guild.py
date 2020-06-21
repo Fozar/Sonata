@@ -11,8 +11,8 @@ class Channel(DiscordConfigModel):
 
 
 class Greeting(BaseModel):
-    channel_id: int
-    message: str
+    channel_id: int = None
+    message: str = None
 
 
 class Guild(DiscordConfigModel):
@@ -21,7 +21,7 @@ class Guild(DiscordConfigModel):
     dm_help: bool = False
     auto_lvl_msg: bool = False
     delete_commands: bool = False
-    greeting: Optional[Greeting] = None
+    greeting: Optional[Greeting] = Greeting()
     last_message_at: datetime = None
     admin_roles: List[int] = []
     mod_roles: List[int] = []

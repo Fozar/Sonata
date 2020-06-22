@@ -3,10 +3,10 @@ from typing import List, Optional
 
 from pydantic import BaseModel, validator
 
-from .base import BWList, DiscordConfigModel, BaseAlertConfig
+from .base import BWList, DiscordConfigModel, BaseAlertConfig, CreatedAtMixin
 
 
-class Channel(DiscordConfigModel):
+class Channel(CreatedAtMixin, DiscordConfigModel):
     pass
 
 

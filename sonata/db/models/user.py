@@ -13,6 +13,6 @@ class UserStats(CreatedAtMixin, CounterMixin):
     auto_lvl_msg: bool = True
 
 
-class User(DiscordConfigModel):
+class User(CreatedAtMixin, DiscordConfigModel):
     about: Optional[str] = None
     guilds: List[int] = []

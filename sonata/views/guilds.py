@@ -6,8 +6,10 @@ from typing import Union
 import discord
 from aiohttp import web
 from aiohttp_security import check_authorized
+from pydantic import ValidationError
 
 from .view import View
+from ..db.models.guild import GuildUpdate
 
 
 def date_converter(o):
@@ -61,6 +63,21 @@ class Guild(GuildBase):
         )
 
         return web.json_response(text=json.dumps(guild_conf, default=date_converter))
+
+    async def post(self):
+        user, guild = await self.check_perms()
+        update = await self.request.json()
+        try:
+            update = GuildUpdate(**update)
+        except ValidationError as e:
+            raise web.HTTPBadRequest(
+                text=e.json(indent=None), content_type="application/json"
+            )
+
+        self.bot.db.guilds.update_one(
+            {"id": guild.id}, {"$set": update.dict(exclude_unset=True)}
+        )
+        raise web.HTTPCreated
 
 
 class GuildStats(GuildBase):

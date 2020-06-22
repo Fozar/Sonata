@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import List, Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
 
 from .base import BWList, DiscordConfigModel, BaseAlertConfig
 
@@ -12,7 +12,15 @@ class Channel(DiscordConfigModel):
 
 class Greeting(BaseModel):
     channel_id: int = None
-    message: str = None
+    message: Optional[str] = None
+
+    @validator("message")
+    def message_validator(cls, v: Optional[str]):
+        if isinstance(v, str):
+            v = v.strip()
+            if len(v) > 2000:
+                raise ValueError("greeting message is too long.")
+        return v
 
 
 class GuildUpdate(DiscordConfigModel):

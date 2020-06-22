@@ -1,7 +1,10 @@
 from datetime import datetime
 from typing import Optional, List
 
+from discord.ext import commands
 from pydantic import BaseModel, validator
+
+from sonata.bot.utils.converters import validate_locale
 
 
 class CreatedAtMixin(BaseModel):
@@ -25,6 +28,22 @@ class DiscordModel(BaseModel):
 class DiscordConfigModel(CreatedAtMixin, DiscordModel):
     locale: str = "en_US"
     custom_prefix: Optional[str] = "!"
+
+    @validator('locale')
+    def locale_validator(cls, v: str):
+        try:
+            return validate_locale(v)
+        except commands.BadArgument:
+            raise ValueError("locale not found")
+
+    @validator('custom_prefix')
+    def prefix_validator(cls, v: str):
+        v = v.strip()
+        if len(v) > 20:
+            raise ValueError("prefix is too long")
+        if len(v) == 0:
+            raise ValueError("prefix is a required")
+        return v
 
 
 class Mention(BaseModel):

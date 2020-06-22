@@ -15,21 +15,24 @@ class Greeting(BaseModel):
     message: str = None
 
 
-class Guild(DiscordConfigModel):
-    owner_id: int
-    premium: bool = False
+class GuildUpdate(DiscordConfigModel):
     dm_help: bool = False
     auto_lvl_msg: bool = False
     delete_commands: bool = False
-    greeting: Optional[Greeting] = Greeting()
-    last_message_at: datetime = None
+    greeting: Greeting = Greeting()
     admin_roles: List[int] = []
     mod_roles: List[int] = []
-    modlog: Optional[int] = None
-    alerts: Optional[BaseAlertConfig] = BaseAlertConfig()
     disabled_cogs: List[str] = []
     disabled_commands: List[str] = []
-    channels: List[Channel] = []
     blacklist: BWList = BWList()
     whitelist: BWList = BWList()
+
+
+class Guild(CreatedAtMixin, GuildUpdate):
+    owner_id: int
+    premium: bool = False
+    last_message_at: datetime = None
+    modlog: Optional[int] = None
+    alerts: Optional[BaseAlertConfig] = BaseAlertConfig()
+    channels: List[Channel] = []
     left: Optional[datetime] = None

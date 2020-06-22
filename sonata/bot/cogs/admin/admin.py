@@ -469,7 +469,7 @@ class Admin(
             prefix = guild["custom_prefix"] or ctx.prefix
             return await ctx.inform(_("Current guild prefix is `{0}`.").format(prefix))
 
-        max_len = 4
+        max_len = 20
         if len(prefix) > max_len:
             return await ctx.inform(
                 _(

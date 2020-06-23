@@ -90,8 +90,6 @@ class GuildStats(GuildBase):
         )
         limit = self.request.query.get("limit")
         stats = await cursor.to_list(int(limit) if limit else None)
-        if not stats:
-            raise web.HTTPNotFound
 
         return web.json_response(
             text=json.dumps({"id": guild.id, "stats": stats}, default=date_converter)

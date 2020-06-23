@@ -1,10 +1,9 @@
 from datetime import datetime
 from typing import Optional, List
 
-from discord.ext import commands
 from pydantic import BaseModel, validator
 
-from sonata.bot.utils.converters import validate_locale
+from sonata.bot.utils import i18n
 
 
 class CreatedAtMixin(BaseModel):
@@ -25,18 +24,17 @@ class DiscordModel(BaseModel):
     name: str
 
 
-class DiscordConfigModel(DiscordModel):
+class DiscordConfigModel(BaseModel):
     locale: str = "en_US"
     custom_prefix: Optional[str] = "!"
 
-    @validator('locale')
+    @validator("locale")
     def locale_validator(cls, v: str):
-        try:
-            return validate_locale(v)
-        except commands.BadArgument:
+        if v not in i18n.LOCALES:
             raise ValueError("locale not found")
+        return v
 
-    @validator('custom_prefix')
+    @validator("custom_prefix")
     def prefix_validator(cls, v: str):
         v = v.strip()
         if len(v) > 20:

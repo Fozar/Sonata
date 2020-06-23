@@ -72,8 +72,6 @@ class AuthCallback(web.View, CorsViewMixin):
             if r.status != 200:
                 raise web.HTTPBadGateway
             user = await r.json()
-        session = await get_session(self.request)
-        session["oauth"] = oauth
         redirect = self.request.query.get("state")
         redirect = (
             base64.urlsafe_b64decode(redirect).decode("utf-8") if redirect else "/"
@@ -88,6 +86,8 @@ class AuthCallback(web.View, CorsViewMixin):
             content_type="text/html",
         )
         await remember(self.request, response, user["id"])
+        session = await get_session(self.request)
+        session["oauth"] = oauth
         return response
 
 

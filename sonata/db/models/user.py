@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Optional, List
 
-from .base import CreatedAtMixin, CounterMixin, DiscordConfigModel
+from .base import CreatedAtMixin, CounterMixin, DiscordConfigModel, DiscordModel
 
 
 class UserStats(CreatedAtMixin, CounterMixin):
@@ -13,6 +13,6 @@ class UserStats(CreatedAtMixin, CounterMixin):
     auto_lvl_msg: bool = True
 
 
-class User(CreatedAtMixin, DiscordConfigModel):
+class User(CreatedAtMixin, DiscordModel, DiscordConfigModel):
     about: Optional[str] = None
     guilds: List[int] = []

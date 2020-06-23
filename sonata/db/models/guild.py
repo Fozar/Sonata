@@ -3,10 +3,10 @@ from typing import List, Optional
 
 from pydantic import BaseModel, validator
 
-from .base import BWList, DiscordConfigModel, BaseAlertConfig, CreatedAtMixin
+from .base import BWList, DiscordConfigModel, BaseAlertConfig, CreatedAtMixin, DiscordModel
 
 
-class Channel(CreatedAtMixin, DiscordConfigModel):
+class Channel(CreatedAtMixin, DiscordModel, DiscordConfigModel):
     pass
 
 
@@ -36,7 +36,7 @@ class GuildUpdate(DiscordConfigModel):
     whitelist: BWList = BWList()
 
 
-class Guild(CreatedAtMixin, GuildUpdate):
+class Guild(CreatedAtMixin, DiscordModel, GuildUpdate):
     owner_id: int
     premium: bool = False
     last_message_at: datetime = None

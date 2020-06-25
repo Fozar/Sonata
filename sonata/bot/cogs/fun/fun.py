@@ -105,6 +105,8 @@ class Fun(
     @core.command(examples=[_("coffee tea juice"), _('love "doesn\'t love"')])
     async def choose(self, ctx: core.Context, *options: commands.clean_content()):
         _("""Selects one of the options""")
+        if not options:
+            return await ctx.inform(_("I have nothing to choose from"))
         choice = random.choice(options)
         await ctx.send(f"{ctx.author.mention}, {choice.strip()}")
 

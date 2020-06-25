@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-06-08 23:26+0700\n"
-"PO-Revision-Date: 2020-06-08 23:26+0700\n"
+"POT-Creation-Date: 2020-06-25 16:38+0700\n"
+"PO-Revision-Date: 2020-06-25 16:39+0700\n"
 "Last-Translator: \n"
 "Language: ru_RU\n"
 "Language-Team: ru_RU <LL@li.org>\n"
@@ -29,66 +29,66 @@ msgstr ""
 "Этот модуль отвечает за уникальное поведение бота в твоей гильдии. Ты можешь "
 "отключать и включать модули и команды, изменять язык, префикс бота и др."
 
-#: sonata/bot/cogs/admin/admin.py:84
+#: sonata/bot/cogs/admin/admin.py:69
 msgid "Channels settings"
 msgstr "Настройки каналов"
 
-#: sonata/bot/cogs/admin/admin.py:90 sonata/bot/cogs/admin/admin.py:208
-#: sonata/bot/cogs/admin/admin.py:246 sonata/bot/cogs/admin/admin.py:455
-#: sonata/bot/cogs/admin/admin.py:724 sonata/bot/cogs/admin/admin.py:762
+#: sonata/bot/cogs/admin/admin.py:75 sonata/bot/cogs/admin/admin.py:193
+#: sonata/bot/cogs/admin/admin.py:231 sonata/bot/cogs/admin/admin.py:440
+#: sonata/bot/cogs/admin/admin.py:709 sonata/bot/cogs/admin/admin.py:747
 #: sonata/bot/cogs/streams/streams.py:52
 msgid "#TextChannel"
 msgstr "#ТекстовыйКанал"
 
-#: sonata/bot/cogs/admin/admin.py:90
+#: sonata/bot/cogs/admin/admin.py:75
 msgid "#TextChannel en_US"
 msgstr "#ТекстовыйКанал ru_RU"
 
-#: sonata/bot/cogs/admin/admin.py:98
+#: sonata/bot/cogs/admin/admin.py:83
 msgid "Set channel locale"
 msgstr "Устанавливает язык канала"
 
-#: sonata/bot/cogs/admin/admin.py:110
+#: sonata/bot/cogs/admin/admin.py:95
 msgid "Current channel locale is {flag} `{locale}`."
 msgstr "Текущий язык канала: {flag} `{0}`."
 
-#: sonata/bot/cogs/admin/admin.py:131
+#: sonata/bot/cogs/admin/admin.py:116
 msgid "The channel locale is set to {flag} `{locale}`."
 msgstr "Язык канала установлен на {flag} `{locale}`."
 
-#: sonata/bot/cogs/admin/admin.py:140
+#: sonata/bot/cogs/admin/admin.py:125
 msgid "Guild settings"
 msgstr "Настройки гильдии"
 
-#: sonata/bot/cogs/admin/admin.py:147
+#: sonata/bot/cogs/admin/admin.py:132
 msgid "Disables/Enables auto-message when leveling up for all members"
 msgstr "Отключает/включает автосообщение при повышении уровня для всех участников"
 
-#: sonata/bot/cogs/admin/admin.py:155
+#: sonata/bot/cogs/admin/admin.py:140
 msgid "Enables auto-message when leveling up for all members"
 msgstr "Включает автосообщение при повышении уровня для всех участников"
 
-#: sonata/bot/cogs/admin/admin.py:161
+#: sonata/bot/cogs/admin/admin.py:146
 msgid "Auto-message when leveling up is already enabled for all members."
 msgstr "Автосообщение при повышении уровня уже включено для всех участников."
 
-#: sonata/bot/cogs/admin/admin.py:165
+#: sonata/bot/cogs/admin/admin.py:150
 msgid "Auto-message when leveling up is enabled for all members."
 msgstr "Автосообщение при повышении уровня включено для всех участников."
 
-#: sonata/bot/cogs/admin/admin.py:170
+#: sonata/bot/cogs/admin/admin.py:155
 msgid "Disables auto-message when leveling up for all members"
 msgstr "Отключает автосообщение при повышении уровня для всех участников"
 
-#: sonata/bot/cogs/admin/admin.py:176
+#: sonata/bot/cogs/admin/admin.py:161
 msgid "Auto-message when leveling up is already disabled for all members."
 msgstr "Автосообщение при повышении уровня уже отключено для всех участников."
 
-#: sonata/bot/cogs/admin/admin.py:180
+#: sonata/bot/cogs/admin/admin.py:165
 msgid "Auto-message when leveling up is disabled for all members."
 msgstr "Автосообщение при повышении уровня отключено для всех участников."
 
-#: sonata/bot/cogs/admin/admin.py:185
+#: sonata/bot/cogs/admin/admin.py:170
 msgid ""
 "Guild blacklist\n"
 "\n"
@@ -98,114 +98,114 @@ msgstr ""
 "\n"
 "        Бот не будет отвечать на команды в каналах из черного списка."
 
-#: sonata/bot/cogs/admin/admin.py:193 sonata/bot/cogs/admin/admin.py:204
+#: sonata/bot/cogs/admin/admin.py:178 sonata/bot/cogs/admin/admin.py:189
 #: sonata/bot/cogs/streams/twitch.py:787
 msgid "Blacklist is empty."
 msgstr "Черный список пуст."
 
-#: sonata/bot/cogs/admin/admin.py:196
+#: sonata/bot/cogs/admin/admin.py:181
 msgid "Blacklist"
 msgstr "Черный список"
 
-#: sonata/bot/cogs/admin/admin.py:202 sonata/bot/cogs/admin/admin.py:718
+#: sonata/bot/cogs/admin/admin.py:187 sonata/bot/cogs/admin/admin.py:703
 msgid "**Channels**\n"
 msgstr "**Каналы**\n"
 
-#: sonata/bot/cogs/admin/admin.py:208 sonata/bot/cogs/admin/admin.py:246
-#: sonata/bot/cogs/admin/admin.py:724 sonata/bot/cogs/admin/admin.py:762
+#: sonata/bot/cogs/admin/admin.py:193 sonata/bot/cogs/admin/admin.py:231
+#: sonata/bot/cogs/admin/admin.py:709 sonata/bot/cogs/admin/admin.py:747
 msgid "#TextChannel #AnotherTextChannel"
 msgstr "#ТекстовыйКанал #ДругойТекстовыйКанал"
 
-#: sonata/bot/cogs/admin/admin.py:213
+#: sonata/bot/cogs/admin/admin.py:198
 msgid "Adds channels to blacklist"
 msgstr "Добавляет каналы в черный список"
 
-#: sonata/bot/cogs/admin/admin.py:218
+#: sonata/bot/cogs/admin/admin.py:203
 msgid "Channels successfully added to blacklist."
 msgstr "Каналы успешно добавлены в черный список."
 
-#: sonata/bot/cogs/admin/admin.py:222 sonata/bot/cogs/streams/twitch.py:850
+#: sonata/bot/cogs/admin/admin.py:207 sonata/bot/cogs/streams/twitch.py:850
 #: sonata/bot/cogs/streams/twitch.py:1041
 msgid "Clears the blacklist"
 msgstr "Очищает черный список"
 
-#: sonata/bot/cogs/admin/admin.py:226
+#: sonata/bot/cogs/admin/admin.py:211
 msgid "Blacklist cleared successfully."
 msgstr "Черный список успешно очищен."
 
-#: sonata/bot/cogs/admin/admin.py:230
+#: sonata/bot/cogs/admin/admin.py:215
 msgid "Disables blacklist in the guild"
 msgstr "Отключает черный список в гильдии"
 
-#: sonata/bot/cogs/admin/admin.py:234
+#: sonata/bot/cogs/admin/admin.py:219
 msgid "Blacklist disabled."
 msgstr "Черный список отключен."
 
-#: sonata/bot/cogs/admin/admin.py:238
+#: sonata/bot/cogs/admin/admin.py:223
 msgid "Enables blacklist in the guild"
 msgstr "Включает черный список в гильдии"
 
-#: sonata/bot/cogs/admin/admin.py:242
+#: sonata/bot/cogs/admin/admin.py:227
 msgid "Blacklist enabled."
 msgstr "Черный список включен."
 
-#: sonata/bot/cogs/admin/admin.py:251
+#: sonata/bot/cogs/admin/admin.py:236
 msgid "Removes channels from blacklist"
 msgstr "Удаляет каналы из черного списка"
 
-#: sonata/bot/cogs/admin/admin.py:256
+#: sonata/bot/cogs/admin/admin.py:241
 msgid "Channels successfully removed from blacklist."
 msgstr "Каналы успешно удалены из черного списка."
 
-#: sonata/bot/cogs/admin/admin.py:260
+#: sonata/bot/cogs/admin/admin.py:245
 msgid "Toggle whether to send help message to direct messages"
 msgstr "Переключает отправку справки в личные сообщения"
 
-#: sonata/bot/cogs/admin/admin.py:267
+#: sonata/bot/cogs/admin/admin.py:252
 msgid "Enables sending help to direct messages"
 msgstr "Включает отправку справки в личные сообщения"
 
-#: sonata/bot/cogs/admin/admin.py:273
+#: sonata/bot/cogs/admin/admin.py:258
 msgid "Sending bot help messages to direct messages is already enabled."
 msgstr "Отправка справки в личные сообщения уже включена."
 
-#: sonata/bot/cogs/admin/admin.py:277
+#: sonata/bot/cogs/admin/admin.py:262
 msgid "Sending bot help messages to direct messages is enabled."
 msgstr "Отправка справки в личные сообщения включена."
 
-#: sonata/bot/cogs/admin/admin.py:282
+#: sonata/bot/cogs/admin/admin.py:267
 msgid "Disables sending help to direct messages"
 msgstr "Отключает отправку справки в личные сообщения"
 
-#: sonata/bot/cogs/admin/admin.py:288
+#: sonata/bot/cogs/admin/admin.py:273
 msgid "Sending bot help messages to direct messages is already disabled."
 msgstr "Отправка справки в личные сообщения уже отключена."
 
-#: sonata/bot/cogs/admin/admin.py:292
+#: sonata/bot/cogs/admin/admin.py:277
 msgid "Sending bot help messages to direct messages is disabled."
 msgstr "Отправка справки в личные сообщения отключена."
 
-#: sonata/bot/cogs/admin/admin.py:297
+#: sonata/bot/cogs/admin/admin.py:282
 msgid "Disables/Enables cog in the guild"
 msgstr "Отключает/включает модуль в гильдии"
 
-#: sonata/bot/cogs/admin/admin.py:304
+#: sonata/bot/cogs/admin/admin.py:289
 msgid "Enables cog in the guild"
 msgstr "Включает модуль в гильдии"
 
-#: sonata/bot/cogs/admin/admin.py:309
+#: sonata/bot/cogs/admin/admin.py:294
 msgid "This cog has not been disabled."
 msgstr "Этот модуль не был отключен."
 
-#: sonata/bot/cogs/admin/admin.py:311
+#: sonata/bot/cogs/admin/admin.py:296
 msgid "Cog `{0}` enabled."
 msgstr "Модуль `{0}` включен."
 
-#: sonata/bot/cogs/admin/admin.py:315
+#: sonata/bot/cogs/admin/admin.py:300
 msgid "Disables cog in the guild"
 msgstr "Отключает модуль в гильдии"
 
-#: sonata/bot/cogs/admin/admin.py:318
+#: sonata/bot/cogs/admin/admin.py:303
 msgid ""
 "Cog `{cog}` does not exist.\n"
 "You can disable the following cogs: {cogs}."
@@ -213,67 +213,67 @@ msgstr ""
 "Модуль `{cog}` не существует.\n"
 "Ты можешь отключить следующие модули: {cogs}."
 
-#: sonata/bot/cogs/admin/admin.py:324
+#: sonata/bot/cogs/admin/admin.py:309
 msgid "Cog `{0}` cannot be disabled."
 msgstr "Модуль `{0}` не может быть отключен."
 
-#: sonata/bot/cogs/admin/admin.py:329
+#: sonata/bot/cogs/admin/admin.py:314
 msgid "This cog is already disabled."
 msgstr "Этот модуль уже отключен."
 
-#: sonata/bot/cogs/admin/admin.py:331
+#: sonata/bot/cogs/admin/admin.py:316
 msgid "Cog `{0}` disabled."
 msgstr "Модуль `{0}` отключен."
 
-#: sonata/bot/cogs/admin/admin.py:335
+#: sonata/bot/cogs/admin/admin.py:320
 msgid "Disables/Enables command in the guild"
 msgstr "Отключает/включает команду в гильдии"
 
-#: sonata/bot/cogs/admin/admin.py:342
+#: sonata/bot/cogs/admin/admin.py:327
 msgid "Enables command in the guild"
 msgstr "Включает команду в гильдии"
 
-#: sonata/bot/cogs/admin/admin.py:347
+#: sonata/bot/cogs/admin/admin.py:332
 msgid "This command has not been disabled."
 msgstr "Эта команда не была отключена."
 
-#: sonata/bot/cogs/admin/admin.py:349
+#: sonata/bot/cogs/admin/admin.py:334
 msgid "Command `{0}` enabled."
 msgstr "Команда `{0}` включена."
 
-#: sonata/bot/cogs/admin/admin.py:353
+#: sonata/bot/cogs/admin/admin.py:338
 msgid "Disables command in the guild"
 msgstr "Отключает команду в гильдии"
 
-#: sonata/bot/cogs/admin/admin.py:356
+#: sonata/bot/cogs/admin/admin.py:341
 msgid "Command `{0}` not found."
 msgstr "Команда `{0}` не найдена."
 
-#: sonata/bot/cogs/admin/admin.py:361
+#: sonata/bot/cogs/admin/admin.py:346
 msgid "Command `{0}` cannot be disabled."
 msgstr "Команда `{0}` не может быть отключена."
 
-#: sonata/bot/cogs/admin/admin.py:367
+#: sonata/bot/cogs/admin/admin.py:352
 msgid "This command is already disabled."
 msgstr "Эта команда уже отключена."
 
-#: sonata/bot/cogs/admin/admin.py:369
+#: sonata/bot/cogs/admin/admin.py:354
 msgid "Command `{0}` disabled."
 msgstr "Команда `{0}` отключена."
 
-#: sonata/bot/cogs/admin/admin.py:373
+#: sonata/bot/cogs/admin/admin.py:358
 msgid "Welcome message"
 msgstr "Приветственное сообщение"
 
-#: sonata/bot/cogs/admin/admin.py:379
+#: sonata/bot/cogs/admin/admin.py:364
 msgid "Welcome message not set."
 msgstr "Приветственное сообщение не установлено."
 
-#: sonata/bot/cogs/admin/admin.py:384
+#: sonata/bot/cogs/admin/admin.py:369
 msgid "Channel not found. Set a new welcome message."
 msgstr "Канал не найден. Установи новое приветственное сообщение."
 
-#: sonata/bot/cogs/admin/admin.py:387
+#: sonata/bot/cogs/admin/admin.py:372
 msgid ""
 "**Channel**: {channel}\n"
 "**Message**: ```{msg}```"
@@ -281,19 +281,19 @@ msgstr ""
 "**Канал**: {channel}\n"
 "**Сообщение**: ```{msg}```"
 
-#: sonata/bot/cogs/admin/admin.py:394
+#: sonata/bot/cogs/admin/admin.py:379
 msgid "Disables the greeting message."
 msgstr "Отключает приветственное сообщение."
 
-#: sonata/bot/cogs/admin/admin.py:398
+#: sonata/bot/cogs/admin/admin.py:383
 msgid "Welcome message is disabled."
 msgstr "Приветственное сообщение отключено."
 
-#: sonata/bot/cogs/admin/admin.py:401
+#: sonata/bot/cogs/admin/admin.py:386
 msgid "#TextChannel Hi, {{member}}! Welcome to our guild!"
 msgstr "#ТекстовыйКанал Привет, {{member}}! Добро пожаловать в нашу гильдию!"
 
-#: sonata/bot/cogs/admin/admin.py:410
+#: sonata/bot/cogs/admin/admin.py:395
 msgid ""
 "Sets welcome message\n"
 "\n"
@@ -307,48 +307,48 @@ msgstr ""
 "{{mention}}, чтобы @упомянуть.\n"
 "        "
 
-#: sonata/bot/cogs/admin/admin.py:418 sonata/bot/cogs/admin/admin.py:460
+#: sonata/bot/cogs/admin/admin.py:403 sonata/bot/cogs/admin/admin.py:445
 #: sonata/bot/cogs/streams/streams.py:56 sonata/bot/cogs/streams/twitch.py:1089
 msgid "I can't send messages in this channel."
 msgstr "Я не могу отправлять сообщения в этот канал."
 
-#: sonata/bot/cogs/admin/admin.py:420
+#: sonata/bot/cogs/admin/admin.py:405
 msgid "Welcome message cannot exceed 2000 characters."
 msgstr "Длина приветствия не может быть больше 2000 символов."
 
-#: sonata/bot/cogs/admin/admin.py:426
+#: sonata/bot/cogs/admin/admin.py:411
 msgid "Welcome message set."
 msgstr "Приветственное сообщение установлено."
 
-#: sonata/bot/cogs/admin/admin.py:430
+#: sonata/bot/cogs/admin/admin.py:415
 msgid "Set guild locale"
 msgstr "Устанавливает язык гильдии"
 
-#: sonata/bot/cogs/admin/admin.py:434
+#: sonata/bot/cogs/admin/admin.py:419
 msgid "Current guild locale is {flag} `{locale}`."
 msgstr "Текущий язык гильдии: {flag} `{locale}`."
 
-#: sonata/bot/cogs/admin/admin.py:449
+#: sonata/bot/cogs/admin/admin.py:434
 msgid "The guild locale is set to {flag} `{locale}`."
 msgstr "Язык гильдии установлен на {flag} `{locale}`."
 
-#: sonata/bot/cogs/admin/admin.py:458
+#: sonata/bot/cogs/admin/admin.py:443
 msgid "Set modlog channel"
 msgstr "Устанавливает канал журнала модераторов"
 
-#: sonata/bot/cogs/admin/admin.py:465
+#: sonata/bot/cogs/admin/admin.py:450
 msgid "Modlog channel is set to {0}."
 msgstr "Журнал модераторов установлен на {0}."
 
-#: sonata/bot/cogs/admin/admin.py:469
+#: sonata/bot/cogs/admin/admin.py:454
 msgid "Reset modlog channel"
 msgstr "Сбрасывает канал журнала модераторов"
 
-#: sonata/bot/cogs/admin/admin.py:471
+#: sonata/bot/cogs/admin/admin.py:456
 msgid "Modlog channel reset."
 msgstr "Канал журнала модераторов сброшен."
 
-#: sonata/bot/cogs/admin/admin.py:475
+#: sonata/bot/cogs/admin/admin.py:460
 msgid ""
 "Set guild prefix\n"
 "        \n"
@@ -358,58 +358,58 @@ msgstr ""
 "        \n"
 "        Префикс гильдии перезаписывает префикс по умолчанию."
 
-#: sonata/bot/cogs/admin/admin.py:485
+#: sonata/bot/cogs/admin/admin.py:470
 msgid "Current guild prefix is `{0}`."
 msgstr "Текущий префикс гильдии: `{0}`."
 
-#: sonata/bot/cogs/admin/admin.py:490
+#: sonata/bot/cogs/admin/admin.py:475
 msgid ""
 "This prefix is too long. The prefix cannot consist of more than {0} characters."
 msgstr ""
 "Этот префикс слишком длинный. Префикс не может состоять из более, чем {0} "
 "символов."
 
-#: sonata/bot/cogs/admin/admin.py:499
+#: sonata/bot/cogs/admin/admin.py:484
 msgid "The guild prefix is set to `{0}`."
 msgstr "Префикс гильдии установлен на `{0}`."
 
-#: sonata/bot/cogs/admin/admin.py:504
+#: sonata/bot/cogs/admin/admin.py:489
 msgid "Toggles deletion of commands"
 msgstr "Переключает удаление команд"
 
-#: sonata/bot/cogs/admin/admin.py:512
+#: sonata/bot/cogs/admin/admin.py:497
 msgid "Enables deletion of commands"
 msgstr "Включает удаление команд"
 
-#: sonata/bot/cogs/admin/admin.py:516
+#: sonata/bot/cogs/admin/admin.py:501
 msgid "Deleting commands is enabled."
 msgstr "Удаление команд включено."
 
-#: sonata/bot/cogs/admin/admin.py:521
+#: sonata/bot/cogs/admin/admin.py:506
 msgid "Disables deletion of commands"
 msgstr "Отключает удаление команд"
 
-#: sonata/bot/cogs/admin/admin.py:525
+#: sonata/bot/cogs/admin/admin.py:510
 msgid "Deleting commands is disabled."
 msgstr "Удаление команд отключено."
 
-#: sonata/bot/cogs/admin/admin.py:529
+#: sonata/bot/cogs/admin/admin.py:514
 msgid "Resets guild settings"
 msgstr "Сбрасывает настройки гильдии"
 
-#: sonata/bot/cogs/admin/admin.py:530
+#: sonata/bot/cogs/admin/admin.py:515
 msgid "Are you sure?"
 msgstr "Вы уверены?"
 
-#: sonata/bot/cogs/admin/admin.py:544
+#: sonata/bot/cogs/admin/admin.py:529
 msgid "Guild settings reset."
 msgstr "Настройки гильдии сброшены."
 
-#: sonata/bot/cogs/admin/admin.py:548
+#: sonata/bot/cogs/admin/admin.py:533
 msgid "Set privileged roles"
 msgstr "Устанавливает привилегированные роли"
 
-#: sonata/bot/cogs/admin/admin.py:556
+#: sonata/bot/cogs/admin/admin.py:541
 msgid ""
 "Admin roles\n"
 "        \n"
@@ -421,27 +421,27 @@ msgstr ""
 "        Участники которые имеют роль администратора могут пользоваться модулем "
 "наравне с участниками, которые имеют права администратора."
 
-#: sonata/bot/cogs/admin/admin.py:566
+#: sonata/bot/cogs/admin/admin.py:551
 msgid "Admin roles not set."
 msgstr "Роли администраторов не установлены."
 
-#: sonata/bot/cogs/admin/admin.py:578
+#: sonata/bot/cogs/admin/admin.py:563
 msgid "Admin roles: {0}."
 msgstr "Роли администраторов: {0}."
 
-#: sonata/bot/cogs/admin/admin.py:584 sonata/bot/cogs/admin/admin.py:608
+#: sonata/bot/cogs/admin/admin.py:569 sonata/bot/cogs/admin/admin.py:593
 msgid "@Admin"
 msgstr "@Админ"
 
-#: sonata/bot/cogs/admin/admin.py:585 sonata/bot/cogs/admin/admin.py:609
+#: sonata/bot/cogs/admin/admin.py:570 sonata/bot/cogs/admin/admin.py:594
 msgid "@MiniAdmin @Admin @BotManager"
 msgstr "@МиниАдмин @Админ @БотМенеджер"
 
-#: sonata/bot/cogs/admin/admin.py:586 sonata/bot/cogs/admin/admin.py:610
+#: sonata/bot/cogs/admin/admin.py:571 sonata/bot/cogs/admin/admin.py:595
 msgid "705363996747759657 Admin"
 msgstr "705363996747759657 Админ"
 
-#: sonata/bot/cogs/admin/admin.py:592
+#: sonata/bot/cogs/admin/admin.py:577
 msgid ""
 "Add roles to admin role list\n"
 "            \n"
@@ -451,16 +451,16 @@ msgstr ""
 "            \n"
 "        Вы можете указать роли используя ID, упоминание или имя роли."
 
-#: sonata/bot/cogs/admin/admin.py:598 sonata/bot/cogs/admin/admin.py:622
-#: sonata/bot/cogs/admin/admin.py:667 sonata/bot/cogs/admin/admin.py:692
+#: sonata/bot/cogs/admin/admin.py:583 sonata/bot/cogs/admin/admin.py:607
+#: sonata/bot/cogs/admin/admin.py:652 sonata/bot/cogs/admin/admin.py:677
 msgid "You must specify at least one role."
 msgstr "Тебе нужно указать хотя бы одну роль."
 
-#: sonata/bot/cogs/admin/admin.py:603 sonata/bot/cogs/admin/admin.py:672
+#: sonata/bot/cogs/admin/admin.py:588 sonata/bot/cogs/admin/admin.py:657
 msgid "Roles successfully added."
 msgstr "Роли успешно добавлены."
 
-#: sonata/bot/cogs/admin/admin.py:616
+#: sonata/bot/cogs/admin/admin.py:601
 msgid ""
 "Removes roles from admin role list\n"
 "        \n"
@@ -470,11 +470,11 @@ msgstr ""
 "        \n"
 "        Вы можете указать роли используя ID, упоминание или имя роли."
 
-#: sonata/bot/cogs/admin/admin.py:627 sonata/bot/cogs/admin/admin.py:697
+#: sonata/bot/cogs/admin/admin.py:612 sonata/bot/cogs/admin/admin.py:682
 msgid "Roles successfully removed."
 msgstr "Роли успешно удалены."
 
-#: sonata/bot/cogs/admin/admin.py:631
+#: sonata/bot/cogs/admin/admin.py:616
 msgid ""
 "Mod roles\n"
 "\n"
@@ -486,27 +486,27 @@ msgstr ""
 "        Участники, у которых есть хотя бы одна из ролей модераторов могут "
 "использовать модуль Mod без необходимости иметь соответствующие права."
 
-#: sonata/bot/cogs/admin/admin.py:639
+#: sonata/bot/cogs/admin/admin.py:624
 msgid "Mod roles not set."
 msgstr "Роли модераторов не установлены."
 
-#: sonata/bot/cogs/admin/admin.py:651
+#: sonata/bot/cogs/admin/admin.py:636
 msgid "Mod roles: {0}."
 msgstr "Роли модераторов: {0}."
 
-#: sonata/bot/cogs/admin/admin.py:656 sonata/bot/cogs/admin/admin.py:676
+#: sonata/bot/cogs/admin/admin.py:641 sonata/bot/cogs/admin/admin.py:661
 msgid "@Mod"
 msgstr "@Мод"
 
-#: sonata/bot/cogs/admin/admin.py:656 sonata/bot/cogs/admin/admin.py:676
+#: sonata/bot/cogs/admin/admin.py:641 sonata/bot/cogs/admin/admin.py:661
 msgid "@MiniMod @Mod"
 msgstr "@МиниМод"
 
-#: sonata/bot/cogs/admin/admin.py:656 sonata/bot/cogs/admin/admin.py:676
+#: sonata/bot/cogs/admin/admin.py:641 sonata/bot/cogs/admin/admin.py:661
 msgid "705363996747759657 Mod"
 msgstr "705363996747759657 Мод"
 
-#: sonata/bot/cogs/admin/admin.py:661
+#: sonata/bot/cogs/admin/admin.py:646
 msgid ""
 "Add roles to mod role list\n"
 "\n"
@@ -516,7 +516,7 @@ msgstr ""
 "\n"
 "        Вы можете указать роли используя ID, упоминание или имя роли."
 
-#: sonata/bot/cogs/admin/admin.py:681
+#: sonata/bot/cogs/admin/admin.py:666
 msgid ""
 "Removes roles from mod role list\n"
 "\n"
@@ -536,7 +536,7 @@ msgstr ""
 "        - guild role mod remove @MiniMod @Mod\n"
 "        - guild role mod remove 705363996747759657 Mod"
 
-#: sonata/bot/cogs/admin/admin.py:701
+#: sonata/bot/cogs/admin/admin.py:686
 msgid ""
 "Guild whitelist\n"
 "\n"
@@ -546,53 +546,53 @@ msgstr ""
 "\n"
 "        Бот будет отвечать на команды только в каналах из белого списка."
 
-#: sonata/bot/cogs/admin/admin.py:709 sonata/bot/cogs/admin/admin.py:720
+#: sonata/bot/cogs/admin/admin.py:694 sonata/bot/cogs/admin/admin.py:705
 #: sonata/bot/cogs/streams/twitch.py:658
 msgid "Whitelist is empty."
 msgstr "Белый список пуст."
 
-#: sonata/bot/cogs/admin/admin.py:712
+#: sonata/bot/cogs/admin/admin.py:697
 msgid "Whitelist"
 msgstr "Белый список"
 
-#: sonata/bot/cogs/admin/admin.py:729
+#: sonata/bot/cogs/admin/admin.py:714
 msgid "Adds channels to whitelist"
 msgstr "Добавляет каналы в белый список"
 
-#: sonata/bot/cogs/admin/admin.py:734
+#: sonata/bot/cogs/admin/admin.py:719
 msgid "Channels successfully added to whitelist."
 msgstr "Каналы успешно добавлены в белый список."
 
-#: sonata/bot/cogs/admin/admin.py:738 sonata/bot/cogs/streams/twitch.py:721
+#: sonata/bot/cogs/admin/admin.py:723 sonata/bot/cogs/streams/twitch.py:721
 #: sonata/bot/cogs/streams/twitch.py:950
 msgid "Clears the whitelist"
 msgstr "Очищает белый список"
 
-#: sonata/bot/cogs/admin/admin.py:742
+#: sonata/bot/cogs/admin/admin.py:727
 msgid "Whitelist cleared successfully."
 msgstr "Белый список успешно очищен."
 
-#: sonata/bot/cogs/admin/admin.py:746
+#: sonata/bot/cogs/admin/admin.py:731
 msgid "Disables whitelist in the guild"
 msgstr "Отключает белый список в гильдии"
 
-#: sonata/bot/cogs/admin/admin.py:750
+#: sonata/bot/cogs/admin/admin.py:735
 msgid "Whitelist disabled"
 msgstr "Белый список отключен"
 
-#: sonata/bot/cogs/admin/admin.py:754
+#: sonata/bot/cogs/admin/admin.py:739
 msgid "Enables whitelist in the guild"
 msgstr "Включает белый список в гильдии"
 
-#: sonata/bot/cogs/admin/admin.py:758
+#: sonata/bot/cogs/admin/admin.py:743
 msgid "Whitelist enabled."
 msgstr "Белый список включен."
 
-#: sonata/bot/cogs/admin/admin.py:767
+#: sonata/bot/cogs/admin/admin.py:752
 msgid "Removes channels from whitelist"
 msgstr "Удаляет каналы из белого списка."
 
-#: sonata/bot/cogs/admin/admin.py:772
+#: sonata/bot/cogs/admin/admin.py:757
 msgid "Channels successfully removed from whitelist."
 msgstr "Каналы успешно удалены из белого списка."
 
@@ -784,7 +784,11 @@ msgstr "любит \"не любит\""
 msgid "Selects one of the options"
 msgstr "Выбирает один из вариантов"
 
-#: sonata/bot/cogs/fun/fun.py:117
+#: sonata/bot/cogs/fun/fun.py:109
+msgid "I have nothing to choose from"
+msgstr "Мне не из чего выбирать"
+
+#: sonata/bot/cogs/fun/fun.py:119
 msgid ""
 "Rolls the dice\n"
 "            \n"
@@ -814,19 +818,19 @@ msgstr ""
 "комбинаций и получить суммарный результат. Для этого разделите комбинации с "
 "помощью \" + \" (плюс с пробелами)."
 
-#: sonata/bot/cogs/fun/fun.py:140
+#: sonata/bot/cogs/fun/fun.py:142
 msgid "Invalid expression format."
 msgstr "Неверный формат выражения."
 
-#: sonata/bot/cogs/fun/fun.py:165
+#: sonata/bot/cogs/fun/fun.py:167
 msgid "Finds a random cat image"
 msgstr "Находит случайное изображение кошки"
 
-#: sonata/bot/cogs/fun/fun.py:172
+#: sonata/bot/cogs/fun/fun.py:174
 msgid "No cat found "
 msgstr "Не нашла ни одного котика "
 
-#: sonata/bot/cogs/fun/fun.py:181
+#: sonata/bot/cogs/fun/fun.py:183
 msgid ""
 "Finds a random dog image\n"
 "        \n"
@@ -838,63 +842,63 @@ msgstr ""
 "        Ты также можешь указать породу собаки.\n"
 "        "
 
-#: sonata/bot/cogs/fun/fun.py:192
+#: sonata/bot/cogs/fun/fun.py:194
 msgid "Breed list"
 msgstr "Список пород"
 
-#: sonata/bot/cogs/fun/fun.py:198 sonata/bot/cogs/fun/fun.py:211
-#: sonata/bot/cogs/fun/fun.py:224 sonata/bot/cogs/fun/fun.py:237
-#: sonata/bot/cogs/fun/fun.py:258 sonata/bot/cogs/general/general.py:140
+#: sonata/bot/cogs/fun/fun.py:200 sonata/bot/cogs/fun/fun.py:213
+#: sonata/bot/cogs/fun/fun.py:226 sonata/bot/cogs/fun/fun.py:239
+#: sonata/bot/cogs/fun/fun.py:260 sonata/bot/cogs/general/general.py:140
 #: sonata/bot/cogs/mod/mod.py:155 sonata/bot/cogs/stats/leveling.py:95
 #: sonata/bot/cogs/tags/tags.py:384 sonata/bot/cogs/utils/utils.py:92
 msgid "@Member"
 msgstr "@Участник"
 
-#: sonata/bot/cogs/fun/fun.py:201
+#: sonata/bot/cogs/fun/fun.py:203
 msgid "Choke a guild member"
 msgstr "Душить участника гильдии"
 
-#: sonata/bot/cogs/fun/fun.py:203
+#: sonata/bot/cogs/fun/fun.py:205
 msgid "*{author} chokes {target}* "
 msgstr "*{author} душит {target}* "
 
-#: sonata/bot/cogs/fun/fun.py:214
+#: sonata/bot/cogs/fun/fun.py:216
 msgid "Hug a guild member"
 msgstr "Обнять участника гильдии"
 
-#: sonata/bot/cogs/fun/fun.py:216
+#: sonata/bot/cogs/fun/fun.py:218
 msgid "*{author} hugs {target}* "
 msgstr "*{author} обнимает {target}* "
 
-#: sonata/bot/cogs/fun/fun.py:227
+#: sonata/bot/cogs/fun/fun.py:229
 msgid "Hit a guild member"
 msgstr "Ударить участника гильдии"
 
-#: sonata/bot/cogs/fun/fun.py:229
+#: sonata/bot/cogs/fun/fun.py:231
 msgid "*{author} hits {target}* "
 msgstr "*{author} бьет {target}* "
 
-#: sonata/bot/cogs/fun/fun.py:240
+#: sonata/bot/cogs/fun/fun.py:242
 msgid "Kiss a guild member"
 msgstr "Поцеловать участника гильдии"
 
-#: sonata/bot/cogs/fun/fun.py:242
+#: sonata/bot/cogs/fun/fun.py:244
 msgid "*{author} kisses {target}* "
 msgstr "*{author} целует {target}* "
 
-#: sonata/bot/cogs/fun/fun.py:250
+#: sonata/bot/cogs/fun/fun.py:252
 msgid "reflects on the eternal"
 msgstr "думает о вечном"
 
-#: sonata/bot/cogs/fun/fun.py:253
+#: sonata/bot/cogs/fun/fun.py:255
 msgid "Perform a 3rd person action"
 msgstr "Выполнить действие от 3-го лица"
 
-#: sonata/bot/cogs/fun/fun.py:261
+#: sonata/bot/cogs/fun/fun.py:263
 msgid "Wink at guild member"
 msgstr "Подмигнуть участнику гильдии"
 
-#: sonata/bot/cogs/fun/fun.py:263
+#: sonata/bot/cogs/fun/fun.py:265
 msgid "*{author} winks at {target}* "
 msgstr "*{author} подмигивает {target}* "
 

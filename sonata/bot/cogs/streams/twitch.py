@@ -52,6 +52,9 @@ class TwitchGameConverter(commands.Converter):
 class TwitchUserConverter(commands.Converter):
     async def convert(self, ctx: core.Context, argument):
         client = ctx.bot.twitch_client
+        re_result = re.match(r'(https?://)?(www.)?twitch.tv/(\S+)', argument)
+        if re_result:
+            argument = re_result.group(2)
         try:
             user = await client.get_user(str(int(argument)))
         except ValueError:

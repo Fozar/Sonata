@@ -169,8 +169,11 @@ class TwitchMixin(core.Cog):
             except (KeyError, TypeError):
                 return  # No subs
 
-            for alert_config in alert_configs:
-                await self.process_alert(alert_config, topic, stream, user)
+            aws = [
+                self.process_alert(alert_config, topic, stream, user)
+                for alert_config in alert_configs
+            ]
+            await asyncio.gather(*aws)
 
     # Methods
 

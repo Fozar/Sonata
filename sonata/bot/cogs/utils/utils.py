@@ -198,6 +198,17 @@ class Utils(
         )
         await pages.start(ctx)
 
+    @core.command(examples=[_("echo"), _("#TextChannel echo")])
+    @commands.check(is_admin)
+    async def echo(self, ctx: core.Context, channel: Optional[discord.TextChannel], message: str):
+        _("""Sends the specified message to the specified channel
+        
+        If no channel is specified, the current one is used.""")
+        if channel is None:
+            channel = ctx.channel
+
+        await channel.send(message)
+
     @cached(
         ttl=300,
         serializer=PickleSerializer(),

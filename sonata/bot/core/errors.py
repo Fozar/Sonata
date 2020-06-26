@@ -1,6 +1,14 @@
 from discord.ext import commands
 
 
+class NotAdmin(commands.CheckFailure):
+    """Exception raised when the message author is not the admin of the guild.
+
+    This inherits from :exc:`CheckFailure`
+    """
+    pass
+
+
 class NoPremium(commands.CheckFailure):
     """Exception raised when an operation does not work on the guild without premium.
 

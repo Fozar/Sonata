@@ -2,7 +2,17 @@ import discord
 from discord.ext import commands
 
 from .context import Context
-from .errors import NoPremium
+from .errors import NoPremium, NotAdmin
+
+
+async def is_admin(ctx: Context):
+    if ctx.guild is None:
+        raise commands.NoPrivateMessage()
+
+    if not ctx.bot.is_admin(ctx.author):
+        raise NotAdmin(_("You are not an administrator"))
+
+    return True
 
 
 async def is_premium(ctx: Context):

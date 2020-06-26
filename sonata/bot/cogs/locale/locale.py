@@ -11,7 +11,7 @@ from sonata.bot.utils.misc import make_locale_list
 
 
 def admin_or_dm(ctx: core.Context):
-    if ctx.guild is not None and not ctx.author.guild_permissions.administrator:
+    if ctx.guild is not None and not ctx.bot.is_admin(ctx.author):
         raise commands.PrivateMessageOnly()
 
     return True

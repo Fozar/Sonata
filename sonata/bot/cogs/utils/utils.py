@@ -12,6 +12,7 @@ from discord.ext import commands, menus
 from discord.ext.commands import BucketType
 
 from sonata.bot import core
+from sonata.bot.core import is_admin
 from sonata.bot.utils.converters import MathExpression, to_lower, locale_to_lang
 from sonata.bot.utils.paginator import CloseMenu
 
@@ -190,6 +191,7 @@ class Utils(
 
     @covid.command(name="list")
     async def covid_list(self, ctx: core.Context):
+        _("""Displays country list""")
         data = await self.get_covid_data()
         countries = list(sorted([r.get("Country_Region") for r in data]))
         pages = menus.MenuPages(

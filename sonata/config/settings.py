@@ -15,7 +15,7 @@ class BotConfig:
     default_prefix: str = "!"
     core_cogs: FrozenSet[str] = frozenset({"Locale", "Owner", "General", "Admin"})
     other_cogs: FrozenSet[str] = frozenset(
-        {"Fun", "Reminder", "Utils", "Emoji", "Mod", "Tags", "Streams", "Stats"}
+        {"Fun", "Reminder", "Utils", "Emoji", "Mod", "Tags", "Streams", "Stats", "Roles"}
     )
 
     @property

@@ -312,7 +312,7 @@ class TwitchMixin(core.Cog):
                     else alert_config
                 )
                 if mention:
-                    content = f"\n@{mention}"
+                    content = f"\n{mention}"
 
         return await channel.send(content=content, embed=embed)
 
@@ -1183,7 +1183,7 @@ class TwitchMixin(core.Cog):
             {"topic": str(user.topic), "guilds.id": ctx.guild.id},
             {
                 "$set": {
-                    "guilds.$.mention.value": "everyone",
+                    "guilds.$.mention.value": "@everyone",
                     "guilds.$.mention.inherit": False,
                 }
             },
@@ -1205,13 +1205,40 @@ class TwitchMixin(core.Cog):
             {"topic": str(user.topic), "guilds.id": ctx.guild.id},
             {
                 "$set": {
-                    "guilds.$.mention.value": "here",
+                    "guilds.$.mention.value": "@here",
                     "guilds.$.mention.inherit": False,
                 }
             },
         )
         return await ctx.inform(
-            _("Alerts will mention `here` for {0}.").format(user.user.display_name)
+            _("Alerts will mention `@here` for {0}.").format(user.user.display_name)
+        )
+
+    @twitch_set_mention.command(name="role", examples=[_("ninja @Role")])
+    async def twitch_set_mention_role(
+        self, ctx: core.Context, user: TwitchSubscriptionConverter, role: discord.Role
+    ):
+        _(
+            """Sets alert mentions to specified role for specified user
+
+        Role must be mentionable."""
+        )
+        if not role.mentionable:
+            return await ctx.inform(_("The role is not mentionable."))
+
+        await ctx.db.twitch_subs.update_one(
+            {"topic": str(user.topic), "guilds.id": ctx.guild.id},
+            {
+                "$set": {
+                    "guilds.$.mention.value": role.mention,
+                    "guilds.$.mention.inherit": False,
+                }
+            },
+        )
+        return await ctx.inform(
+            _("Alerts will mention `@{role}` for {user}.").format(
+                role=role.name, user=user.user.display_name
+            )
         )
 
     @twitch_set_mention.command(name="enable", examples=["ninja"])

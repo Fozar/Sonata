@@ -119,7 +119,7 @@ class Streams(
         The bot must have the permission to mention everyone."""
         )
         await ctx.db.guilds.update_one(
-            {"id": ctx.guild.id}, {"$set": {"alerts.mention.value": "everyone"}}
+            {"id": ctx.guild.id}, {"$set": {"alerts.mention.value": "@everyone"}}
         )
         await ctx.inform(_("Alerts will mention `@everyone`."))
 
@@ -131,9 +131,24 @@ class Streams(
         The bot must have the permission to mention everyone."""
         )
         await ctx.db.guilds.update_one(
-            {"id": ctx.guild.id}, {"$set": {"alerts.mention.value": "here"}}
+            {"id": ctx.guild.id}, {"$set": {"alerts.mention.value": "@here"}}
         )
         await ctx.inform(_("Alerts will mention `@here`."))
+
+    @alerts_set_mention.command(name="role", examples=[_("@Role")])
+    async def alerts_set_mention_role(self, ctx: core.Context, role: discord.Role):
+        _(
+            """Sets alert mentions to specified role
+
+        Role must be mentionable."""
+        )
+        if not role.mentionable:
+            return await ctx.inform(_("The role is not mentionable."))
+
+        await ctx.db.guilds.update_one(
+            {"id": ctx.guild.id}, {"$set": {"alerts.mention.value": role.mention}}
+        )
+        await ctx.inform(_("Alerts will mention `@{0}`.").format(role.name))
 
     @alerts_set_mention.command(name="enable")
     async def alerts_set_mention_enable(self, ctx: core.Context):

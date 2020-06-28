@@ -15,7 +15,7 @@ class ManageableRole(commands.Converter):
         role = await commands.RoleConverter().convert(ctx, argument)
         if role.managed:
             raise commands.BadArgument(
-                _("I can not manage the following role: {role}").format(role=role)
+                _("I can not manage role: {role}").format(role=role)
             )
         me = ctx.guild.me or await ctx.guild.fetch_member(ctx.bot.user.id)
         if me.top_role < role:
@@ -161,7 +161,7 @@ class Roles(core.Cog, colour=discord.Colour.blurple()):  # TODO: Add description
         try:
             await pages.start(ctx)
         except IndexError:
-            await ctx.inform(_("No results were found for your request."))
+            await ctx.inform(_("Role menu list is empty"))
 
     @rolemenu.command(
         name="create", aliases=["add"], examples=[_("gender @Male @Female")]
@@ -173,8 +173,8 @@ class Roles(core.Cog, colour=discord.Colour.blurple()):  # TODO: Add description
         *roles: ManageableRole(),
     ):
         _("""Creates a new role menu""")
-        if len(roles) < 2:
-            return await ctx.inform(_("You must specify at least 2 roles"))
+        if len(roles) < 1:
+            return await ctx.inform(_("You must specify at least 1 role"))
 
         msg = None
         role_emoji = []
@@ -239,7 +239,7 @@ class Roles(core.Cog, colour=discord.Colour.blurple()):  # TODO: Add description
             )
         await ctx.inform(_("Role menu named `{name}` deleted").format(name=name))
 
-    @rolemenu.command(name="attach")
+    @rolemenu.command(name="attach", examples=[_("gender 726798897204428842")])
     @commands.bot_has_guild_permissions(add_reactions=True)
     async def rolemenu_attach(
         self,
@@ -288,7 +288,7 @@ class Roles(core.Cog, colour=discord.Colour.blurple()):  # TODO: Add description
 
         await ctx.inform(_("Role menu `{name}` attached to message").format(name=name))
 
-    @rolemenu.command(name="detach")
+    @rolemenu.command(name="detach", examples=[_("gender 726798897204428842")])
     @commands.bot_has_guild_permissions(add_reactions=True)
     async def rolemenu_detach(
         self,

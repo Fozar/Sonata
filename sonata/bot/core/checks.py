@@ -9,7 +9,7 @@ async def is_admin(ctx: Context):
     if ctx.guild is None:
         raise commands.NoPrivateMessage()
 
-    if not ctx.bot.is_admin(ctx.author):
+    if not await ctx.bot.is_admin(ctx.author):
         raise NotAdmin(_("You are not an administrator"))
 
     return True

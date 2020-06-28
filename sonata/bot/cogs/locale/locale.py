@@ -10,8 +10,8 @@ from sonata.bot.utils.converters import validate_locale, locale_to_flag
 from sonata.bot.utils.misc import make_locale_list
 
 
-def admin_or_dm(ctx: core.Context):
-    if ctx.guild is not None and not ctx.bot.is_admin(ctx.author):
+async def admin_or_dm(ctx: core.Context):
+    if ctx.guild is not None and not await ctx.bot.is_admin(ctx.author):
         raise commands.PrivateMessageOnly()
 
     return True

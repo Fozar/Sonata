@@ -1,8 +1,11 @@
 import random
 import re
 from contextlib import suppress
+from typing import Union
 
 import discord
+from aiocache import cached
+from aiocache.serializers import PickleSerializer
 from discord.ext import commands
 
 from sonata.bot import core
@@ -45,14 +48,13 @@ class Fun(
         self.sonata = sonata
         super().__init__()
 
-    @core.Cog.listener()
-    async def on_message(self, message: discord.Message):
-        if (
-            message.author.id == 438476530302189579
-            and "ильяс" in message.content.lower()
-            and "флуд" in message.content.lower()
-        ):
-            await message.add_reaction(self.sonata.emoji("Jebaited"))
+    @cached(
+        ttl=60 * 60 * 24,
+        serializer=PickleSerializer(),
+        key_builder=lambda f, s, h: f"{f.__name__}_{h}",
+    )
+    async def measure_love(self, *args):
+        return random.randint(1, 100)
 
     def random_magic_ball_response(self) -> str:
         responses = [
@@ -248,6 +250,22 @@ class Fun(
         )
         with suppress(discord.HTTPException):
             await ctx.message.delete()
+
+    @core.command(examples=[_("@Member")])
+    @commands.guild_only()
+    async def love(self, ctx: core.Context, *, target: Union[discord.Member, str]):
+        _("Measures love")
+        if isinstance(target, discord.Member) and target.id == ctx.bot.user.id:
+            return await ctx.inform(_("Love you 💗"))
+        _hash = frozenset({hash(ctx.author), hash(target)})
+        love = await self.measure_love(_hash)
+        await ctx.inform(
+            _("{love}% 💗 between {author} and {target}.").format(
+                love=love,
+                author=ctx.author.mention,
+                target=target.mention if isinstance(target, discord.Member) else target,
+            )
+        )
 
     @core.command(examples=[_("reflects on the eternal")])
     @commands.guild_only()

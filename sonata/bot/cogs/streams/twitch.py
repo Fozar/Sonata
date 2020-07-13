@@ -152,7 +152,7 @@ class TwitchMixin(core.Cog):
             self._locks[user_id] = lock
         async with lock:
             if not data:  # Maybe it's just a reconnect
-                await asyncio.sleep(180)  # Check to avoid spam alerts.
+                await asyncio.sleep(7 * 60)  # Check to avoid spam alerts.
                 stream = await self.twitch.get_stream(user_id)
             else:
                 stream = twitch.Stream(self.twitch, data)

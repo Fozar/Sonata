@@ -74,9 +74,14 @@ class Guild(GuildBase):
                 text=e.json(indent=None), content_type="application/json"
             )
 
-        self.bot.db.guilds.update_one(
-            {"id": guild.id}, {"$set": update.dict(exclude_unset=True)}
-        )
+        update = update.dict(exclude_unset=True)
+        if "locale" in update:
+            for channel in filter(
+                lambda ch: isinstance(ch, discord.TextChannel), guild.channels
+            ):
+                await self.bot.cache.delete(f"locale_{channel.id}")
+
+        self.bot.db.guilds.update_one({"id": guild.id}, {"$set": update})
         raise web.HTTPCreated
 
 

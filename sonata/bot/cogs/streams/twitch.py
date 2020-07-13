@@ -2,6 +2,7 @@ import asyncio
 import logging
 import os
 import re
+import time
 import weakref
 from contextlib import suppress
 from datetime import timedelta, datetime
@@ -367,7 +368,7 @@ class TwitchMixin(core.Cog):
             title=stream.title,
             timestamp=stream.started_at,
         )
-        embed.set_image(url=stream.thumbnail_url())
+        embed.set_image(url=stream.thumbnail_url() + f"?timestamp={int(time.time())}")
         embed.set_footer(
             text="Twitch", icon_url="https://www.sonata.fun/img/TwitchGlitchPurple.png"
         )

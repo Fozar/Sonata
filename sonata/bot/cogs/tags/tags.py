@@ -26,9 +26,16 @@ class TagSource(menus.AsyncIteratorPageSource):
 
 class SearchSource(menus.AsyncIteratorPageSource):
     def __init__(
-        self, entries, colour: discord.Colour, slice_content: int, *, per_page
+        self,
+        entries,
+        query: str,
+        colour: discord.Colour,
+        slice_content: int,
+        *,
+        per_page,
     ):
         super().__init__(entries, per_page=per_page)
+        self.query = query
         self.colour = colour
         self.slice_content = slice_content
 
@@ -36,11 +43,21 @@ class SearchSource(menus.AsyncIteratorPageSource):
         embed = discord.Embed(title=_("Searching results"), colour=self.colour)
         for entry in entries:
             content = entry["content"]
-            value = (
-                content
-                if len(content) <= self.slice_content
-                else content[: self.slice_content] + "..."
-            )
+            first_match = content.find(self.query)
+            if len(content) <= self.slice_content:
+                value = content
+            elif first_match == -1:
+                value = content[: self.slice_content] + "..."
+            else:
+                start_index = max(0, first_match - int(self.slice_content / 2))
+                last_index = min(
+                    len(content), first_match + int(self.slice_content / 2)
+                )
+                value = content[start_index:last_index]
+                if start_index > 0:
+                    value = "..." + value
+                if last_index < len(content):
+                    value += "..."
             embed.add_field(
                 name=entry["name"], value=value,
             )
@@ -464,6 +481,7 @@ class Tags(
                     {"name": True, "content": True},
                     limit=0,
                 ),
+                query,
                 ctx.colour,
                 100,
                 per_page=24,

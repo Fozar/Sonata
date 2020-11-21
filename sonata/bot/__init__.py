@@ -3,6 +3,8 @@ import logging
 import os
 from logging import handlers
 
+from aiohttp import ClientSession
+
 from sonata.bot.cogs import load_extension
 from sonata.bot.core import Sonata
 
@@ -30,11 +32,28 @@ def setup_logger():
     return logger
 
 
+async def get_twitch_bearer_token(twitch_config):
+    async with ClientSession() as session:
+        response = await session.post(
+            "https://id.twitch.tv/oauth2/token",
+            params={
+                "client_id": twitch_config.client_id,
+                "client_secret": twitch_config.client_secret,
+                "grant_type": "client_credentials",
+            },
+        )
+        body = await response.json()
+        return body["access_token"]
+
+
 async def init_bot(app):
     logger = setup_logger()
     loop = asyncio.get_event_loop()
     bot_config = app["config"]["bot"]
-    app["bot"] = Sonata(logger=logger, app=app, loop=loop)
+    twitch_bearer_token = await get_twitch_bearer_token(app["config"]["twitch"])
+    app["bot"] = Sonata(
+        logger=logger, app=app, loop=loop, twitch_bearer_token=twitch_bearer_token
+    )
     for cog in bot_config.cogs:
         load_extension(app["bot"], cog.lower())
     loop.create_task(app["bot"].start())

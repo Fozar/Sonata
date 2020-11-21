@@ -37,7 +37,7 @@ class Emoji(
         ):
             return
 
-        matches = EMOJI_REGEX.findall(message.content)
+        matches = set(EMOJI_REGEX.findall(message.content))
         if not matches:
             return
 

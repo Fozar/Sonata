@@ -46,6 +46,7 @@ class TwitchConfig:
     client_id: str = None
     bearer_token: str = None
     hub_secret: str = None
+    client_secret: str = None
 
 
 class ApiConfig:

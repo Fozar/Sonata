@@ -180,6 +180,25 @@ class Fun(
             embed=discord.Embed(colour=self.colour).set_image(url=js[0]["url"])
         )
 
+    @core.group(name="боня", hidden=True)
+    @commands.check(lambda ctx: ctx.guild.id in (750688889823297569, 313726240710197250))
+    async def bonya(self, ctx: core.Context):
+        """Находит случайную фотографю Бони"""
+        if ctx.invoked_subcommand is not None:
+            return
+
+        cursor = ctx.db.bonya.aggregate([{"$sample": {"size": 1}}])
+        await cursor.fetch_next
+        doc = cursor.next_object()
+        await ctx.send(doc["url"])
+
+    @bonya.command(name="добавить")
+    @commands.check(lambda ctx: ctx.author.id in (616989796887298049, 149722383165423616))
+    async def bonya_add(self, ctx: core.Context, url: str):
+        """Добавляет новую фотографию Бони"""
+        await ctx.db.bonya.insert_one({"url": url})
+        await ctx.send("Фото добавлено")
+
     @core.command(examples=["akita"])
     async def dog(self, ctx: core.Context, breed: to_lower = None):
         _(

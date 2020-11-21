@@ -202,7 +202,7 @@ class Utils(
 
     @core.command(examples=[_("echo"), _("#TextChannel echo")])
     @commands.check(is_admin)
-    async def echo(self, ctx: core.Context, channel: Optional[discord.TextChannel], message: str):
+    async def echo(self, ctx: core.Context, channel: Optional[discord.TextChannel], *, message: str):
         _("""Sends the specified message to the specified channel
         
         If no channel is specified, the current one is used.""")
@@ -229,7 +229,7 @@ class Utils(
 
     @core.command(aliases=["w"], examples=[_("London")])
     @commands.cooldown(1, 1, type=BucketType.guild)
-    async def weather(self, ctx: core.Context, locality: str):
+    async def weather(self, ctx: core.Context, *, locality: str):
         _(
             """Finds out the weather
 

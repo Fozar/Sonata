@@ -17,6 +17,7 @@ from aiocache import cached, Cache
 from aiocache.serializers import PickleSerializer
 from aiohttp import web
 from discord.ext import commands
+from sentry_sdk import capture_exception, configure_scope
 
 from sonata.bot.utils import i18n
 from .cog import Cog
@@ -31,7 +32,12 @@ if TYPE_CHECKING:
 
 class Sonata(commands.Bot):
     def __init__(
-        self, app: "Application", logger: "Logger" = None, *args, **kwargs,
+        self,
+        app: "Application",
+        twitch_bearer_token: str,
+        logger: "Logger" = None,
+        *args,
+        **kwargs,
     ):
         self.app = app
         self.config = config = app["config"]
@@ -50,7 +56,7 @@ class Sonata(commands.Bot):
         self.pool = concurrent.futures.ThreadPoolExecutor()
         self.launch_time = None
         self.twitch_client = twitch.Client(
-            config["twitch"].client_id, config["twitch"].bearer_token, self.session
+            config["twitch"].client_id, twitch_bearer_token, self.session
         )
         self.dbl_client = (
             dbl.DBLClient(
@@ -206,12 +212,16 @@ class Sonata(commands.Bot):
     ):  # TODO: Add check error handler
         if hasattr(exc, "original"):
             exc = exc.original
-        if isinstance(exc, commands.MissingPermissions):
-            response = _("You do not have enough permissions to do it.").format(
-                ctx.author.mention
-            )
+        if isinstance(exc, commands.CommandNotFound):
+            return
+        elif isinstance(exc, commands.MissingPermissions):
+            response = _(
+                "You do not have enough permissions to do it."
+            ) + "```diff\n- {}```".format("\n- ".join(exc.missing_perms))
         elif isinstance(exc, commands.BotMissingPermissions):
-            response = _("I do not have enough permissions to do it.")
+            response = _(
+                "I do not have enough permissions to do it."
+            ) + "```diff\n- {}```".format("\n- ".join(exc.missing_perms))
         elif isinstance(exc, discord.errors.Forbidden):
             response = _("I am missing permissions.")
         elif isinstance(exc, (commands.BadArgument, commands.BadUnionArgument)):
@@ -249,6 +259,17 @@ class Sonata(commands.Bot):
             self.logger.warning(
                 "\n".join(traceback.format_exception(type(exc), exc, exc.__traceback__))
             )
+            with configure_scope() as scope:
+                scope.set_context(
+                    "context",
+                    {
+                        "guild": repr(ctx.guild),
+                        "channel": repr(ctx.channel),
+                        "author": repr(ctx.author),
+                        "message": repr(ctx.message.content),
+                    },
+                )
+                capture_exception(exc)
         else:
             try:
                 await ctx.inform(response)

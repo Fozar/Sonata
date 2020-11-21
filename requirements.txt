@@ -13,7 +13,7 @@ dateparser==0.7.4
 DateTime==4.3
 dblpy==0.3.4
 discord-ext-menus==1.0.0a21+gd9965ec
-discord.py==1.3.3
+discord.py==1.5.1
 dsdev-utils==1.0.4
 emoji==0.5.4
 emoji-country-flag==1.2.1

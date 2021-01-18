@@ -41,10 +41,13 @@ class Sonata(commands.Bot):
     ):
         self.app = app
         self.config = config = app["config"]
+        intents = discord.Intents.default()
+        intents.members = True
         super().__init__(
             owner_id=self.config["bot"].owner_id,
             command_prefix=determine_prefix,
             status=discord.Status.idle,
+            intents=intents,
             *args,
             **kwargs,
         )

@@ -178,7 +178,7 @@ class Sonata(commands.Bot):
             self.log_channel = service_guild.get_channel(714881722163920917)
 
         await self.change_presence(
-            status=discord.Status.dnd, activity=discord.Game("https://www.sonata.fun/")
+            status=discord.Status.dnd, activity=discord.Game("https://www.sonata-bot.ru/")
         )
         if not self.launch_time:
             self.launch_time = datetime.utcnow()

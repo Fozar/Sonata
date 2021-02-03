@@ -22,7 +22,7 @@ HELIX_API = "https://api.twitch.tv/helix"
 STREAMS_URL = HELIX_API + "/streams"
 
 
-CALLBACK_URL = "https://sonata.fun/api/wh/twitch"
+CALLBACK_URL = "https://sonata-bot.ru/api/wh/twitch"
 
 
 def limit_subs():
@@ -370,7 +370,7 @@ class TwitchMixin(core.Cog):
         )
         embed.set_image(url=stream.thumbnail_url() + f"?timestamp={int(time.time())}")
         embed.set_footer(
-            text="Twitch", icon_url="https://www.sonata.fun/img/TwitchGlitchPurple.png"
+            text="Twitch", icon_url="https://www.sonata-bot.ru/img/TwitchGlitchPurple.png"
         )
         if game:
             embed.add_field(name=_("Game"), value=game.name)

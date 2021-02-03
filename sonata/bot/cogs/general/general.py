@@ -128,7 +128,7 @@ class General(
                 "[Invite the bot to your server]({invite})\n"
                 "[Vote for the bot]({vote})",
             ).format(
-                website="https://sonata.fun/",
+                website="https://sonata-bot.ru/",
                 invite=ctx.bot.invite,
                 vote=f"https://top.gg/bot/{ctx.bot.user.id}",
             ),
